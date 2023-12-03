@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
-import MenuAlgo from "../../../shared/components/MenuAlgo";
+import MenuAlgo from "../../shared/components/MenuAlgo";
 
 function DashboardAlgo() {
 
     return (
         <>
             <Box  sx={{display: 'flex'}} >
-                <MenuAlgo/>
-                <Box>
+                <MenuAlgo isStatic={true}/>
+                <Box sx={{ml: '310px'}}>
                     Dashboard
                 </Box>
             </Box>

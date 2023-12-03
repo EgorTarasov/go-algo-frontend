@@ -3,7 +3,8 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import PrivateRoute from "./routes/PrivateRoute";
 import { AuthProvider } from "./hooks/AuthProvider";
 import LoginPage from "./pages/login/LoginPage";
-import DashboardAlgo from "./pages/algorithmist/dashboard/DashboardAlgo";
+import DashboardAlgo from "./pages/algorithmist/DashboardAlgo";
+import CreateAlgo from './pages/algorithmist/CreateAlgo';
 import DrawUi from "./DrawUi";
 import AppBar from "./shared/components/AppBar";
 
@@ -49,7 +50,17 @@ function App() {
                             path="/home"
                             element={
                                 <PrivateRoute>
+                                    <AppBar/>
                                     <DashboardAlgo />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/createAlgorithm"
+                            element={
+                                <PrivateRoute>
+                                    <AppBar/>
+                                    <CreateAlgo />
                                 </PrivateRoute>
                             }
                         />

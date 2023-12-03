@@ -13,6 +13,9 @@ export default function AppBar() {
 
     const pathText: { [key: string]: string } = {
         'home': 'Дашборд',
+        'createAlgorithm': 'Создать алгоритм',
+        'profile': 'Профиль',
+        'myAlgorithms': 'Мои Алгоритмы',
     };
 
     return (
