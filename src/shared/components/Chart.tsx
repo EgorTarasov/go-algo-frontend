@@ -4,7 +4,7 @@ import {
     IChartApi,
     DeepPartial,
     LayoutOptions,
-    ITimeScaleApi,
+    
 } from "lightweight-charts";
 import { useEffect, useRef, RefObject } from "react";
 import { IChartData } from "../../models/IChartData";
@@ -94,7 +94,7 @@ export const ChartComponent: React.FC<ChartProps> = (props) => {
             ticksVisible: true,
             fixLeftEdge: true,
             fixRightEdge: true,
-            rightOffset: 10,
+            barSpacing: 50,
             lockVisibleTimeRangeOnResize: true,
             borderColor: "#D1D4DC",
         });
