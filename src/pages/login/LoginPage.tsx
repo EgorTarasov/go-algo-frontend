@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -26,8 +26,22 @@ function LoginPage() {
 
     return (
         <>
-            <Box className='root-box'            >
-                Login
+            <Box sx={{ display: 'flex' }}>
+                <Box sx={{backgroundColor: 'primary.main'}}>
+                    <Typography
+                        sx={{
+                            fontFamily: 'Favorit Pro, sans',
+                            fontWeight: 400,
+                            fontSize: '15px',
+                            color: 'black',
+                            textDecoration: 'none',
+                            marginRight: 0,
+                            paddingRight: 2,
+                        }}
+                    >
+                        Text
+                    </Typography>
+                </Box>
             </Box>
 
         </>

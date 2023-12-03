@@ -8,8 +8,15 @@ import DrawUi from './DrawUi';
 
 const theme = createTheme({
   palette: {
+    primary: {
+      main: '#FF0508',
+      light: '#F59495',
+      dark: '#AAB0FF'
+    },
     secondary: {
-      main: '#0B0959'
+      main: '#343537',
+      dark: '#13161C',
+      light: '#F3F4F6'
     },
     error: {
       main: '#860000'
