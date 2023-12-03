@@ -10,11 +10,12 @@ interface UserLogin {
 const ApiAuth = {
 
     async loginUser(data: UserLogin) {
-        const response = await axios
-            .post(`${BASE_URL}/auth/login`, data)
+        // const response = await axios
+        //     .post(`${BASE_URL}/auth/login`, data)
 
-        storage.setToken(response.data.accessToken);
-        storage.setRole(response.data.role);
+        // storage.setToken(response.data.accessToken);
+        // storage.setRole(response.data.role);
+        storage.setToken('12345');
         return;
     },
 };
