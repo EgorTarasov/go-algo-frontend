@@ -5,6 +5,7 @@ import { AuthProvider } from './hooks/AuthProvider';
 import LoginPage from './pages/login/LoginPage';
 import DashboardAlgo from './pages/algorithmist/dashboard/DashboardAlgo';
 import DrawUi from './DrawUi';
+import AppBar from './shared/components/AppBar'
 
 const theme = createTheme({
   palette: {
@@ -31,13 +32,18 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-          <AuthProvider>
-            <Routes>
-              <Route path="/" element={<LoginPage />} />
-              <Route path="ui" element={<DrawUi />} />
-              <Route path="/home" element={<PrivateRoute><DashboardAlgo /></PrivateRoute>} />
-            </Routes>
-          </AuthProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="ui" element={<DrawUi />} />
+            <Route path="/home" element={
+              <PrivateRoute>
+                <AppBar />
+                <DashboardAlgo />
+              </PrivateRoute>
+            } />
+          </Routes>
+        </AuthProvider>
       </ThemeProvider>
     </>
   )

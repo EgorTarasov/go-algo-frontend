@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
 import login_picture from '../../assets/login_picture.svg';
 import logo_algopack from '../../assets/logo_algopack.png';
-import LoginForm from "../../shared/components/LoginForm";
-import RegisterForm from '../../shared/components/RegisterForm';
+import LoginForm from "../../shared/components/login/LoginForm";
+import RegisterForm from '../../shared/components/register/RegisterForm';
 
 
 function LoginPage() {
