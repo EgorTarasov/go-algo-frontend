@@ -1,0 +1,29 @@
+export interface ISecurity {
+    SECID: string;
+    BOARDID: string;
+    SHORTNAME: string;
+    PREVPRICE: number;
+    LOTSIZE: number;
+    FACEVALUE: number;
+    STATUS: string;
+    BOARDNAME: string;
+    DECIMALS: number;
+    SECNAME: string;
+    REMARKS?: unknown;
+    MARKETCODE: string;
+    INSTRID: string;
+    SECTORID?: unknown;
+    MINSTEP: number;
+    PREVWAPRICE: number;
+    FACEUNIT: string;
+    PREVDATE: string;
+    ISSUESIZE: number;
+    ISIN: string;
+    LATNAME: string;
+    REGNUMBER: string;
+    PREVLEGALCLOSEPRICE: number;
+    CURRENCYID: string;
+    SECTYPE: string;
+    LISTLEVEL: number;
+    SETTLEDATE: string;
+}
