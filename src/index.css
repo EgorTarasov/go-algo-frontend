@@ -4,3 +4,11 @@ html body {
     overflow-x: hidden;
     box-sizing: border-box;
 }
+
+.textfield {
+    width: 300px;
+}
+
+.textfield .MuiOutlinedInput-root {
+    border-radius: 8px;
+}

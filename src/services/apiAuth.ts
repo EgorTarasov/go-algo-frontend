@@ -7,6 +7,13 @@ interface UserLogin {
     password: string;
 }
 
+interface CreateUserData {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+}
+
 const ApiAuth = {
 
     async loginUser(data: UserLogin) {
@@ -17,6 +24,16 @@ const ApiAuth = {
         // storage.setRole(response.data.role);
         storage.setToken('12345');
         return;
+    },
+    async createUser(data: CreateUserData) {
+        // let config = {
+        //     headers: {
+        //         Authorization: `Bearer ${storage.getToken()}`
+        //     }
+        // }
+        // return await axios
+        //     .post(`${BASE_URL}/api/v1/users`, data , config);
+        storage.setToken('12345');
     },
 };
 export default ApiAuth;

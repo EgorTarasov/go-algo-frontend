@@ -1,10 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
 import login_picture from '../../assets/login_picture.svg';
 import logo_algopack from '../../assets/logo_algopack.png';
 import LoginForm from "../../shared/components/LoginForm";
+import RegisterForm from '../../shared/components/RegisterForm';
 
 
 function LoginPage() {
@@ -15,6 +16,8 @@ function LoginPage() {
     const navigate = useNavigate();
     const { from } = location.state || { from: { pathname: "/home" } };
 
+    const [isRegister, setIsRegister] = useState(false);
+
     useEffect(() => {
         if (isAuthorized) {
             navigate(from.pathname);
@@ -23,6 +26,9 @@ function LoginPage() {
 
     const updateAuthorized = (newAuthorized: boolean) => {
         setIsAuthorized(newAuthorized);
+    };
+    const updateRegister = (newRegister: boolean) => {
+        setIsRegister(newRegister);
     };
 
     return (
@@ -92,7 +98,9 @@ function LoginPage() {
                         <img src={logo_algopack} width="40%" />
                     </Box>
                     <Box sx={{display: 'flex', justifyContent: 'center', mt: 13}}>
-                        <LoginForm updateAuthorized={updateAuthorized} />
+                        {!isRegister ?
+                        (<LoginForm updateAuthorized={updateAuthorized} updateRegister={updateRegister}/>) :
+                        (<RegisterForm updateAuthorized={updateAuthorized} updateRegister={updateRegister}/>)}
                     </Box>
                 </Box>
             </Box>
