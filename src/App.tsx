@@ -1,7 +1,39 @@
-import "./App.css";
+import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material';
+import PrivateRoute from './routes/PrivateRoute'
+import { AuthProvider } from './hooks/AuthProvider';
+import LoginPage from './pages/login/LoginPage';
+import DashboardAlgo from './pages/algorithmist/dashboard/DashboardAlgo';
+import DrawUi from './DrawUi';
+
+const theme = createTheme({
+  palette: {
+    secondary: {
+      main: '#0B0959'
+    },
+    error: {
+      main: '#860000'
+    },
+    success: {
+      main: '#00440f'
+    }
+  }
+});
 
 function App() {
-    return <h1 className="text-3xl font-bold underline ">Hello world!</h1>;
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<LoginPage />} />
+              <Route path="ui" element={<DrawUi />} />
+              <Route path="/home" element={<PrivateRoute><DashboardAlgo /></PrivateRoute>} />
+            </Routes>
+          </AuthProvider>
+      </ThemeProvider>
+    </>
+  )
 }
 
-export default App;
+export default App
