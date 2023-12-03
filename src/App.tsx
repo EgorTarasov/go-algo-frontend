@@ -5,6 +5,7 @@ import { AuthProvider } from "./hooks/AuthProvider";
 import LoginPage from "./pages/login/LoginPage";
 import DashboardAlgo from "./pages/algorithmist/dashboard/DashboardAlgo";
 import DrawUi from "./DrawUi";
+import AppBar from "./shared/components/AppBar";
 
 const theme = createTheme({
     palette: {

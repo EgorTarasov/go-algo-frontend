@@ -1,8 +1,8 @@
 import { TextField, Box, InputAdornment } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import Button from '../ui/Button';
-import { TypographyHeader, TypographyMain } from "../ui/Typography";
+import Button from '../../ui/Button';
+import { TypographyHeader, TypographyMain } from "../../ui/Typography";
 import { useLoginForm } from './useLoginForm';
 
 
@@ -67,7 +67,7 @@ const LoginForm = (loginProps: LoginFormProps) => {
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    {!showPassword ? <VisibilityOffIcon onClick={handleTogglePasswordVisibility} sx={{ color: '#1F1B4C' }} /> : <VisibilityIcon onClick={handleTogglePasswordVisibility} sx={{ color: '#1F1B4C' }} />}
+                                    {!showPassword ? <VisibilityOffIcon onClick={handleTogglePasswordVisibility} sx={{ color: '#1F1B4C', cursor: 'pointer' }} /> : <VisibilityIcon onClick={handleTogglePasswordVisibility} sx={{ color: '#1F1B4C', cursor: 'pointer' }} />}
                                 </InputAdornment>
                             ),
                         }}

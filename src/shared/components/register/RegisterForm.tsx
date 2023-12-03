@@ -1,6 +1,6 @@
 import { TextField, Box } from "@mui/material";
-import Button from '../ui/Button';
-import { TypographyHeader, TypographyMain } from "../ui/Typography";
+import Button from '../../ui/Button';
+import { TypographyHeader, TypographyMain } from "../../ui/Typography";
 import { useRegisterForm } from './useRegisterForm';
 
 

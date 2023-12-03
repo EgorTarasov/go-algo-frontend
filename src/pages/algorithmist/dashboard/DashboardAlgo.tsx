@@ -1,12 +1,15 @@
 import { Box } from "@mui/material";
-
+import MenuAlgo from "../../../shared/components/MenuAlgo";
 
 function DashboardAlgo() {
 
     return (
         <>
-            <Box className='root-box'            >
-                Dashboard
+            <Box  sx={{display: 'flex'}} >
+                <MenuAlgo/>
+                <Box>
+                    Dashboard
+                </Box>
             </Box>
 
         </>
