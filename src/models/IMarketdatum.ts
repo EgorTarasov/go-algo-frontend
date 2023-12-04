@@ -54,4 +54,5 @@ export interface IMarketdatum {
     ETFSETTLECURRENCY?: unknown;
     VALTODAY_RUR: number;
     TRADINGSESSION?: unknown;
+    SHORTNAME: string;
 }

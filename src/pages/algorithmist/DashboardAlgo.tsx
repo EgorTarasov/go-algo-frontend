@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import MenuAlgo from "../../shared/components/MenuAlgo";
 import { useMediaQuery } from '@mui/material';
+import MainGraphStocks from "../../shared/widgets/MainGraphStocks";
 
 
 function DashboardAlgo() {
@@ -10,7 +11,7 @@ function DashboardAlgo() {
             <Box  sx={{display: 'flex'}} >
                 <MenuAlgo isStatic={!isMobile}/>
                 <Box sx={{ml: '310px'}}>
-                    Dashboard
+                    <MainGraphStocks/>
                 </Box>
             </Box>
 

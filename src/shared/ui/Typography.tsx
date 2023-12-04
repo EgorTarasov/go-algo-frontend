@@ -40,7 +40,7 @@ export function TypographyMain({ children , sx}: StyledTypographyProps) {
                 fontWeight: 400,
                 fontSize: '16px',
                 textDecoration: 'none',
-                color: '#secindary.main',
+                color: 'secondary.main',
                 ...sx
             }}
         >

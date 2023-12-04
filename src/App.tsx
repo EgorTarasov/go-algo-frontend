@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import PrivateRoute from "./routes/PrivateRoute";
 import { AuthProvider } from "./hooks/AuthProvider";
+import { AllStockProvider } from "./hooks/AllStockDataProvider";
 import LoginPage from "./pages/login/LoginPage";
 import DashboardAlgo from "./pages/algorithmist/DashboardAlgo";
 import CreateAlgo from './pages/algorithmist/CreateAlgo';
@@ -42,30 +43,32 @@ function App() {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <AuthProvider>
-                    <Routes>
-                        <Route path="/" element={<LoginPage />} />
-                        <Route path="ui" element={<DrawUi />} />
-                        <Route
-                            path="/home"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar/>
-                                    <DashboardAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/createAlgorithm"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar/>
-                                    <CreateAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                    </Routes>
-                </AuthProvider>
+                <AllStockProvider>
+                    <AuthProvider>
+                        <Routes>
+                            <Route path="/" element={<LoginPage />} />
+                            <Route path="ui" element={<DrawUi />} />
+                            <Route
+                                path="/home"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <DashboardAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/createAlgorithm"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <CreateAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                        </Routes>
+                    </AuthProvider>
+                </AllStockProvider>
             </ThemeProvider>
         </>
     );

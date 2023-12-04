@@ -16,22 +16,22 @@ import { serialiseCandles } from "./utils/graph";
 import StockCard, { StockCardProps } from "./shared/components/StockCard";
 import { createDataPoints } from "./shared/components/AreaChart";
 
-const CardsData: StockCardProps[] = [
-    {
-        ticker: "Газпром",
-        stockID: "GAZP", // как называется на бирже GAZP, SBER, YNDX
-        stockPrice: 162.5,
-        change: -0.35, // изменение цены в процентах
-        data: createDataPoints(162.5, 12),
-    },
-    // {
-    //     ticker: "Сбер",
-    //     stockID: "SBER", // как называется на бирже GAZP, SBER, YNDX
-    //     stockPrice: 271,
-    //     change: 5.35, // изменение цены в процентах
-    //     data: createDataPoints(271, 12),
-    // },
-];
+// const CardsData: StockCardProps[] = [
+//     {
+//         ticker: "Газпром",
+//         stockID: "GAZP", // как называется на бирже GAZP, SBER, YNDX
+//         stockPrice: 162.5,
+//         change: -0.35, // изменение цены в процентах
+//         data: createDataPoints(162.5, 12),
+//     },
+//     // {
+//     //     ticker: "Сбер",
+//     //     stockID: "SBER", // как называется на бирже GAZP, SBER, YNDX
+//     //     stockPrice: 271,
+//     //     change: 5.35, // изменение цены в процентах
+//     //     data: createDataPoints(271, 12),
+//     // },
+// ];
 
 function DrawUi() {
     // TODO: перерисовывать график на изменении интервала
@@ -52,7 +52,7 @@ function DrawUi() {
             setIsLoaded(true);
 
             if (data) {
-                // console.log(data.securities[0]);
+                //console.log(data);
                 // setSecuries(data.securities[0]);
             }
         };
@@ -77,11 +77,11 @@ function DrawUi() {
     return (
         //
         <Box margin={"auto"}>
-            <Stack direction={"row"} spacing={2} paddingTop={5} paddingLeft={5}>
+            {/* <Stack direction={"row"} spacing={2} paddingTop={5} paddingLeft={5}>
                 {CardsData.map((card) => (
                     <StockCard key={card.stockID} {...card} />
                 ))}
-            </Stack>
+            </Stack> */}
             <Box sx={{ m: 10 }}>
                 {isLoaded ? (
                     <Chart data={graphData}></Chart>

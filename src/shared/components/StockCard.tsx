@@ -1,55 +1,67 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import React from "react";
 import AreaChart, { DataPoint } from "./AreaChart";
+import { TypographyMain, TypographyHeader } from "../ui/Typography";
 
 export interface StockCardProps {
-    ticker: string;
+    shortname: string;
     stockID: string; // как называется на бирже GAZP, SBER, YNDX
     stockPrice: number;
-    change: number; // изменение цены в процентах
-    data: DataPoint[];
+    changePercent: number; // изменение цены в процентах
+    active: boolean;
+    onClick: () => void;
+
+    // data: DataPoint[];
 }
 const StockCard: React.FC<StockCardProps> = ({
-    ticker,
+    shortname,
     stockID,
     stockPrice,
-    change,
-    data,
+    changePercent,
+    active,
+    onClick,
 }: StockCardProps) => {
     return (
-        <Paper>
-            <Stack padding={4}>
-                <Stack
-                    direction={"row"}
-                    spacing={20}
-                    justifyContent={"space-between"}
+        <Box 
+            sx={{ 
+                width: '330px', 
+                backgroundColor: 'secondary.light', 
+                borderRadius: '13.5px',
+                boxShadow: active ? '0 0 10px #AAB0FF' : 'none', 
+                transition: 'box-shadow 0.3s ease', 
+                cursor: 'pointer'
+            }}
+            onClick={onClick}
+        >
+            <Box padding={4}>
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    sx={{ mb: 2 }} 
                 >
-                    <Typography variant={"h4"}>{ticker}</Typography>
-                    <Stack>
-                        <Typography variant={"h6"}>{stockID}</Typography>
-                        {change > 0 ? (
-                            <Typography variant={"h6"} color={"green"}>
-                                {change}%
-                            </Typography>
+                    <TypographyMain sx={{ fontSize: '25px' }}>{shortname}</TypographyMain>
+                    <Box>
+                        <TypographyMain >{stockID}</TypographyMain>
+                        {changePercent > 0 ? (
+                            <TypographyMain sx={{ color: 'green' }} >
+                                {changePercent}%
+                            </TypographyMain>
                         ) : (
-                            <Typography variant={"h6"} color={"red"}>
-                                {change}%
-                            </Typography>
+                            <TypographyMain sx={{ color: 'primary.main' }}>
+                                {changePercent}%
+                            </TypographyMain>
                         )}
-                    </Stack>
-                </Stack>
-                <Stack direction={"row"} justifyContent={"space-between"}>
-                    <Stack direction={"row"}>
-                        <Typography variant={"h4"}>{stockPrice}</Typography>
-                        <Typography variant={"h6"}>RUB</Typography>
-                    </Stack>
-                    {/* <AreaChart
-                        dataPoints={data}
-                        color={change < 0 ? "#FF0000" : "#00FF00"}
-                    /> */}
-                </Stack>
-            </Stack>
-        </Paper>
+                    </Box>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                    <Box display="flex">
+                        <TypographyHeader sx={{ mr: 0.5 }}>{stockPrice}</TypographyHeader>
+                        <TypographyMain sx={{ textAlign: 'center' }}>RUB</TypographyMain>
+                    </Box>
+                </Box>
+            </Box>
+
+        </Box>
     );
 };
 
