@@ -25,6 +25,7 @@ const StockCard: React.FC<StockCardProps> = ({
         <Box 
             sx={{ 
                 width: '300px', 
+                height: '172px',
                 backgroundColor: 'secondary.light', 
                 borderRadius: '13.5px',
                 boxShadow: active ? '0 0 10px #AAB0FF' : 'none', 

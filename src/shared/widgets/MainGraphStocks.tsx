@@ -1,19 +1,21 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import StockCard from "../components/StockCard";
 import { TypographyHeader } from "../ui/Typography";
 import { Button } from "@mui/material";
 import arrowRight from '../../assets/arrow_right.svg';
 import StockInfo from "../components/StockInfo";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAllStock } from '../../hooks/AllStockDataProvider';
 import MainGraph from "./MainGraph";
-
 
 function MainGraphStocks() {
     const stockContext = useAllStock();
 
     if (!stockContext) throw new Error("AllStockProvider is missing");
     const { stocks, setCurrentStock, currentStock } = stockContext;
+
+    const [startIndex, setStartIndex] = useState(0); // Add this line
 
     useEffect(() => {
         if (stocks.length > 0) {
@@ -27,6 +29,13 @@ function MainGraphStocks() {
         }
     }, [stocks, setCurrentStock, currentStock]);
 
+    const handleNext = () => { // Add this function
+        setStartIndex(prevIndex => prevIndex + 4 < stocks.length ? prevIndex + 4 : prevIndex);
+    }
+
+    const handleBack = () => { // Add this function
+        setStartIndex(prevIndex => prevIndex - 4 >= 0 ? prevIndex - 4 : prevIndex);
+    }
 
     return (
         <>
@@ -44,18 +53,26 @@ function MainGraphStocks() {
                         <img width="15px" height="15px" src={arrowRight} alt="logo" style={{ margin: '0 5px', paddingTop: '2px' }} />
                     </Button>
                 </Box>
-                <Box display="flex" flexWrap="wrap" sx={{ gap: 2, pt: 3, justifyContent: 'space-evenly' }}>
-                    {stocks.slice(0, 4).map((card) => (
-                        <StockCard
-                            key={card['SECID']}
-                            stockPrice={card['LAST']}
-                            changePercent={card['LASTTOPREVPRICE']}
-                            shortname={card['SHORTNAME']}
-                            stockID={card['SECID']}
-                            active={currentStock?.SECID === card['SECID']}
-                            onClick={() => setCurrentStock(card)}
-                        />
-                    ))}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <IconButton onClick={handleBack}>
+                        <ArrowBackIos />
+                    </IconButton>
+                    <Box display="flex" flexWrap="wrap" sx={{ gap: 2, pt: 3, justifyContent: 'space-evenly' }}>
+                        {stocks.slice(startIndex, startIndex + 4).map((card) => (
+                            <StockCard
+                                key={card['SECID']}
+                                stockPrice={card['LAST']}
+                                changePercent={card['LASTTOPREVPRICE']}
+                                shortname={card['SHORTNAME']}
+                                stockID={card['SECID']}
+                                active={currentStock?.SECID === card['SECID']}
+                                onClick={() => setCurrentStock(card)}
+                            />
+                        ))}
+                    </Box>
+                    <IconButton onClick={handleNext}>
+                        <ArrowForwardIos />
+                    </IconButton>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
                     {currentStock &&

@@ -41,9 +41,11 @@ const StockInfo: React.FC<StockCardProps> = ({
                     sx={{ mb: 2 }}
                 >
                     <TypographyMain sx={{ fontSize: '50px' }}>{shortname}</TypographyMain>
-                    <Box sx={{ backgroundColor: 'white', borderRadius: '13.5px', width: '150px', boxShadow: '0px 0px 25px rgba(0, 0, 0, 0.25)', 
-                    display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        <TypographyMain sx={{fontSize: '30px', p: 0, m: 0,  textAlign: 'center' }}>{stockID}</TypographyMain>
+                    <Box sx={{
+                        backgroundColor: 'white', borderRadius: '13.5px', width: '150px', boxShadow: '0px 0px 25px rgba(0, 0, 0, 0.25)',
+                        display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    }}>
+                        <TypographyMain sx={{ fontSize: '30px', p: 0, m: 0, textAlign: 'center' }}>{stockID}</TypographyMain>
                     </Box>
 
                 </Box>
@@ -74,30 +76,33 @@ const StockInfo: React.FC<StockCardProps> = ({
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                    <Box>
-                        <TypographyMain>Объем торгов за день</TypographyMain>
-                        <TypographyMain sx={{ fontSize: '25px' }}>
-                            {formatNumber(volume)} RUB
-                        </TypographyMain>
-                    </Box>
-                    <Box>
-                        <TypographyMain>Капитализация</TypographyMain>
-                        <TypographyMain sx={{ fontSize: '25px' }}>
-                            {formatNumber(cap)} RUB
-                        </TypographyMain>
-                    </Box>
+                    {volume &&
+                        <Box>
+                            <TypographyMain>Объем торгов за день</TypographyMain>
+                            <TypographyMain sx={{ fontSize: '25px' }}>
+                                {formatNumber(volume)} RUB
+                            </TypographyMain>
+                        </Box>}
+                    {cap &&
+                        <Box>
+                            <TypographyMain>Капитализация</TypographyMain>
+                            <TypographyMain sx={{ fontSize: '25px' }}>
+                                {formatNumber(cap)} RUB
+                            </TypographyMain>
+                        </Box>}
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                    <TypographyMain sx={{alignSelf: 'center'}}>Диапазон цен</TypographyMain>
-                    <TypographyMain sx={{ fontSize: '25px', mr: 0 }}>
-                        {formatNumber(low)} RUB
-                    </TypographyMain>
-                    <span style={{alignSelf: 'center'}}>—</span>
-                    <TypographyMain sx={{ fontSize: '25px' }}>
-                        {formatNumber(high)} RUB
-                    </TypographyMain>
-                </Box>
-                <Button onClick={() => {}}>СОЗДАТЬ АЛГОРИТМ</Button>
+                {(low && high) &&
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                        <TypographyMain sx={{ alignSelf: 'center' }}>Диапазон цен</TypographyMain>
+                        <TypographyMain sx={{ fontSize: '25px', mr: 0 }}>
+                            {formatNumber(low)} RUB
+                        </TypographyMain>
+                        <span style={{ alignSelf: 'center' }}>—</span>
+                        <TypographyMain sx={{ fontSize: '25px' }}>
+                            {formatNumber(high)} RUB
+                        </TypographyMain>
+                    </Box>}
+                <Button onClick={() => { }}>СОЗДАТЬ АЛГОРИТМ</Button>
             </Box>
 
         </Box>
