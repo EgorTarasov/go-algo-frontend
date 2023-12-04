@@ -4,9 +4,12 @@ import {
     IChartApi,
     DeepPartial,
     LayoutOptions,
+    ISeriesApi
 } from "lightweight-charts";
 import { useEffect, useRef, RefObject } from "react";
 import { IChartData } from "../../models/IChartData";
+import moexApiInstance from "../../services/apiMoex";
+import { serialiseCandles } from "../../utils/graph";
 
 interface ChartColors {
     backgroundColor?: string;
@@ -17,7 +20,8 @@ interface ChartColors {
 }
 
 interface ChartProps {
-    data: IChartData[];
+    secid: string;
+    myInterval: number;
     colors?: ChartColors;
 }
 
@@ -29,18 +33,15 @@ const defaultColors = {
     areaBottomColor: "rgba(41, 98, 255, 0.28)",
 };
 
-const configureChart = (chart: IChartApi, colors: ChartColors, data: IChartData[]) => {
+const configureChart = (chart: IChartApi, colors: ChartColors) => {
     const {
         backgroundColor,
-        lineColor,
         textColor,
-        areaTopColor,
-        areaBottomColor,
     } = colors;
 
     const myPriceFormatter = Intl.NumberFormat("ru", {
         style: "currency",
-        currency: "RUB", 
+        currency: "RUB",
     }).format;
 
     const myTimeFormatter = (time: number) => {
@@ -91,35 +92,61 @@ const configureChart = (chart: IChartApi, colors: ChartColors, data: IChartData[
             borderColor: "#D1D4DC",
         },
     });
-
-    const mainSeries = chart.addCandlestickSeries();
-    mainSeries.setData(data as any);
 };
 
-const handleResize = (chart: IChartApi, chartContainerRef: RefObject<HTMLDivElement>) => {
-    if (chartContainerRef.current) {
-        chart.applyOptions({
-            width: chartContainerRef.current.clientWidth,
-        });
-    }
-};
 
-export const ChartComponent: React.FC<ChartProps> = ({ data, colors = defaultColors }) => {
+export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors = defaultColors }) => {
+
     const chartContainerRef: RefObject<HTMLDivElement> = useRef(null);
+    const intervalRef = useRef<any>(null);
 
+    let chart: IChartApi | null = null;
+    let mainSeries: ISeriesApi<'Candlestick'> | null = null;
     useEffect(() => {
-        const chart: IChartApi = createChart(chartContainerRef.current!, {
-            width: chartContainerRef.current!.clientWidth,
-            height: 400,
-        });
-        configureChart(chart, colors, data);
 
-        window.addEventListener("resize", () => handleResize(chart, chartContainerRef));
-        return () => {
-            window.removeEventListener("resize", () => handleResize(chart, chartContainerRef));
-            chart.remove();
+        const fetchAndUpdate = async () => {
+            const candleData = (
+                await moexApiInstance.getCandles({
+                    engine: "stock",
+                    markets: "shares",
+                    boardgroups: 57,
+                    ticker: secid,
+                    interval: myInterval,
+                    candles: 500,
+                    timestamp: Date.now(),
+                })
+            ).candles[0];
+            const newData = serialiseCandles(candleData.data);
+
+            if (chart) {
+                console.log('here')
+                chart.remove();
+                chart = null;
+                mainSeries = null;
+            }
+            
+   
+            chart = createChart(chartContainerRef.current!, {
+                width: chartContainerRef.current!.clientWidth,
+                height: 400,
+            });
+            configureChart(chart, colors);
+            mainSeries = chart.addCandlestickSeries();
+            mainSeries.setData(newData as any);
         };
-    }, [data, colors]);
+
+        fetchAndUpdate();
+        intervalRef.current = setInterval(fetchAndUpdate, myInterval * 60 * 1000);
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+            if (chart) {
+                chart.remove();
+            }
+        };
+    }, [secid, myInterval, colors]);
 
     return <div ref={chartContainerRef} />;
 };

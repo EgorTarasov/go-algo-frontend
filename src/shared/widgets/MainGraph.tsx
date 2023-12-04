@@ -5,51 +5,52 @@ import {
     Typography,
 } from "@mui/material";
 import Chart from '../components/Chart';
-import moexApiInstance from "../../services/apiMoex";
 import { useEffect, useState } from "react";
 import { IChartData } from "../../models/IChartData";
+import moexApiInstance from "../../services/apiMoex";
 import { serialiseCandles } from "../../utils/graph";
 
 
 function MainGraph({secid} : {secid: string}) {
     const [graphData, setGraphData] = useState<IChartData[]>([]);
     const [myInterval, setMyInterval] = useState<number>(1); // интервал в минутах
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(true);
 
-    useEffect(() => {
-        const fetch = async () => {
-            setIsLoaded(false);
-            const candleData = (
-                await moexApiInstance.getCandles({
-                    engine: "stock",
-                    markets: "shares",
-                    boardgroups: 57,
-                    ticker: secid,
-                    interval: myInterval,
-                    candles: 500,
-                    timestamp: Date.now(),
-                })
-            ).candles[0];
-            setGraphData(serialiseCandles(candleData.data));
-            setIsLoaded(true);
-        };
+    // useEffect(() => {
+    //     const fetch = async () => {
+    //         setIsLoaded(false);
+    //         const candleData = (
+    //             await moexApiInstance.getCandles({
+    //                 engine: "stock",
+    //                 markets: "shares",
+    //                 boardgroups: 57,
+    //                 ticker: secid,
+    //                 interval: myInterval,
+    //                 candles: 500,
+    //                 timestamp: Date.now(),
+    //             })
+    //         ).candles[0];
+    //         setGraphData(serialiseCandles(candleData.data));
+    //         setIsLoaded(true);
+    //     };
 
-        fetch();
+    //     fetch();
 
-        // const intervalId = setInterval(fetch, 5000); // Запускаем fetch каждые 5000 мс
+    //     // const intervalId = setInterval(fetch, 5000); // Запускаем fetch каждые 5000 мс
 
-        // return () => {
-        //     clearInterval(intervalId); // Очищаем интервал при размонтировании компонента
-        // };
-    }, [myInterval, secid]);
+    //     // return () => {
+    //     //     clearInterval(intervalId); // Очищаем интервал при размонтировании компонента
+    //     // };
+    // }, [myInterval, secid]);
 
     return (
         //
         <Box margin={"auto"}>
-            <Box sx={{ m: 10 }}>
+            <Box sx={{ m: 1 }}>
                 {isLoaded ? (
                     <>
-                        <Chart data={graphData}></Chart>
+                        {/* <Chart data={graphData}></Chart> */}
+                        <Chart secid={secid} myInterval={myInterval}></Chart>
                     </>
                 ) : (
                     <Typography variant="h4">Загрузка...</Typography>

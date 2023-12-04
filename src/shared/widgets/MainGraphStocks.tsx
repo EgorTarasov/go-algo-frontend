@@ -63,7 +63,7 @@ function MainGraphStocks() {
                             <Box sx={{width: '60%'}}>
                                 <MainGraph secid={currentStock['SECID']} />
                             </Box>
-                            <Box sx={{ width: '40%', height: '350px', backgroundColor: 'secondary.light', borderRadius: '13.5px' }}>
+                            <Box sx={{ width: '40%', height: '350px', backgroundColor: 'secondary.light', borderRadius: '13.5px'}}>
                                 <StockInfo
                                     key={currentStock['SECID']}
                                     stockPrice={currentStock['LAST']}
