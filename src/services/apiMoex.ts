@@ -42,22 +42,6 @@ export interface Candle {
     data: number[][];
 }
 
-// export const SecuritiesInfoRequest = {
-//     engines: "stock",
-//     markets: "shares",
-//     boards: "TQBR",
-// };
-
-// export const GetCandlesRequest = {
-//     engine: "stock",
-//     markets: "shares",
-//     boardgroups: 57,
-//     ticker: "SBER",
-//     interval: 1,
-//     candles: 500,
-//     timestamp: 1701609202725,
-// };
-
 // https://iss.moex.com/iss/engines/stock/markets/index/boards/SNDX/securities.json?securities=IMOEX,RGBITR&iss.json=extended&iss.meta=off&iss.only=securities,marketdata&securities.columns=SECID,TRADEDATE,OPEN,CLOSE&limit=1&sort_column=TRADEDATE&sort_order=desc
 // https://iss.moex.com/iss/engines/:engine/markets/:market/boards/:board/securities.json?securities=IMOEX,RGBITR&iss.json=extended&iss.meta=off&iss.only=securities,marketdata&securities.columns=SECID,TRADEDATE,OPEN,CLOSE&limit=1&sort_column=TRADEDATE&sort_order=desc
 class MoexApiService {

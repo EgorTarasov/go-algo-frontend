@@ -2,11 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import PrivateRoute from "./routes/PrivateRoute";
 import { AuthProvider } from "./hooks/AuthProvider";
-import { AllStockProvider } from "./hooks/AllStockDataProvider";
 import LoginPage from "./pages/login/LoginPage";
 import DashboardAlgo from "./pages/algorithmist/DashboardAlgo";
 import CreateAlgo from './pages/algorithmist/CreateAlgo';
-import DrawUi from "./DrawUi";
 import AppBar from "./shared/components/AppBar";
 
 const theme = createTheme({
@@ -46,7 +44,6 @@ function App() {
                     <AuthProvider>
                         <Routes>
                             <Route path="/" element={<LoginPage />} />
-                            <Route path="ui" element={<DrawUi />} />
                             <Route
                                 path="/home"
                                 element={
