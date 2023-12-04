@@ -43,7 +43,6 @@ function App() {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <AllStockProvider>
                     <AuthProvider>
                         <Routes>
                             <Route path="/" element={<LoginPage />} />
@@ -68,7 +67,6 @@ function App() {
                             />
                         </Routes>
                     </AuthProvider>
-                </AllStockProvider>
             </ThemeProvider>
         </>
     );

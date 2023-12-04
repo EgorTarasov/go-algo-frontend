@@ -6,10 +6,8 @@ import {
     Stack,
 } from "@mui/material";
 import Chart from "./shared/components/Chart";
-import moexApiInstance, {
-    GetCandlesRequest,
-    SecuritiesInfoRequest,
-} from "./services/apiMoex";
+import ChartCandles from './shared/components/ChartCandles'
+import moexApiInstance from "./services/apiMoex";
 import { useEffect, useState } from "react";
 import { IChartData } from "./models/IChartData";
 import { serialiseCandles } from "./utils/graph";
@@ -42,7 +40,9 @@ function DrawUi() {
     useEffect(() => {
         const fetch = async () => {
             const data = await moexApiInstance.getSecuritiesInfo({
-                ...SecuritiesInfoRequest,
+                engines: "stock",
+                markets: "shares",
+                boards: "TQBR",
                 ticker: "SBER",
             });
 
@@ -50,11 +50,6 @@ function DrawUi() {
 
             setGraphData(serialiseCandles(candleData.data));
             setIsLoaded(true);
-
-            if (data) {
-                //console.log(data);
-                // setSecuries(data.securities[0]);
-            }
         };
         fetch();
     }, []);
@@ -84,7 +79,10 @@ function DrawUi() {
             </Stack> */}
             <Box sx={{ m: 10 }}>
                 {isLoaded ? (
-                    <Chart data={graphData}></Chart>
+                    <>
+                        <Chart data={graphData}></Chart>
+                        {/* <ChartCandles data={graphData}></ChartCandles> */}
+                    </>
                 ) : (
                     <Typography variant="h4">Loading...</Typography>
                 )}
@@ -117,30 +115,6 @@ function DrawUi() {
                         selected={interval === 60}
                     >
                         <Typography>Час</Typography>
-                    </ToggleButton>
-                    ,
-                    <ToggleButton
-                        value={1440}
-                        key={1440}
-                        selected={interval === 1440}
-                    >
-                        <Typography>День</Typography>
-                    </ToggleButton>
-                    ,
-                    <ToggleButton
-                        value={10_080}
-                        key={10_080}
-                        selected={interval === 10_080}
-                    >
-                        <Typography>Неделя</Typography>
-                    </ToggleButton>
-                    ,
-                    <ToggleButton
-                        value={40_320}
-                        key={40_320}
-                        selected={interval === 40_320}
-                    >
-                        <Typography>Неделя</Typography>
                     </ToggleButton>
                 </ToggleButtonGroup>
             </Box>

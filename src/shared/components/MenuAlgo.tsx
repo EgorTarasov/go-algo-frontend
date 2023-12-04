@@ -40,7 +40,6 @@ export default function MenuAlgo({ isStatic = false }) {
         <>
             <div style={{
                 marginTop: '-70px',
-                marginLeft: '8px',
                 width: '300px',
                 position: 'absolute'
             }}>

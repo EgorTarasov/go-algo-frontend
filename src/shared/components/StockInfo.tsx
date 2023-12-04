@@ -8,14 +8,27 @@ export interface StockCardProps {
     stockPrice: number;
     changePercent: number; // изменение цены в процентах
     change: number;
+    volume: number;
+    cap: number;
+    low: number;
+    high: number;
     // data: DataPoint[];
 }
+
+function formatNumber(price: number) {
+    return price.toLocaleString('ru-RU');
+}
+
 const StockInfo: React.FC<StockCardProps> = ({
     shortname,
     stockID,
     stockPrice,
     changePercent,
     change,
+    volume,
+    cap,
+    low,
+    high,
     // data,
 }: StockCardProps) => {
     return (
@@ -49,14 +62,38 @@ const StockInfo: React.FC<StockCardProps> = ({
                         )}
                         {change > 0 ? (
                             <TypographyMain sx={{ color: 'green', fontSize: '25px' }} >
-                                {change}
+                                {change} RUB
                             </TypographyMain>
                         ) : (
                             <TypographyMain sx={{ color: 'primary.main', fontSize: '25px' }}>
-                                {change}
+                                {change} RUB
                             </TypographyMain>
                         )}
                     </Box>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                    <Box>
+                        <TypographyMain>Объем торгов за день</TypographyMain>
+                        <TypographyMain sx={{ fontSize: '25px' }}>
+                            {formatNumber(volume)} RUB
+                        </TypographyMain>
+                    </Box>
+                    <Box>
+                        <TypographyMain>Капитализация</TypographyMain>
+                        <TypographyMain sx={{ fontSize: '25px' }}>
+                            {formatNumber(cap)} RUB
+                        </TypographyMain>
+                    </Box>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                    <TypographyMain sx={{alignSelf: 'center'}}>Диапазон цен</TypographyMain>
+                    <TypographyMain sx={{ fontSize: '25px', mr: 0 }}>
+                        {formatNumber(low)} RUB
+                    </TypographyMain>
+                    <span style={{alignSelf: 'center'}}>—</span>
+                    <TypographyMain sx={{ fontSize: '25px' }}>
+                        {formatNumber(high)} RUB
+                    </TypographyMain>
                 </Box>
             </Box>
 

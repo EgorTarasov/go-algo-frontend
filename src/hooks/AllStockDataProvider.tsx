@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import moexApiInstance, { SecuritiesInfoRequest } from '../services/apiMoex';
+import moexApiInstance from '../services/apiMoex';
 import { IMarketdatum } from '../models/IMarketdatum';
 import { ISecurity } from '../models/ISecurity';
 
@@ -19,7 +19,9 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const fetch = async () => {
       const data = await moexApiInstance.getSecuritiesInfo({
-        ...SecuritiesInfoRequest,
+        engines: "stock",
+        markets: "shares",
+        boards: "TQBR",
         ticker: "",
       });
       if (data[1]?.marketdata && data[1]?.securities) {
@@ -31,20 +33,24 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
           return map;
         }, {});
 
-        const stocks = marketdata.map((datum: IMarketdatum) => {
-          const security = securitiesMap[datum.SECID];
-          return {
-            ...datum,
-            SHORTNAME: security?.SHORTNAME,
-          };
-        });
+        const stocks = marketdata.reduce((arr: IMarketdatum[], datum: IMarketdatum) => {
+          if (datum['LAST'] !== null) {
+            const security = securitiesMap[datum.SECID];
+            arr.push({
+              ...datum,
+              SHORTNAME: security?.SHORTNAME,
+            });
+          }
+          return arr;
+        }, []);
         setStocks(stocks);
       }
     };
     fetch();
-    const intervalId = setInterval(fetch, 5000); 
+    const intervalId = setInterval(fetch, 5000);
     return () => clearInterval(intervalId);
-}, []);
+  }, []);
+
 
 
   const value = { stocks, setStocks, currentStock, setCurrentStock };

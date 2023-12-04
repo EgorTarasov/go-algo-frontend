@@ -5,6 +5,16 @@ html body {
     box-sizing: border-box;
 }
 
+#root {
+    margin: 0 auto;
+}
+
+.container-main {
+    margin: 0 auto;
+    max-width: 1700px;
+    padding: 0 8px;
+}
+
 .textfield {
     width: 300px;
 }

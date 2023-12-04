@@ -5,7 +5,7 @@ function DashboardAlgo() {
 
     return (
         <>
-            <Box  sx={{display: 'flex'}} >
+            <Box  sx={{display: 'flex'}} className='container-main'>
                 <MenuAlgo isStatic={false}/>
                 <Box sx={{ml: '310px'}}>
                     CreateAlgo

@@ -4,7 +4,6 @@ import {
     IChartApi,
     DeepPartial,
     LayoutOptions,
-    
 } from "lightweight-charts";
 import { useEffect, useRef, RefObject } from "react";
 import { IChartData } from "../../models/IChartData";
@@ -22,73 +21,66 @@ interface ChartProps {
     colors?: ChartColors;
 }
 
-export const ChartComponent: React.FC<ChartProps> = (props) => {
+const defaultColors = {
+    backgroundColor: "white",
+    lineColor: "#2962FF",
+    textColor: "black",
+    areaTopColor: "#2962FF",
+    areaBottomColor: "rgba(41, 98, 255, 0.28)",
+};
+
+const configureChart = (chart: IChartApi, colors: ChartColors, data: IChartData[]) => {
     const {
-        data,
-        colors: {
-            backgroundColor = "white",
-            lineColor = "#2962FF",
-            textColor = "black",
-            areaTopColor = "#2962FF",
-            areaBottomColor = "rgba(41, 98, 255, 0.28)",
-        } = {},
-    } = props;
+        backgroundColor,
+        lineColor,
+        textColor,
+        areaTopColor,
+        areaBottomColor,
+    } = colors;
 
-    const chartContainerRef: RefObject<HTMLDivElement> = useRef(null);
+    const myPriceFormatter = Intl.NumberFormat("ru", {
+        style: "currency",
+        currency: "RUB", 
+    }).format;
 
-    useEffect(() => {
-        const handleResize = () => {
-            if (chartContainerRef.current) {
-                chart.applyOptions({
-                    width: chartContainerRef.current.clientWidth,
-                });
-            }
-        };
-
-        const chart: IChartApi = createChart(chartContainerRef.current!, {
-            layout: {
-                background: { type: ColorType.Solid, color: backgroundColor },
-                textColor,
-            } as DeepPartial<LayoutOptions>,
-            width: chartContainerRef.current!.clientWidth,
-            height: 300,
+    const myTimeFormatter = (time: number) => {
+        return new Date(time).toLocaleString("ru", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            timeZone: "UTC"
         });
-        chart.timeScale().applyOptions({
-            timeVisible: true,
-            secondsVisible: false,
-            ticksVisible: true,
+    };
+
+    const myTickMarkFormatter = (time: number) => {
+        return new Date(time).toLocaleString("ru", {
+            hour: "numeric",
+            minute: "numeric",
+            timeZone: "UTC"
         });
+    };
 
-        const myPriceFormatter = Intl.NumberFormat("ru", {
-            style: "currency",
-            currency: "RUB", // Currency for data points
-        }).format;
-        chart.applyOptions({
-            localization: {
-                locale: "ru",
-
-                priceFormatter: myPriceFormatter,
-
-                timeFormatter: (time: number) => {
-                    return new Date(time).toUTCString().slice(16);
-                },
+    chart.applyOptions({
+        layout: {
+            background: { type: ColorType.Solid, color: backgroundColor },
+            textColor,
+        } as DeepPartial<LayoutOptions>,
+        overlayPriceScales: {
+            scaleMargins: {
+                top: 0.3,
+                bottom: 0.25,
             },
-
-            timeScale: {
-                tickMarkFormatter: (time: number) => {
-                    return new Date(time).toUTCString().slice(0, 16);
-                },
-            },
-            overlayPriceScales: {
-                scaleMargins: {
-                    top: 0.3,
-                    bottom: 0.25,
-                },
-                borderVisible: false,
-            },
-        });
-
-        chart.timeScale().applyOptions({
+            borderVisible: false,
+        },
+        localization: {
+            locale: "ru",
+            priceFormatter: myPriceFormatter,
+            timeFormatter: myTimeFormatter,
+        },
+        timeScale: {
+            tickMarkFormatter: myTickMarkFormatter,
             timeVisible: true,
             secondsVisible: false,
             ticksVisible: true,
@@ -97,36 +89,39 @@ export const ChartComponent: React.FC<ChartProps> = (props) => {
             barSpacing: 50,
             lockVisibleTimeRangeOnResize: true,
             borderColor: "#D1D4DC",
+        },
+    });
+
+    const mainSeries = chart.addCandlestickSeries();
+    mainSeries.setData(data as any);
+};
+
+const handleResize = (chart: IChartApi, chartContainerRef: RefObject<HTMLDivElement>) => {
+    if (chartContainerRef.current) {
+        chart.applyOptions({
+            width: chartContainerRef.current.clientWidth,
         });
+    }
+};
 
-        // const newSeries: ISeriesApi<"Area"> = chart.addAreaSeries({
-        //     lineColor,
-        //     topColor: areaTopColor,
-        //     bottomColor: areaBottomColor,
-        // });
-        const mainSeries = chart.addCandlestickSeries();
+export const ChartComponent: React.FC<ChartProps> = ({ data, colors = defaultColors }) => {
+    const chartContainerRef: RefObject<HTMLDivElement> = useRef(null);
 
-        mainSeries.setData(data);
+    useEffect(() => {
+        const chart: IChartApi = createChart(chartContainerRef.current!, {
+            width: chartContainerRef.current!.clientWidth,
+            height: 400,
+        });
+        configureChart(chart, colors, data);
 
-        window.addEventListener("resize", handleResize);
-
+        window.addEventListener("resize", () => handleResize(chart, chartContainerRef));
         return () => {
-            window.removeEventListener("resize", handleResize);
-
+            window.removeEventListener("resize", () => handleResize(chart, chartContainerRef));
             chart.remove();
         };
-    }, [
-        data,
-        backgroundColor,
-        lineColor,
-        textColor,
-        areaTopColor,
-        areaBottomColor,
-    ]);
+    }, [data, colors]);
 
     return <div ref={chartContainerRef} />;
 };
 
-export default function Chart(props: ChartProps) {
-    return <ChartComponent {...props}></ChartComponent>;
-}
+export default ChartComponent;
