@@ -1,17 +1,25 @@
 import { Box } from "@mui/material";
 import { TypographyMain } from "../ui/Typography";
 import MenuButton from "../ui/MenuButton";
+import Button from '../ui/Button';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useState } from 'react';
-import { useLocation , useNavigate} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import home_icon from '../../assets/home_icon.svg';
 import create_algorithm from '../../assets/create_algorithm.svg';
+import my_algorithms from '../../assets/my_algorithms.svg';
+import profile_icon from '../../assets/profile_icon.svg';
+import icon_documentation from '../../assets/icon-documentation.png';
+
+
+
 
 export default function MenuAlgo({ isStatic = false }) {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(!isStatic);
     const location = useLocation();
-    const currentPath = location.pathname.split('/')[1]; 
+    const currentPath = location.pathname.split('/')[1];
+
 
     const defaultStyle = {
         transition: `all 300ms ease-in-out`,
@@ -52,10 +60,31 @@ export default function MenuAlgo({ isStatic = false }) {
                         ...defaultStyle,
                         ...transitionStyles[isOpen ? 'entered' : 'exited']
                     }}>
-                        <Box sx={{height: '70vh'}}>
-                            <MenuButton active={currentPath === 'home'} onClick={() => {navigate('/home') }} sx={{ width: '100%', mt: 3 }} iconSrc={home_icon}>Дашборд</MenuButton>
-                            <MenuButton active={currentPath === 'createAlgorithm'} onClick={() => { navigate('/createAlgorithm')}} sx={{ width: '100%' }} iconSrc={create_algorithm}>Создать алгоритм</MenuButton>
+                        <Box sx={{ height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <Box >
+                                <MenuButton active={currentPath === 'home'} onClick={() => { navigate('/home') }} sx={{ width: '100%', mt: 3 }} iconSrc={home_icon}>Дашборд</MenuButton>
+                                <MenuButton active={currentPath === 'createAlgorithm'} onClick={() => { navigate('/createAlgorithm') }} sx={{ width: '100%' }} iconSrc={create_algorithm}>Создать алгоритм</MenuButton>
+                                <TypographyMain sx={{ mt: 4, ml: 2 }}>Аккаунт</TypographyMain>
+                                <MenuButton active={currentPath === 'profile'} onClick={() => { navigate('/profile') }} sx={{ width: '100%' }} iconSrc={profile_icon}>Профиль</MenuButton>
+                                <MenuButton active={currentPath === 'myAlgorithms'} onClick={() => { navigate('/myAlgorithms') }} sx={{ width: '100%' }} iconSrc={my_algorithms}>Мои алгоритмы</MenuButton>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                                <img src={icon_documentation} width="90%" />
+                                <TypographyMain sx={{ mr: 0, mt: -4, textAlign: 'center' }}>На основе данных <br></br>ALGOPACK</TypographyMain>
+                                <Button onClick={() => { }} sx={{
+                                    width: '100%',
+                                    backgroundColor: 'primary.main',
+                                    color: 'secondary.main',
+                                    fontFamily: 'FavoritC',
+                                    textTransform: 'uppercase',
+                                    '&:hover': {
+                                        backgroundColor: 'secondary.main',
+                                        color: 'white',
+                                    },
+                                }}>ALGOPACK</Button>
+                            </Box>
                         </Box>
+
                     </div>
                 </Box>
             </div>
