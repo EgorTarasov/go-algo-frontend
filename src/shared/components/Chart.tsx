@@ -102,8 +102,8 @@ export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors
 
     let chart: IChartApi | null = null;
     let mainSeries: ISeriesApi<'Candlestick'> | null = null;
-    useEffect(() => {
 
+    useEffect(() => {
         const fetchAndUpdate = async () => {
             const candleData = (
                 await moexApiInstance.getCandles({
@@ -118,21 +118,18 @@ export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors
             ).candles[0];
             const newData = serialiseCandles(candleData.data);
 
-            if (chart) {
-                console.log('here')
-                chart.remove();
-                chart = null;
-                mainSeries = null;
+            if (!chart) {
+                chart = createChart(chartContainerRef.current!, {
+                    width: chartContainerRef.current!.clientWidth,
+                    height: 400,
+                });
+                configureChart(chart, colors);
+                mainSeries = chart.addCandlestickSeries();
+            }
+            if (mainSeries) {
+                mainSeries.setData(newData as any);
             }
             
-   
-            chart = createChart(chartContainerRef.current!, {
-                width: chartContainerRef.current!.clientWidth,
-                height: 400,
-            });
-            configureChart(chart, colors);
-            mainSeries = chart.addCandlestickSeries();
-            mainSeries.setData(newData as any);
         };
 
         fetchAndUpdate();
@@ -147,6 +144,7 @@ export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors
             }
         };
     }, [secid, myInterval, colors]);
+
 
     return <div ref={chartContainerRef} />;
 };
