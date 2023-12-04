@@ -9,7 +9,6 @@ interface StyledTypographyProps {
 export function TypographyHeader({ children, sx }: StyledTypographyProps) {
     return (
         <Typography 
-            variant="h2"
             sx={{
                 textAlign: 'left',
                 mr: 2,
@@ -30,7 +29,6 @@ export function TypographyHeader({ children, sx }: StyledTypographyProps) {
 export function TypographyMain({ children , sx}: StyledTypographyProps) {
     return (
         <Typography 
-            variant="h2"
             sx={{
                 textAlign: 'left',
                 mr: 2,

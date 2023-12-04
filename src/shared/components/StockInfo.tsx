@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { TypographyMain, TypographyHeader } from "../ui/Typography";
+import Button from '../ui/Button';
 
 export interface StockCardProps {
     shortname: string;
@@ -40,8 +41,9 @@ const StockInfo: React.FC<StockCardProps> = ({
                     sx={{ mb: 2 }}
                 >
                     <TypographyMain sx={{ fontSize: '50px' }}>{shortname}</TypographyMain>
-                    <Box sx={{ backgroundColor: 'white', borderRadius: '13.5px', width: '150px', boxShadow: '0px 0px 25px rgba(0, 0, 0, 0.25)' }}>
-                        <TypographyMain sx={{ width: '100%', fontSize: '30px', p: 2, m: '0 auto' }}>{stockID}</TypographyMain>
+                    <Box sx={{ backgroundColor: 'white', borderRadius: '13.5px', width: '150px', boxShadow: '0px 0px 25px rgba(0, 0, 0, 0.25)', 
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <TypographyMain sx={{fontSize: '30px', p: 0, m: 0,  textAlign: 'center' }}>{stockID}</TypographyMain>
                     </Box>
 
                 </Box>
@@ -95,6 +97,7 @@ const StockInfo: React.FC<StockCardProps> = ({
                         {formatNumber(high)} RUB
                     </TypographyMain>
                 </Box>
+                <Button onClick={() => {}}>СОЗДАТЬ АЛГОРИТМ</Button>
             </Box>
 
         </Box>
