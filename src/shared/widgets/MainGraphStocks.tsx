@@ -15,7 +15,7 @@ function MainGraphStocks() {
     if (!stockContext) throw new Error("AllStockProvider is missing");
     const { stocks, setCurrentStock, currentStock } = stockContext;
 
-    const [startIndex, setStartIndex] = useState(0); // Add this line
+    const [startIndex, setStartIndex] = useState(0); 
 
     useEffect(() => {
         if (stocks.length > 0) {
@@ -29,11 +29,11 @@ function MainGraphStocks() {
         }
     }, [stocks, setCurrentStock, currentStock]);
 
-    const handleNext = () => { // Add this function
+    const handleNext = () => { 
         setStartIndex(prevIndex => prevIndex + 4 < stocks.length ? prevIndex + 4 : prevIndex);
     }
 
-    const handleBack = () => { // Add this function
+    const handleBack = () => {
         setStartIndex(prevIndex => prevIndex - 4 >= 0 ? prevIndex - 4 : prevIndex);
     }
 
