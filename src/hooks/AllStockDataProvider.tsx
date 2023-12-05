@@ -35,13 +35,11 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
         }, {});
 
         const stocks = marketdata.reduce((arr: IMarketdatum[], datum: IMarketdatum) => {
-          // if (datum['LAST'] !== null) {
-            const security = securitiesMap[datum.SECID];
-            arr.push({
-              ...datum,
-              SHORTNAME: security?.SHORTNAME,
-            });
-          // }
+          const security = securitiesMap[datum.SECID];
+          arr.push({
+            ...datum,
+            SHORTNAME: security?.SHORTNAME,
+          });
           return arr;
         }, []);
         setStocks(stocks);

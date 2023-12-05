@@ -11,7 +11,6 @@ import MainGraph from "./MainGraph";
 
 function MainGraphStocks() {
     const stockContext = useAllStock();
-
     if (!stockContext) throw new Error("AllStockProvider is missing");
     const { stocks, setCurrentStock, currentStock } = stockContext;
 
@@ -19,7 +18,6 @@ function MainGraphStocks() {
 
     useEffect(() => {
         if (stocks.length > 0) {
-            console.log(stocks)
             const existingCurrentStock = stocks.find(stock => stock.SECID === currentStock?.SECID);
 
             if (existingCurrentStock) {

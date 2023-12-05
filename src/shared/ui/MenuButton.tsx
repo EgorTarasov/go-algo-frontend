@@ -5,7 +5,7 @@ interface StyledButtonProps {
     onClick: (event: any) => void;
     sx?: any;
     children: ReactNode;
-    iconSrc: string;
+    iconSrc?: string;
     active: boolean
 }
 
@@ -31,7 +31,7 @@ function MenuButton({ onClick, sx, children, iconSrc, active }: StyledButtonProp
                 paddingLeft: '15px',
                 ...sx 
             }}
-            startIcon={<img src={iconSrc} alt="icon" height="18px"/>}
+            startIcon={iconSrc ? <img src={iconSrc} alt="icon" height="18px"/> : ''}
         >
             {children}
         </Button>
