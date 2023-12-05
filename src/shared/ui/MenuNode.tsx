@@ -1,17 +1,12 @@
 import { TypographyMain } from "./Typography";
+import { IMenuNode } from "../../models/IMenuNode";
 
-interface MenuNodeProps {
-    nodeGroup: string; //node group to add color label
-    title: string; //what is written on node
-}
-
-function MenuNode({ nodeGroup, title }: MenuNodeProps) {
+function MenuNode({ nodeGroup, title, isParent }: IMenuNode) {
 
     function onDragStart(
         event: React.DragEvent<any>,
-        data: MenuNodeProps
+        data: IMenuNode
     ): void {
-        //start drag event
         var crt = event.currentTarget.cloneNode(true);
         crt.style.position = "absolute";
         crt.style.top = "-500px";
@@ -32,7 +27,8 @@ function MenuNode({ nodeGroup, title }: MenuNodeProps) {
                     onDragStart(event,
                         {
                             nodeGroup: nodeGroup,
-                            title: title
+                            title: title,
+                            isParent: isParent
                         }
                     )
                 }

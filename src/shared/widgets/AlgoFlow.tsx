@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import ReactFlow, {
     Node,
     addEdge,
@@ -10,11 +10,13 @@ import ReactFlow, {
     OnEdgesChange,
     OnConnect,
     applyEdgeChanges,
-    Panel
+    Panel,
+    ReactFlowInstance
 } from "reactflow";
 import 'reactflow/dist/style.css';
 
 import FlowSideBar from '../components/FlowSideBar';
+import { IMenuNode } from '../../models/IMenuNode';
 
 const initialEdges = [{ id: 'b-c', source: 'B', target: 'C' }];
 
@@ -64,6 +66,9 @@ const initialNodes: Node[] = [
 function AlgoFlow() {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
+    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+
 
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -78,23 +83,99 @@ function AlgoFlow() {
         [setEdges],
     );
 
+    function getNodeId(nodeType: string) {
+        return nodeType + "-" + Math.floor(Math.random() * 1000);
+    }
+
+    const onDrop = useCallback(
+        (event: React.DragEvent) => {
+            event.preventDefault();
+            console.log('here')
+            if (event.dataTransfer.types.some((types) => types === "nodedata")) {
+                // takeSnapshot();
+
+                // Get the current bounds of the ReactFlow wrapper element
+                const reactflowBounds =
+                    reactFlowWrapper.current?.getBoundingClientRect();
+
+                // Extract the data from the drag event and parse it as a JSON object
+                let data: IMenuNode = JSON.parse(
+                    event.dataTransfer.getData("nodedata")
+                );
+
+                // Calculate the position where the node should be created
+                const position = reactFlowInstance!.project({
+                    x: event.clientX - reactflowBounds!.left,
+                    y: event.clientY - reactflowBounds!.top,
+                });
+
+                // Generate a unique node ID
+                let { title } = data;
+                let newId = getNodeId(title);
+                let newNode: Node;
+
+                if (!data.isParent) {
+                    // Create a new node object
+                    console.log('newnode')
+                    newNode = {
+                        id: newId,
+                        type: "genericNode",
+                        position,
+                        data: {
+                            ...data,
+                            id: newId,
+                            label: data.title
+                        },
+                    };
+                } else {
+                    // Create a new node object
+                    newNode = {
+                        id: newId,
+                        type: "genericNode",
+                        position,
+                        data: {
+                            ...data,
+                            id: newId,
+                            label: data.title
+                        },
+                    };
+
+                    // Add the new node to the list of nodes in state
+                }
+                setNodes((nds) => nds.concat(newNode));
+            }
+        },
+        // Specify dependencies for useCallback
+        [getNodeId, reactFlowInstance, setNodes]
+    );
+
+    const onDragOver = (event: React.DragEvent) => {
+        event.preventDefault();
+    };
+
+
     return (
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            fitView
-            style={rfStyle}
-            attributionPosition="top-right"
-        >
-            <Background />
-            <Panel position="top-left" style={{height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0}}>
-                <FlowSideBar type='ml'/>
-            </Panel>
-            <Controls position='bottom-right'/>
-        </ReactFlow>
+        <div ref={reactFlowWrapper} style={{width: '100%', height: 'calc(100vh - 200px)'}}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onInit={setReactFlowInstance}
+                fitView
+                style={rfStyle}
+                proOptions={{ hideAttribution: true }}
+            >
+                <Background />
+                <Panel position="top-left" style={{ height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0 }}>
+                    <FlowSideBar type='ml' />
+                </Panel>
+                <Controls position='bottom-right' />
+            </ReactFlow>
+        </div>
     );
 }
 

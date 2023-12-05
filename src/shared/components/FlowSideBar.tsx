@@ -22,7 +22,8 @@ function FlowSideBar({ type }: FlowSideBarProps) {
                                 <>
                                     <TypographyMain>{MlNodeSectionNames[sectionName]}</TypographyMain>
                                     {MlNodeSectionNodes[sectionName].map((nodeName) => (
-                                        <MenuNode nodeGroup={sectionName} title={nodeName} />
+                                        <MenuNode nodeGroup={sectionName} title={nodeName} 
+                                        isParent={sectionName === 'models'}/>
                                     ))}
                                 </>
                             ))}

@@ -1,28 +1,28 @@
 export const MlNodeSectionNames : IMlNodeSectionNames= {
     'models' : 'Модели',
     'operators' : 'Операторы',
-    'delay' : 'Задержка',
+    'delay' : 'Сдвиг',
     'mean' : 'Скользящие среднии',
     'candles' : 'Доля красных и зеленых свечей',
-    'rsiSection' : 'Индекс относительной силы',
-    'macdSection' : 'Расхождение скользящих средних',
-    'bollingerSection' : 'Линии Боллинджера',
+    'RSISection' : 'Индекс относительной силы',
+    'MACDSection' : 'Расхождение скользящих средних',
+    'BollingerSection' : 'Линии Боллинджера',
     'timeFeatures' : 'Временные признаки',
 };
 
 export const MlNodeTip : IMlNodeTip = {
     'Catboost' : 'Модель Catboost',
     'LightGBM' : 'Модель LightGBM',
-    'candleSteps' : 'Интервал свечей',
+    'CandleSteps' : 'Интервал свечей',
     'lags' : 'Сдвиг',
-    'cma': 'Кумулятивное скользящее среднее',
-    'sma': 'Простое скользящее среднее',
-    'ema': 'Экспоненциальное скользящее среднее',
+    'CMA': 'Кумулятивное скользящее среднее',
+    'SMA': 'Простое скользящее среднее',
+    'EMA': 'Экспоненциальное скользящее среднее',
     'Green candles ratio': 'Доля зеленых свечей',
     'Red candles ratio': 'Доля красных свечей',
-    'rsi': 'Индекс относительной силы',
-    'macd': 'Расхождение скользящих средних',
-    'bollinger': 'Линии Боллинджера',
+    'RSI': 'Индекс относительной силы',
+    'MACD': 'Расхождение скользящих средних',
+    'Bollinger': 'Линии Боллинджера',
     'month' : 'Месяц', 
     'week' : 'Неделя', 
     'day_of_month' : 'Число', 
@@ -33,13 +33,13 @@ export const MlNodeTip : IMlNodeTip = {
 
 export const MlNodeSectionNodes : IMlNodeSectionNodes = {
     'models' : ['Catboost', 'LightGBM'],
-    'operators' : ['candleSteps'],
+    'operators' : ['CandleSteps'],
     'delay' : ['Lags'],
-    'mean' : ['cma', 'sma', 'ema'], 
+    'mean' : ['CMA', 'SMA', 'EMA'], 
     'candles' : ['Green candles ratio', 'Red candles ratio'],
-    'rsiSection' : ['rsi'],
-    'macdSection' : ['macd'],
-    'bollingerSection' : ['bollinger'],
+    'RSISection' : ['RSI'],
+    'MACDSection' : ['MACD'],
+    'BollingerSection' : ['Bollinger'],
     'timeFeatures' : ['month', 'week', 'day_of_month', 'day_of_week', 'hour', 'minute']
 }
 
@@ -50,9 +50,9 @@ export interface IMlNodeSectionNames {
     delay: string;
     mean: string;
     candles: string;
-    rsiSection: string;
-    macdSection: string;
-    bollingerSection: string;
+    RSISection: string;
+    MACDSection: string;
+    BollingerSection: string;
     timeFeatures: string;
 }
 
@@ -60,16 +60,16 @@ export interface IMlNodeTip {
     [key: string]: string;
     Catboost: string;
     LightGBM: string;
-    candleSteps: string;
+    CandleSteps: string;
     lags: string;
-    cma: string;
-    sma: string;
-    ema: string;
+    CMA: string;
+    SMA: string;
+    EMA: string;
     'Green candles ratio': string;
     'Red candles ratio': string;
-    rsi: string;
-    macd: string;
-    bollinger: string;
+    RSI: string;
+    MACD: string;
+    Bollinger: string;
     month: string;
     week: string;
     day_of_month: string;
@@ -85,8 +85,8 @@ export interface IMlNodeSectionNodes {
     delay: string[];
     mean: string[];
     candles: string[];
-    rsiSection: string[];
-    macdSection: string[];
-    bollingerSection: string[];
+    RSISection: string[];
+    MACDSection: string[];
+    BollingerSection: string[];
     timeFeatures: string[];
 }
