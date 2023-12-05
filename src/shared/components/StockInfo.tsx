@@ -51,7 +51,9 @@ const StockInfo: React.FC<StockCardProps> = ({
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                     <Box display="flex">
-                        <TypographyHeader sx={{ mr: 0.5, fontSize: '25px' }}>{stockPrice}</TypographyHeader>
+                        {(stockPrice !== null) ? (
+                            <TypographyHeader sx={{ mr: 0.5 }}>{stockPrice}</TypographyHeader>) :
+                            (<TypographyHeader sx={{ mr: 0.5 }}>-</TypographyHeader>)}
                         <TypographyMain sx={{ textAlign: 'center' }}>RUB</TypographyMain>
                     </Box>
                     <Box sx={{ display: 'flex' }}>
@@ -59,8 +61,12 @@ const StockInfo: React.FC<StockCardProps> = ({
                             <TypographyMain sx={{ color: 'green', fontSize: '25px' }} >
                                 {changePercent}%
                             </TypographyMain>
-                        ) : (
+                        ) : changePercent < 0 ? (
                             <TypographyMain sx={{ color: 'primary.main', fontSize: '25px' }}>
+                                {changePercent}%
+                            </TypographyMain>
+                        ) : (
+                            <TypographyMain sx={{ color: 'secondary.main', fontSize: '25px' }}>
                                 {changePercent}%
                             </TypographyMain>
                         )}
@@ -68,22 +74,26 @@ const StockInfo: React.FC<StockCardProps> = ({
                             <TypographyMain sx={{ color: 'green', fontSize: '25px' }} >
                                 {change} RUB
                             </TypographyMain>
-                        ) : (
+                        ) : changePercent < 0 ? (
                             <TypographyMain sx={{ color: 'primary.main', fontSize: '25px' }}>
                                 {change} RUB
+                            </TypographyMain>
+                        ) : (
+                            <TypographyMain sx={{ color: 'secondary.main', fontSize: '25px' }}>
+                                - RUB
                             </TypographyMain>
                         )}
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                    {volume &&
+                    {(volume !== null) &&
                         <Box>
                             <TypographyMain>Объем торгов за день</TypographyMain>
                             <TypographyMain sx={{ fontSize: '25px' }}>
                                 {formatNumber(volume)} RUB
                             </TypographyMain>
                         </Box>}
-                    {cap &&
+                    {(cap !== null) &&
                         <Box>
                             <TypographyMain>Капитализация</TypographyMain>
                             <TypographyMain sx={{ fontSize: '25px' }}>

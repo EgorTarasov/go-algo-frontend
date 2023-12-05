@@ -19,6 +19,7 @@ function MainGraphStocks() {
 
     useEffect(() => {
         if (stocks.length > 0) {
+            console.log(stocks)
             const existingCurrentStock = stocks.find(stock => stock.SECID === currentStock?.SECID);
 
             if (existingCurrentStock) {

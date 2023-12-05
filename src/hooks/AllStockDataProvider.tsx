@@ -26,6 +26,7 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
       });
       if (data[1]?.marketdata && data[1]?.securities) {
         const marketdata = data[1].marketdata;
+
         const securities = data[1].securities;
 
         const securitiesMap = securities.reduce((map: { [key: string]: ISecurity }, security: ISecurity) => {
@@ -34,13 +35,13 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
         }, {});
 
         const stocks = marketdata.reduce((arr: IMarketdatum[], datum: IMarketdatum) => {
-          if (datum['LAST'] !== null) {
+          // if (datum['LAST'] !== null) {
             const security = securitiesMap[datum.SECID];
             arr.push({
               ...datum,
               SHORTNAME: security?.SHORTNAME,
             });
-          }
+          // }
           return arr;
         }, []);
         setStocks(stocks);

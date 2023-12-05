@@ -94,6 +94,13 @@ const configureChart = (chart: IChartApi, colors: ChartColors) => {
     });
 };
 
+const handleResize = (chart: IChartApi, chartContainerRef: RefObject<HTMLDivElement>) => {
+    if (chartContainerRef.current) {
+        chart.applyOptions({
+            width: chartContainerRef.current.clientWidth,
+        });
+    }
+};
 
 export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors = defaultColors }) => {
 
@@ -133,13 +140,16 @@ export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors
         };
 
         fetchAndUpdate();
-        intervalRef.current = setInterval(fetchAndUpdate, myInterval * 60 * 1000);
+        if(myInterval === 1) intervalRef.current = setInterval(fetchAndUpdate, 5000);
+        else intervalRef.current = setInterval(fetchAndUpdate, (myInterval * 60 * 1000) - 10000);
 
+        window.addEventListener("resize", () => handleResize(chart!, chartContainerRef));
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
             }
             if (chart) {
+                window.removeEventListener("resize", () => handleResize(chart!, chartContainerRef));
                 chart.remove();
             }
         };

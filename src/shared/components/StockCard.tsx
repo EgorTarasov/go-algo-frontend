@@ -22,14 +22,14 @@ const StockCard: React.FC<StockCardProps> = ({
     onClick,
 }: StockCardProps) => {
     return (
-        <Box 
-            sx={{ 
-                width: '300px', 
+        <Box
+            sx={{
+                width: '300px',
                 height: '172px',
-                backgroundColor: 'secondary.light', 
+                backgroundColor: 'secondary.light',
                 borderRadius: '13.5px',
-                boxShadow: active ? '0 0 10px #AAB0FF' : 'none', 
-                transition: 'box-shadow 0.3s ease', 
+                boxShadow: active ? '0 0 10px #AAB0FF' : 'none',
+                transition: 'box-shadow 0.3s ease',
                 cursor: 'pointer'
             }}
             onClick={onClick}
@@ -38,17 +38,21 @@ const StockCard: React.FC<StockCardProps> = ({
                 <Box
                     display="flex"
                     justifyContent="space-between"
-                    sx={{ mb: 2 }} 
+                    sx={{ mb: 2 }}
                 >
                     <TypographyMain sx={{ fontSize: '25px' }}>{shortname}</TypographyMain>
                     <Box>
                         <TypographyMain >{stockID}</TypographyMain>
                         {changePercent > 0 ? (
-                            <TypographyMain sx={{ color: 'green' }} >
+                            <TypographyMain sx={{ color: 'green', fontSize: '25px' }} >
+                                {changePercent}%
+                            </TypographyMain>
+                        ) : changePercent < 0 ? (
+                            <TypographyMain sx={{ color: 'primary.main', fontSize: '25px' }}>
                                 {changePercent}%
                             </TypographyMain>
                         ) : (
-                            <TypographyMain sx={{ color: 'primary.main' }}>
+                            <TypographyMain sx={{ color: 'secondary.main', fontSize: '25px' }}>
                                 {changePercent}%
                             </TypographyMain>
                         )}
@@ -56,7 +60,10 @@ const StockCard: React.FC<StockCardProps> = ({
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                     <Box display="flex">
-                        <TypographyHeader sx={{ mr: 0.5 }}>{stockPrice}</TypographyHeader>
+                        {(stockPrice !== null) ? (
+                            <TypographyHeader sx={{ mr: 0.5 }}>{stockPrice}</TypographyHeader>) :
+                            (
+                                <TypographyHeader sx={{ mr: 0.5 }}>-</TypographyHeader>)}
                         <TypographyMain sx={{ textAlign: 'center' }}>RUB</TypographyMain>
                     </Box>
                 </Box>
