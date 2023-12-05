@@ -77,7 +77,7 @@ function LoginPage() {
                     </Box>
                     <Box sx={{
                         position: 'relative',
-                        zIndex: 2,
+                        zIndex: 3,
                         maxWidth: '95%',
                         display: 'flex',
                         justifyContent: 'center',
@@ -90,7 +90,7 @@ function LoginPage() {
                 <Box sx={{ width: '50%' }}>
                     <Box sx={{
                         position: 'relative',
-                        zIndex: 2,
+                        zIndex: 3,
                         display: 'flex',
                         justifyContent: 'center',
                         marginTop: '50px'

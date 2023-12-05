@@ -22,3 +22,7 @@ html body {
 .textfield .MuiOutlinedInput-root {
     border-radius: 8px;
 }
+
+.react-flow {
+    z-index: -1;
+}

@@ -4,6 +4,8 @@ import { useState } from "react";
 import NewAlgoForm from '../../shared/components/newAlgoForm'
 import background_arrow from '../../assets/background_arrow.svg'
 import { AllStockProvider } from "../../hooks/AllStockDataProvider";
+import SideAlgoInfo from "../../shared/widgets/sideAlgoInfo";
+import AlgoFlow from "../../shared/widgets/AlgoFlow";
 
 function DashboardAlgo() {
     const [openFlow, setOpenFlow] = useState(false);
@@ -18,6 +20,17 @@ function DashboardAlgo() {
                     <MenuAlgo isStatic={false} />
                     {openFlow ? (
                         <>
+                            <Box sx={{
+                                display: 'flex', justifyContent: 'space-between',
+                                mt: '80px', width: '100%', height: 'calc(100vh - 200px)',
+                            }}>
+                                <Box sx={{ width: '70%' }}>
+                                    <AlgoFlow />
+                                </Box>
+                                <Box sx={{ width: '30%', ml: 5 }}>
+                                    <SideAlgoInfo />
+                                </Box>
+                            </Box>
                         </>
                     ) : (
                         <Box sx={{

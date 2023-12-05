@@ -16,7 +16,7 @@ export default function Logo() {
                 flexWrap: 'nowrap', 
                 marginTop: 0.5,
                 position: 'relative', 
-                zIndex: 1, 
+                zIndex: 2, 
             }}>
                 <IconButton sx={{ height: 'inherit', flex: '1'}}>
                     <img src={logo_moex} style={{ width: '150px'}} />

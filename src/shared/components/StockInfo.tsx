@@ -13,7 +13,7 @@ export interface StockCardProps {
     cap: number;
     low: number;
     high: number;
-    // data: DataPoint[];
+    button: boolean;
 }
 
 function formatNumber(price: number) {
@@ -30,7 +30,7 @@ const StockInfo: React.FC<StockCardProps> = ({
     cap,
     low,
     high,
-    // data,
+    button
 }: StockCardProps) => {
     return (
         <Box sx={{ width: '100%', backgroundColor: 'secondary.light', borderRadius: '13.5px' }}>
@@ -112,7 +112,10 @@ const StockInfo: React.FC<StockCardProps> = ({
                             {formatNumber(high)} RUB
                         </TypographyMain>
                     </Box>}
-                <Button onClick={() => { }}>СОЗДАТЬ АЛГОРИТМ</Button>
+                {button &&
+                    <>
+                        <Button onClick={() => { }}>СОЗДАТЬ АЛГОРИТМ</Button>
+                    </>}
             </Box>
 
         </Box>
