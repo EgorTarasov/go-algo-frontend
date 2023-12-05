@@ -9,9 +9,12 @@ import ReactFlow, {
     OnNodesChange,
     OnEdgesChange,
     OnConnect,
-    applyEdgeChanges
+    applyEdgeChanges,
+    Panel
 } from "reactflow";
 import 'reactflow/dist/style.css';
+
+import FlowSideBar from '../components/FlowSideBar';
 
 const initialEdges = [{ id: 'b-c', source: 'B', target: 'C' }];
 
@@ -87,7 +90,10 @@ function AlgoFlow() {
             attributionPosition="top-right"
         >
             <Background />
-            <Controls />
+            <Panel position="top-left" style={{height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0}}>
+                <FlowSideBar type='ml'/>
+            </Panel>
+            <Controls position='bottom-right'/>
         </ReactFlow>
     );
 }

@@ -38,7 +38,7 @@ function DashboardAlgo() {
                             backgroundImage: `url(${background_arrow})`,
                             backgroundPosition: 'bottom',
                             backgroundRepeat: 'no-repeat',
-                            backgroundSize: '115vh',
+                            backgroundSize: '105vh',
                         }}>
                             <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <NewAlgoForm updateOpenFlow={updateOpenFlow} />

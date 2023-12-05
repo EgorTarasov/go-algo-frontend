@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import MenuButton from "../ui/MenuButton";
 import Button from "../ui/Button";
 import { IMarketdatum } from "../../models/IMarketdatum";
+import StockCard from "./StockCard";
 
 interface NewAlgoFormProps {
     updateOpenFlow: (newOpenFlow: boolean) => void;
@@ -22,15 +23,19 @@ interface FieldsState {
 function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
     const stockContext = useAllStock();
     if (!stockContext) throw new Error("AllStockProvider is missing");
-    const { stocks, setCurrentStock } = stockContext;
+    const { stocks, setCurrentStock , currentStock} = stockContext;
 
     const [name, setName] = useState('');
-    const [autoValue, setAutoValue] = useState<string | null>('');
+    const [autoValue, setAutoValue] = useState<string | null>(stocks.map(item => `${item.SECID} - ${item.SHORTNAME}`)[0]);
     const [blockType, setBlockType] = useState<'algo' | 'ml'>('algo')
 
     useEffect(() => {
         setCurrentStock(stocks.filter((stock: IMarketdatum) => (stock['SECID'] === autoValue))[0]);
     }, [autoValue])
+
+    useEffect(() => {
+        setCurrentStock(null);
+    }, [])
 
     const [fields, setFields] = useState<FieldsState>({
         stock: {
@@ -82,10 +87,10 @@ function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
                         <Autocomplete
                             value={autoValue}
                             onChange={(_, newValue: string | null) => {
-                                setAutoValue(newValue);
+                                if(newValue) setAutoValue(newValue.split(' - ')[0]);
                             }}
                             id="controllable-states-demo"
-                            options={['SBER', '']}
+                            options={stocks.map(item => `${item.SECID} - ${item.SHORTNAME}`)}
                             sx={{ width: 300 }}
                             renderInput={(params) =>
                                 <TextField
@@ -98,6 +103,16 @@ function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
                                 />
                             }
                         />
+                        {currentStock &&
+                            <StockCard
+                                key={currentStock['SECID']}
+                                stockPrice={currentStock['LAST']}
+                                changePercent={currentStock['LASTTOPREVPRICE']}
+                                shortname={currentStock['SHORTNAME']}
+                                stockID={currentStock['SECID']}
+                                active={currentStock?.SECID === currentStock['SECID']}
+                                onClick={() => {}}
+                            />}
                     </Box>
                     <Box>
                         <div>
@@ -130,7 +145,6 @@ function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
                     }}>Создать алгоритм</Button>
                 </Box>
             </Box>
-            {/* {console.log(stocks.map((el: any) => { el['label'] = el['SECID'] }))} */}
         </>
     );
 }
