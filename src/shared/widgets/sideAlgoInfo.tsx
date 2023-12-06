@@ -7,6 +7,7 @@ function SideAlgoInfo() {
     const stockContext = useAllStock();
     if (!stockContext) throw new Error("AllStockProvider is missing");
     const { currentStock } = stockContext;
+    //todo доставать акцию не их провайдера
 
     return (
         <>

@@ -17,6 +17,8 @@ import 'reactflow/dist/style.css';
 
 import FlowSideBar from '../components/FlowSideBar';
 import { IMenuNode } from '../../models/IMenuNode';
+import CustomNode from './nodes/CustomNode';
+import FeatureNode from './nodes/FeatureNode';
 
 const initialEdges = [{ id: 'b-c', source: 'B', target: 'C' }];
 
@@ -25,6 +27,11 @@ const rfStyle = {
     borderRadius: '20px',
     border: 'solid #AAB0FF 10px',
     zIndex: -1
+};
+
+const nodeTypes = {
+    custom: CustomNode,
+    feature: FeatureNode,
 };
 
 const initialNodes: Node[] = [
@@ -60,10 +67,37 @@ const initialNodes: Node[] = [
         parentNode: 'A',
         extent: 'parent',
     },
+    {
+        id: '4',
+        type: 'custom',
+        position: { x: 100, y: 200 },
+        data: {
+            selects: {
+                'handle-0': 'smoothstep',
+                'handle-1': 'smoothstep',
+            },
+        },
+        parentNode: 'A',
+        extent: 'parent',
+    },
+    {
+        id: '5',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'Lags',
+            params: {
+                'features': ['open', 'close', 'high', 'low', 'value', 'volume', 'target'],
+                'period': ['1', '2', '3', '4', '10', '14', '20', '50', '100']
+            }
+        },
+        // parentNode: 'A',
+        // extent: 'parent',
+    },
 ];
 
 
-function AlgoFlow({type} : {type: 'algo' | 'ml' | undefined}) {
+function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -155,7 +189,7 @@ function AlgoFlow({type} : {type: 'algo' | 'ml' | undefined}) {
 
 
     return (
-        <div ref={reactFlowWrapper} style={{width: '100%', height: 'calc(100vh - 200px)'}}>
+        <div ref={reactFlowWrapper} style={{ width: '100%', height: 'calc(100vh - 200px)' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -168,6 +202,7 @@ function AlgoFlow({type} : {type: 'algo' | 'ml' | undefined}) {
                 fitView
                 style={rfStyle}
                 proOptions={{ hideAttribution: true }}
+                nodeTypes={nodeTypes}
             >
                 <Background />
                 <Panel position="top-left" style={{ height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0 }}>
