@@ -1,14 +1,16 @@
 import React, { memo, ChangeEvent } from 'react';
-import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
+import { NodeToolbar, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
 import { Title } from 'chart.js';
-import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps } from '@mui/material';
+import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
 import Cube from '../../ui/Cube';
 import { TypographyHeader, TypographyMain } from '../../ui/Typography';
 import { styled } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { MlNodeTip } from '../../../constants/nodeData';
 import { MlNodesColors } from '../../../constants/nodeData';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CopyAllIcon from '@mui/icons-material/CopyAll';
 
 
 interface FeatureNodeProps {
@@ -90,10 +92,35 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
     setSelectedDegree(data.params.degree_of_lift)
   }, [])
 
-  const color = MlNodesColors[data.title]
+  const color = MlNodesColors[data.title];
+
+  // const removeElementsAction = useStoreActions((actions) => actions.removeElements);
+  // const addElementsAction = useStoreActions((actions) => actions.addElements);
+
+  // const handleDelete = () => {
+  //   removeElementsAction([{ id }]);
+  // };
+
+  // const handleCopy = () => {
+  //   const newNode = {
+  //     id: '123456', // replace with a unique id
+  //     type: 'featureNode', // replace with the type of your custom node
+  //     position: { x: data.position.x + 20, y: data.position.y }, // shift the new node 20px to the right
+  //     data: { ...data },
+  //   };
+  //   addElementsAction([newNode]);
+  // };
 
   return (
     <>
+      <NodeToolbar isVisible={true}>
+        <IconButton>
+          <DeleteOutlineIcon />
+        </IconButton>
+        <IconButton>
+          <CopyAllIcon />
+        </IconButton>
+      </NodeToolbar>
       <div style={{
         width: '180px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '24.5px', padding: '10px',
         minHeight: '80px'
@@ -144,7 +171,7 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
               <TextField {...params} label="Признаки" InputProps={{ ...params.InputProps, readOnly: true }} />
             )}
           />}
-        {data.title !== 'MACD' && <div style={{ height: '15px' }}></div>}
+        {(data.title !== 'MACD' && data.title !== 'CMA') && <div style={{ height: '15px' }}></div>}
         {MlNodeParams[data.title]?.period && (data.title !== 'MACD') &&
           <StyledAutocomplete
             MyColor={color}
@@ -162,22 +189,24 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
               <TextField {...params} label={(data.title === 'Lags') ? 'Размер сдвига' : 'Количество свечей'} InputProps={{ ...params.InputProps, readOnly: true }} />
             )}
           />}
-        {data.title !== 'MACD' && <div style={{ height: '15px' }}></div>}
         {MlNodeParams[data.title]?.degree_of_lift && (data.title === 'Bollinger') &&
-          <StyledAutocomplete
-            MyColor={color}
-            size="small"
-            color='secondary.dark'
-            options={MlNodeParams[data.title]?.degree_of_lift || []}
-            value={selectedDegree}
-            onChange={(_, newValue) => {
-              setSelectedDegree(newValue as string[]);
-            }}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-              <TextField {...params} label={'Коэффициент отклонения'} InputProps={{ ...params.InputProps, readOnly: true }} />
-            )}
-          />}
-        {data.title !== 'MACD' && <div style={{ height: '15px' }}></div>}
+          <>
+            <div style={{ height: '15px' }}></div>
+            <StyledAutocomplete
+              MyColor={color}
+              size="small"
+              color='secondary.dark'
+              options={MlNodeParams[data.title]?.degree_of_lift || []}
+              value={selectedDegree}
+              onChange={(_, newValue) => {
+                setSelectedDegree(newValue as string[]);
+              }}
+              renderInput={(params: AutocompleteRenderInputParams) => (
+                <TextField {...params} label={'Коэффициент отклонения'} InputProps={{ ...params.InputProps, readOnly: true }} />
+              )}
+            />
+          </>}
+        {(data.title !== 'MACD' && data.title !== 'CMA') && <div style={{ height: '15px' }}></div>}
       </div >
     </>
   );

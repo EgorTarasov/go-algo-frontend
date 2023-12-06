@@ -1,6 +1,5 @@
 export const MlNodeSectionNames : IMlNodeSectionNames= {
     'models' : 'Модели',
-    'operators' : 'Операторы',
     'delay' : 'Сдвиг',
     'mean' : 'Скользящие среднии',
     'candles' : 'Доля красных и зеленых свечей',
@@ -33,7 +32,6 @@ export const MlNodeTip : IMlNodeTip = {
 
 export const MlNodeSectionNodes : IMlNodeSectionNodes = {
     'models' : ['Catboost', 'LightGBM'],
-    'operators' : ['CandleSteps'],
     'delay' : ['Lags'],
     'mean' : ['CMA', 'SMA', 'EMA'], 
     'candles' : ['Green candles ratio', 'Red candles ratio'],
@@ -67,7 +65,6 @@ export const MlNodesColors : IMlNodeTip = {
 export interface IMlNodeSectionNames {
     [key: string]: string;
     models: string;
-    operators: string;
     delay: string;
     mean: string;
     candles: string;
@@ -102,7 +99,6 @@ export interface IMlNodeTip {
 export interface IMlNodeSectionNodes {
     [key: string]: string[];
     models: string[];
-    operators: string[];
     delay: string[];
     mean: string[];
     candles: string[];

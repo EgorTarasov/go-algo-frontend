@@ -19,6 +19,7 @@ import FlowSideBar from '../components/FlowSideBar';
 import { IMenuNode } from '../../models/IMenuNode';
 import CustomNode from './nodes/CustomNode';
 import FeatureNode from './nodes/FeatureNode';
+import { useEffect } from 'react';
 
 const initialEdges = [{ id: 'b-c', source: 'B', target: 'C' }];
 
@@ -35,153 +36,138 @@ const nodeTypes = {
 };
 
 const initialNodes: Node[] = [
-    {
-        id: 'A',
-        type: 'group',
-        data: { label: null },
-        position: { x: 0, y: 0 },
-        style: {
-            width: 170,
-            height: 200,
-        },
-    },
-    {
-        id: 'B',
-        type: 'input',
-        data: { label: 'child node 1' },
-        position: { x: 10, y: 10 },
-        parentNode: 'A',
-        extent: 'parent',
-    },
-    {
-        id: 'C',
-        data: { label: 'child node 2' },
-        position: { x: 10, y: 90 },
-        parentNode: 'A',
-        extent: 'parent',
-    },
-    {
-        id: 'D',
-        data: { label: 'child node 3' },
-        position: { x: 10, y: 200 },
-        parentNode: 'A',
-        extent: 'parent',
-    },
-    {
-        id: '4',
-        type: 'custom',
-        position: { x: 100, y: 200 },
-        data: {
-            selects: {
-                'handle-0': 'smoothstep',
-                'handle-1': 'smoothstep',
-            },
-        },
-        parentNode: 'A',
-        extent: 'parent',
-    },
-    {
-        id: '5',
+     {
+        id: '1',
         type: 'feature',
-        position: { x: 100, y: 200 },
+        position: { x: 10, y: 200 },
         data: {
             title: 'Lags',
             params: {
-                'features': ['open', 'close', 'high', 'low', 'value', 'volume', 'target'],
-                'period': ['1', '2', '3', '4', '10', '14', '20', '50', '100']
+                'features': [],
+                'period': []
             }
         },
     },
-    {
-        id: '6',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'CMA',
-            params: {
-                'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
-            }
-        },
-    },
-    {
-        id: '7',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'SMA',
-            params: {
-                'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
-                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
-            },
-        },
-    },
-    {
-        id: '8',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'EMA',
-            params: {
-                'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
-                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
-            },
-        },
-    },
-    {
-        id: '9',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'Green candles ratio',
-            params: {
-                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
-            },
-        },
-    },
-    {
-        id: '10',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'Red candles ratio',
-            params: {
-                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
-            },
-        },
-    },
-    {
-        id: '11',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'RSI',
-            params: {
-                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
-            },
-        },
-    },
-    {
-        id: '12',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'MACD',
-            params: {
-                'period': ['12', '26']
-            },
-        },
-    },
-    {
-        id: '13',
-        type: 'feature',
-        position: { x: 100, y: 200 },
-        data: {
-            title: 'Bollinger',
-            params: {
-                'period': ['2']
-            },
-        },
-    },
+    // {
+    //     id: 'A',
+    //     type: 'group',
+    //     data: { label: null },
+    //     position: { x: 0, y: 0 },
+    //     style: {
+    //         width: 170,
+    //         height: 200,
+    //     },
+    // },
+    // {
+    //     id: 'B',
+    //     type: 'input',
+    //     data: { label: 'child node 1' },
+    //     position: { x: 10, y: 10 },
+    //     parentNode: 'A',
+    //     extent: 'parent',
+    // },
+    // {
+    //     id: '5',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'Lags',
+    //         params: {
+    //             'features': ['open', 'close', 'high', 'low', 'value', 'volume', 'target'],
+    //             'period': ['1', '2', '3', '4', '10', '14', '20', '50', '100']
+    //         }
+    //     },
+    // },
+    // {
+    //     id: '6',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'CMA',
+    //         params: {
+    //             'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+    //         }
+    //     },
+    // },
+    // {
+    //     id: '7',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'SMA',
+    //         params: {
+    //             'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+    //             'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    //         },
+    //     },
+    // },
+    // {
+    //     id: '8',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'EMA',
+    //         params: {
+    //             'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+    //             'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    //         },
+    //     },
+    // },
+    // {
+    //     id: '9',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'Green candles ratio',
+    //         params: {
+    //             'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    //         },
+    //     },
+    // },
+    // {
+    //     id: '10',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'Red candles ratio',
+    //         params: {
+    //             'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    //         },
+    //     },
+    // },
+    // {
+    //     id: '11',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'RSI',
+    //         params: {
+    //             'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    //         },
+    //     },
+    // },
+    // {
+    //     id: '12',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'MACD',
+    //         params: {
+    //             'period': ['12', '26']
+    //         },
+    //     },
+    // },
+    // {
+    //     id: '13',
+    //     type: 'feature',
+    //     position: { x: 100, y: 200 },
+    //     data: {
+    //         title: 'Bollinger',
+    //         params: {
+    //             'period': ['2']
+    //         },
+    //     },
+    // },
 ];
 
 
@@ -191,6 +177,9 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+
+    }, [])
 
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -241,12 +230,14 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                     console.log('newnode')
                     newNode = {
                         id: newId,
-                        type: "genericNode",
+                        type: "feature",
                         position,
                         data: {
-                            ...data,
-                            id: newId,
-                            label: data.title
+                            title: title,
+                            params:{
+                                features: [],
+                                period: []
+                            }
                         },
                     };
                 } else {
