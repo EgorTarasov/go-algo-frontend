@@ -82,10 +82,12 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [selectedPeriods, setSelectedPeriods] = useState<string[]>([]);
+  const [selectedDegree, setSelectedDegree] = useState<string[]>([]);
 
   useEffect(() => {
     setSelectedFeatures(data.params.features)
     setSelectedPeriods(data.params.period)
+    setSelectedDegree(data.params.degree_of_lift)
   }, [])
 
   const color = MlNodesColors[data.title]
@@ -120,12 +122,17 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
             </div>
           </LightTooltip >
         </div>
+        {data.title === 'MACD' &&
+          <>
+            <TypographyMain sx={{ fontSize: '10px', ml: 2 }}>Параметры для расчета скользящих средних:</TypographyMain>
+            <TypographyHeader sx={{ fontSize: '10px', ml: 2 }}>12, 26</TypographyHeader>
+          </>}
         {MlNodeParams[data.title]?.features &&
           <StyledAutocomplete
             MyColor={color}
             size="small"
             color='secondary.dark'
-            multiple
+            multiple={data.title !== 'Bollinger'}
             limitTags={2}
             id="multiple-limit-tags"
             options={MlNodeParams[data.title]?.features || []}
@@ -137,13 +144,13 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
               <TextField {...params} label="Признаки" InputProps={{ ...params.InputProps, readOnly: true }} />
             )}
           />}
-        <div style={{ height: '15px' }}></div>
-        {MlNodeParams[data.title]?.period &&
+        {data.title !== 'MACD' && <div style={{ height: '15px' }}></div>}
+        {MlNodeParams[data.title]?.period && (data.title !== 'MACD') &&
           <StyledAutocomplete
             MyColor={color}
             size="small"
             color='secondary.dark'
-            multiple
+            multiple={data.title !== 'Bollinger'}
             limitTags={2}
             id="multiple-limit-tags"
             options={MlNodeParams[data.title]?.period || []}
@@ -152,10 +159,25 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
               setSelectedPeriods(newValue as string[]);
             }}
             renderInput={(params: AutocompleteRenderInputParams) => (
-              <TextField {...params} label="Размер сдвига" InputProps={{ ...params.InputProps, readOnly: true }} />
+              <TextField {...params} label={(data.title === 'Lags') ? 'Размер сдвига' : 'Количество свечей'} InputProps={{ ...params.InputProps, readOnly: true }} />
             )}
           />}
-        <div style={{ height: '10px' }}></div>
+        {data.title !== 'MACD' && <div style={{ height: '15px' }}></div>}
+        {MlNodeParams[data.title]?.degree_of_lift && (data.title === 'Bollinger') &&
+          <StyledAutocomplete
+            MyColor={color}
+            size="small"
+            color='secondary.dark'
+            options={MlNodeParams[data.title]?.degree_of_lift || []}
+            value={selectedDegree}
+            onChange={(_, newValue) => {
+              setSelectedDegree(newValue as string[]);
+            }}
+            renderInput={(params: AutocompleteRenderInputParams) => (
+              <TextField {...params} label={'Коэффициент отклонения'} InputProps={{ ...params.InputProps, readOnly: true }} />
+            )}
+          />}
+        {data.title !== 'MACD' && <div style={{ height: '15px' }}></div>}
       </div >
     </>
   );

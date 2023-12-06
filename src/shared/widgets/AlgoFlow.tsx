@@ -91,8 +91,96 @@ const initialNodes: Node[] = [
                 'period': ['1', '2', '3', '4', '10', '14', '20', '50', '100']
             }
         },
-        // parentNode: 'A',
-        // extent: 'parent',
+    },
+    {
+        id: '6',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'CMA',
+            params: {
+                'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+            }
+        },
+    },
+    {
+        id: '7',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'SMA',
+            params: {
+                'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+            },
+        },
+    },
+    {
+        id: '8',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'EMA',
+            params: {
+                'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+            },
+        },
+    },
+    {
+        id: '9',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'Green candles ratio',
+            params: {
+                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+            },
+        },
+    },
+    {
+        id: '10',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'Red candles ratio',
+            params: {
+                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+            },
+        },
+    },
+    {
+        id: '11',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'RSI',
+            params: {
+                'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+            },
+        },
+    },
+    {
+        id: '12',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'MACD',
+            params: {
+                'period': ['12', '26']
+            },
+        },
+    },
+    {
+        id: '13',
+        type: 'feature',
+        position: { x: 100, y: 200 },
+        data: {
+            title: 'Bollinger',
+            params: {
+                'period': ['2']
+            },
+        },
     },
 ];
 

@@ -18,6 +18,7 @@ export const MlNodeParams: IMlNodeParams = {
     'MACD': { 'period': ['12', '26'] }, //только(12, 26)
     'Bollinger': {
         'period': ['2', '3', '4', '10', '14', '20', '50', '100'], // выбор один из 2, 3, 4, 10, 14, 20, 50, 100
+        'degree_of_lift' : ['1', '2', '3'],
     },
 }
 
@@ -52,10 +53,12 @@ export interface IMlNodeParams {
     };
     Bollinger: {
         period: string[];
+        degree_of_lift: string[];
     };
     [key: string]: {
         features?: string[];
         period?: string[];
+        degree_of_lift?: string[];
     };
 }
 
