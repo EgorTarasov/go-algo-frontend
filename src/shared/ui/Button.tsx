@@ -15,7 +15,7 @@ function StyledButton({ onClick, sx, children }: StyledButtonProps) {
                 mt: 3, 
                 width: '300px', 
                 color: 'white', 
-                fontFamily: 'Favorit Pro', 
+                fontFamily: 'FavoritPro-Regular', 
                 borderRadius: '8px', 
                 backgroundColor: 'secondary.main', 
                 textTransform: 'uppercase', 

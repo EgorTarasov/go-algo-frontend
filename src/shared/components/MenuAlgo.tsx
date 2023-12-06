@@ -75,7 +75,7 @@ export default function MenuAlgo({ isStatic = false }) {
                                     width: '100%',
                                     backgroundColor: 'primary.main',
                                     color: 'secondary.main',
-                                    fontFamily: 'FavoritC',
+                                    fontFamily: 'Favorit Bold',
                                     textTransform: 'uppercase',
                                     '&:hover': {
                                         backgroundColor: 'secondary.main',

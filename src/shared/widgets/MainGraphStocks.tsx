@@ -43,7 +43,7 @@ function MainGraphStocks() {
                     <TypographyHeader sx={{ fontSize: '20px', alignSelf: 'center' }}>Акции:</TypographyHeader>
                     <Button href="/ui"
                         style={{
-                            color: 'black', fontFamily: 'Favorit Pro', backgroundColor: 'transparent',
+                            color: 'black', fontFamily: 'FavoritPro-Regular', backgroundColor: 'transparent',
                             borderRadius: '8px', textTransform: 'lowercase', marginRight: 20, width: '70px',
                             justifyContent: 'space-between', paddingRight: '15px', fontSize: '20px'
                         }}
