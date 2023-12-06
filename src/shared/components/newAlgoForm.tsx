@@ -1,4 +1,4 @@
-import { Box, Autocomplete, TextField } from "@mui/material";
+import { Box, Autocomplete, TextField, Skeleton } from "@mui/material";
 import { useAllStock } from '../../hooks/AllStockDataProvider';
 import { TypographyMain } from "../ui/Typography";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ interface FieldsState {
 function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
     const stockContext = useAllStock();
     if (!stockContext) throw new Error("AllStockProvider is missing");
-    const { stocks, setCurrentStock , currentStock} = stockContext;
+    const { stocks, setCurrentStock, currentStock } = stockContext;
 
     const [name, setName] = useState('');
     const [autoValue, setAutoValue] = useState<string | null>(stocks.map(item => `${item.SECID} - ${item.SHORTNAME}`)[0]);
@@ -82,39 +82,43 @@ function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
                 maxWidth: '90vw', maxHeight: '90vh', marginTop: '-80px', p: 5
             }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', alignContent: 'center', flexWrap: 'wrap', height: '100%' }}>
-                    <Box>
-                        <TypographyMain>Выберите акцию</TypographyMain>
-                        <Autocomplete
-                            value={autoValue}
-                            onChange={(_, newValue: string | null) => {
-                                if(newValue) setAutoValue(newValue.split(' - ')[0]);
-                            }}
-                            id="controllable-states-demo"
-                            options={stocks.map(item => `${item.SECID} - ${item.SHORTNAME}`)}
-                            sx={{ width: 300 }}
-                            renderInput={(params) =>
-                                <TextField
-                                    variant="outlined"
-                                    color="secondary"
-                                    className="textfield"
-                                    error={fields['stock'].error}
-                                    helperText={fields['stock'].helperText}
-                                    {...params}
-                                />
-                            }
-                        />
-                        {currentStock &&
-                            <StockCard
-                                key={currentStock['SECID']}
-                                stockPrice={currentStock['LAST']}
-                                changePercent={currentStock['LASTTOPREVPRICE']}
-                                shortname={currentStock['SHORTNAME']}
-                                stockID={currentStock['SECID']}
-                                active={currentStock?.SECID === currentStock['SECID']}
-                                onClick={() => {}}
-                            />}
+                    <Box sx={{ height: '60%', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
+                        <div>
+                            <TypographyMain>Выберите акцию</TypographyMain>
+                            <Autocomplete
+                                value={autoValue}
+                                onChange={(_, newValue: string | null) => {
+                                    if (newValue) setAutoValue(newValue.split(' - ')[0]);
+                                }}
+                                id="controllable-states-demo"
+                                options={stocks.map(item => `${item.SECID} - ${item.SHORTNAME}`)}
+                                sx={{ width: 300 }}
+                                renderInput={(params) =>
+                                    <TextField
+                                        variant="outlined"
+                                        color="secondary"
+                                        className="textfield"
+                                        error={fields['stock'].error}
+                                        helperText={fields['stock'].helperText}
+                                        {...params}
+                                    />
+                                }
+                            />
+                        </div>
+                        <div style={{ height: '172px' }}>
+                            {currentStock &&
+                                <StockCard
+                                    key={currentStock['SECID']}
+                                    stockPrice={currentStock['LAST']}
+                                    changePercent={currentStock['LASTTOPREVPRICE']}
+                                    shortname={currentStock['SHORTNAME']}
+                                    stockID={currentStock['SECID']}
+                                    active={currentStock?.SECID === currentStock['SECID']}
+                                    onClick={() => { }}
+                                />}
+                        </div>
                     </Box>
-                    <Box>
+                    <Box sx={{ height: '38%', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
                         <div>
                             <TypographyMain>Введите название</TypographyMain>
                             <TextField
