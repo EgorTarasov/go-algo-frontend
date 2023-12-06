@@ -63,7 +63,7 @@ const initialNodes: Node[] = [
 ];
 
 
-function AlgoFlow() {
+function AlgoFlow({type} : {type: 'algo' | 'ml' | undefined}) {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -171,7 +171,7 @@ function AlgoFlow() {
             >
                 <Background />
                 <Panel position="top-left" style={{ height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0 }}>
-                    <FlowSideBar type='ml' />
+                    <FlowSideBar type={type ? type : 'algo'} />
                 </Panel>
                 <Controls position='bottom-right' />
             </ReactFlow>

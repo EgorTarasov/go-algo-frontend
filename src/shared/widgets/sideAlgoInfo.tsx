@@ -10,6 +10,7 @@ function SideAlgoInfo() {
 
     return (
         <>
+        {console.log(currentStock)}
             {currentStock &&
                 <Box sx={{ display: 'flex', flexDirection: 'column-reverse' }}>
                     <Box sx={{ width: '100%' }}>

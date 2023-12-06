@@ -6,10 +6,7 @@ import MenuButton from "../ui/MenuButton";
 import Button from "../ui/Button";
 import { IMarketdatum } from "../../models/IMarketdatum";
 import StockCard from "./StockCard";
-
-interface NewAlgoFormProps {
-    updateOpenFlow: (newOpenFlow: boolean) => void;
-}
+import { useNavigate } from "react-router-dom";
 
 interface FieldState {
     error: boolean;
@@ -20,22 +17,19 @@ interface FieldsState {
     [key: string]: FieldState;
 };
 
-function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
+function NewAlgoForm() {
+    const navigate = useNavigate();
     const stockContext = useAllStock();
     if (!stockContext) throw new Error("AllStockProvider is missing");
     const { stocks, setCurrentStock, currentStock } = stockContext;
 
     const [name, setName] = useState('');
-    const [autoValue, setAutoValue] = useState<string | null>(stocks.map(item => `${item.SECID} - ${item.SHORTNAME}`)[0]);
+    const [autoValue, setAutoValue] = useState<string | null>(null);
     const [blockType, setBlockType] = useState<'algo' | 'ml'>('algo')
 
     useEffect(() => {
-        setCurrentStock(stocks.filter((stock: IMarketdatum) => (stock['SECID'] === autoValue))[0]);
+        if(autoValue) setCurrentStock(stocks.filter((stock: IMarketdatum) => (stock['SECID'] === autoValue))[0]);
     }, [autoValue])
-
-    useEffect(() => {
-        setCurrentStock(null);
-    }, [])
 
     const [fields, setFields] = useState<FieldsState>({
         stock: {
@@ -143,8 +137,8 @@ function NewAlgoForm({ updateOpenFlow }: NewAlgoFormProps) {
                     </Box>
                     <Button onClick={() => {
                         if (!checkError()) {
-                            setCurrentStock(stocks.filter((stock: IMarketdatum) => (stock['SECID'] === autoValue))[0]);
-                            updateOpenFlow(true);
+                            console.log('form', currentStock)
+                            navigate(`/algorithm/${blockType}/${12345}`)
                         }
                     }}>Создать алгоритм</Button>
                 </Box>
