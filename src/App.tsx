@@ -44,38 +44,38 @@ function App() {
         <>
             <ThemeProvider theme={theme}>
                 <AuthProvider>
-                <AllStockProvider>
-                    <Routes>
-                        <Route path="/" element={<LoginPage />} />
-                        <Route
-                            path="/home"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar />
-                                    <DashboardAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/createAlgorithm"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar />
-                                    <CreateAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/algorithm/:type/:uuid"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar />
-                                    <CurrentAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                    </Routes>
-                    </AllStockProvider>
+                    {/* <AllStockProvider> */}
+                        <Routes>
+                            <Route path="/" element={<LoginPage />} />
+                            <Route
+                                path="/home"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <DashboardAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/createAlgorithm"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <CreateAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/algorithm/:type/:uuid"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <CurrentAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                        </Routes>
+                    {/* </AllStockProvider> */}
                 </AuthProvider>
             </ThemeProvider>
         </>

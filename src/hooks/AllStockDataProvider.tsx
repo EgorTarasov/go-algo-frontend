@@ -26,7 +26,6 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
       });
       if (data[1]?.marketdata && data[1]?.securities) {
         const marketdata = data[1].marketdata;
-
         const securities = data[1].securities;
 
         const securitiesMap = securities.reduce((map: { [key: string]: ISecurity }, security: ISecurity) => {

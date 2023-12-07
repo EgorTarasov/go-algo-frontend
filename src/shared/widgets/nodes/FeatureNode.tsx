@@ -1,4 +1,4 @@
-import React, { memo, ChangeEvent } from 'react';
+import React, { memo, useCallback } from 'react';
 import { NodeToolbar, useReactFlow, useStoreApi, Position } from 'reactflow';
 import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
 import { Title } from 'chart.js';
@@ -11,6 +11,7 @@ import { MlNodeTip } from '../../../constants/nodeData';
 import { MlNodesColors } from '../../../constants/nodeData';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
+import { useMLFlow } from '../../../hooks/MlFlowProvider';
 
 
 interface FeatureNodeProps {
@@ -82,6 +83,10 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
+  const MlFlowContext = useMLFlow();
+  if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
+  const { nodes, setNodes, currentNode, setCurrentNode, getNodeId } = MlFlowContext;
+
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [selectedPeriods, setSelectedPeriods] = useState<string[]>([]);
   const [selectedDegree, setSelectedDegree] = useState<string[]>([]);
@@ -94,30 +99,43 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
 
   const color = MlNodesColors[data.title];
 
-  // const removeElementsAction = useStoreActions((actions) => actions.removeElements);
-  // const addElementsAction = useStoreActions((actions) => actions.addElements);
 
-  // const handleDelete = () => {
-  //   removeElementsAction([{ id }]);
-  // };
+  const handleDelete = useCallback(() => {
+    setNodes(nodes.filter(node => node.id !== id));
+    if (currentNode?.id === id) {
+      setCurrentNode(null);
+    }
+  }, [id, nodes, setNodes, currentNode, setCurrentNode]);
 
-  // const handleCopy = () => {
-  //   const newNode = {
-  //     id: '123456', // replace with a unique id
-  //     type: 'featureNode', // replace with the type of your custom node
-  //     position: { x: data.position.x + 20, y: data.position.y }, // shift the new node 20px to the right
-  //     data: { ...data },
-  //   };
-  //   addElementsAction([newNode]);
-  // };
+  const handleCopy = useCallback(() => {
+    if (currentNode) {
+      const newNode = {
+        id: getNodeId(),
+        type: "feature",
+        position: {
+          x: currentNode.position.x + 20,
+          y: currentNode.position.y - 20,
+        },
+        data: {
+          title: currentNode.data.title,
+          params: {
+            features: [],
+            period: []
+          }
+        },
+      };
+      setNodes(nodes => [...nodes, newNode]);
+    }
+  }, [currentNode, getNodeId, setNodes]);
+
 
   return (
     <>
-      <NodeToolbar isVisible={true}>
-        <IconButton>
+      <NodeToolbar isVisible={currentNode?.id === id}>
+        <IconButton onClick={handleDelete} >
           <DeleteOutlineIcon />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={handleCopy}>
           <CopyAllIcon />
         </IconButton>
       </NodeToolbar>
