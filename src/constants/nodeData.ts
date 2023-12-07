@@ -54,12 +54,12 @@ export const MlNodesColors : IMlNodeTip = {
     'RSI': '#B6F1CE',
     'MACD': '#FFE8AD',
     'Bollinger': '#F0952A',
-    'month' : '#F1FFB8', 
-    'week' : '#F1FFB8', 
-    'day_of_month' : '#F1FFB8', 
-    'day_of_week' : '#F1FFB8', 
-    'hour' : '#F1FFB8', 
-    'minute' : '#F1FFB8'
+    'month' : '#869C2E', 
+    'week' : '#869C2E', 
+    'day_of_month' : '#869C2E', 
+    'day_of_week' : '#869C2E', 
+    'hour' : '#869C2E', 
+    'minute' : '#869C2E'
 }
 
 export interface IMlNodeSectionNames {

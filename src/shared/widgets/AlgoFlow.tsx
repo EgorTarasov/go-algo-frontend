@@ -15,11 +15,10 @@ import 'reactflow/dist/style.css';
 
 import FlowSideBar from '../components/FlowSideBar';
 import { IMenuNode } from '../../models/IMenuNode';
-import CustomNode from './nodes/CustomNode';
 import FeatureNode from './nodes/FeatureNode';
 import { useMLFlow } from '../../hooks/MlFlowProvider';
+import ModelNode from './nodes/ModelNode';
 
-const initialEdges = [{ id: 'b-c', source: 'B', target: 'C' }];
 
 const rfStyle = {
     backgroundColor: '#F3F4F6',
@@ -29,14 +28,14 @@ const rfStyle = {
 };
 
 const nodeTypes = {
-    custom: CustomNode,
     feature: FeatureNode,
+    model: ModelNode,
 };
 
 function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { nodes, setNodes, reactFlowInstance, setReactFlowInstance, setCurrentNode, getNodeId } = MlFlowContext;
+    const { nodes, setNodes, reactFlowInstance, setReactFlowInstance, setCurrentNode, getNodeId, checkUniqueChild } = MlFlowContext;
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
     const onNodesChange: OnNodesChange = useCallback(
@@ -47,36 +46,44 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const onDrop = useCallback(
         (event: React.DragEvent) => {
             event.preventDefault();
+            console.log(nodes)
             if (event.dataTransfer.types.some((types) => types === "nodedata")) {
-                // takeSnapshot();
-
-                // Get the current bounds of the ReactFlow wrapper element
-                const reactflowBounds =
-                    reactFlowWrapper.current?.getBoundingClientRect();
-
-                // Extract the data from the drag event and parse it as a JSON object
-                let data: IMenuNode = JSON.parse(
-                    event.dataTransfer.getData("nodedata")
-                );
-
-                // Calculate the position where the node should be created
+                const reactflowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+                let data: IMenuNode = JSON.parse(event.dataTransfer.getData("nodedata"));
                 const position = reactFlowInstance!.project({
                     x: event.clientX - reactflowBounds!.left,
                     y: event.clientY - reactflowBounds!.top,
                 });
-
-                // Generate a unique node ID
                 let { title } = data;
                 let newId = getNodeId();
+                console.log('newid', newId)
                 let newNode: Node;
 
                 if (!data.isParent) {
-                    // Create a new node object
-                    console.log('newnode')
+                    const modelNode = nodes.find(node => node.type === 'model' &&
+                    position.x > node.position.x && position.x < node.position.x + 420 &&
+                    position.y > node.position.y && position.y < node.position.y + 800);
+                    console.log('x', position.x, 'y', position.y, 
+                    'modelnode.x', modelNode?.position.x, 'modelnode/y', modelNode?.position.y)
+
+                     if (!modelNode) {
+                        alert('Перенесите фичи внутрь модели');
+                        return;
+                    }
+
+                    if(!checkUniqueChild(modelNode, title)) {
+                        alert('В одной модели могут быть фичи только разного вида, то есть каждая фича должна быть в одном экземпляре');
+                        return;
+                    }
+
+
                     newNode = {
                         id: newId,
                         type: "feature",
-                        position,
+                        position: {
+                            x: 0,
+                            y: 350
+                        },
                         data: {
                             title: title,
                             params: {
@@ -84,28 +91,29 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                                 period: []
                             }
                         },
+                        parentNode: modelNode.id,
+                        extent: 'parent'
                     };
                 } else {
-                    // Create a new node object
                     newNode = {
                         id: newId,
-                        type: "genericNode",
+                        type: "model",
                         position,
                         data: {
-                            ...data,
-                            id: newId,
-                            label: data.title
+                            title: title,
+                            params: {
+                                managment: {},
+                                period: []
+                            }
                         },
                     };
-
-                    // Add the new node to the list of nodes in state
                 }
                 setNodes((nds: Node[]) => nds.concat(newNode));
             }
         },
-        // Specify dependencies for useCallback
-        [getNodeId, reactFlowInstance, setNodes]
+        [getNodeId, reactFlowInstance, setNodes, nodes]
     );
+
 
     const onDragOver = (event: React.DragEvent) => {
         event.preventDefault();
@@ -120,10 +128,10 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
 
     const onPaneClick = useCallback(
         () => {
-          setCurrentNode(null);
+            setCurrentNode(null);
         },
         [setCurrentNode],
-      );
+    );
 
     return (
         <div ref={reactFlowWrapper} style={{ width: '100%', height: 'calc(100vh - 200px)' }}>

@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { NodeToolbar, useReactFlow, useStoreApi, Position } from 'reactflow';
+import { NodeToolbar, Node, useStoreApi, Position } from 'reactflow';
 import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
 import { Title } from 'chart.js';
 import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
@@ -12,12 +12,13 @@ import { MlNodesColors } from '../../../constants/nodeData';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import { useMLFlow } from '../../../hooks/MlFlowProvider';
+import { MlNodeSectionNodes } from '../../../constants/nodeData'
 
 
 interface FeatureNodeProps {
   id: string;
   data: {
-    title: string; //lags (f, p), cma(f), sma(f,p), ema(f,p), green(p), red(P), rsi(p), macd(p: always one), bollinger (p: choose one)
+    title: string;
     params: {
       [key: string]: string[];
     };
@@ -25,10 +26,10 @@ interface FeatureNodeProps {
 }
 
 interface StyledAutocompleteProps extends AutocompleteProps<unknown, boolean | undefined, boolean | undefined, boolean | undefined> {
-  MyColor: string;
+  mycolor: string;
 }
 
-const StyledAutocomplete = styled(Autocomplete)<StyledAutocompleteProps>(({ MyColor }) => ({
+const StyledAutocomplete = styled(Autocomplete)<StyledAutocompleteProps>(({ mycolor }) => ({
   '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input': {
     fontSize: '10px',
   },
@@ -40,11 +41,11 @@ const StyledAutocomplete = styled(Autocomplete)<StyledAutocompleteProps>(({ MyCo
     fontSize: '10px',
   },
   '& .MuiAutocomplete-option[data-focus="true"]': {
-    backgroundColor: MyColor,
+    backgroundColor: mycolor,
   },
   '& .MuiOutlinedInput-root': {
     '&.Mui-focused fieldset': {
-      borderColor: MyColor,
+      borderColor: mycolor,
       borderWidth: '1px',
     },
     '& fieldset': {
@@ -52,7 +53,7 @@ const StyledAutocomplete = styled(Autocomplete)<StyledAutocompleteProps>(({ MyCo
     },
   },
   '& .MuiInputLabel-root.Mui-focused': {
-    color: MyColor,
+    color: mycolor,
   },
   '& .MuiAutocomplete-clearIndicator, & .MuiAutocomplete-popupIndicator': {
     padding: '0px',
@@ -85,17 +86,24 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
   const MlFlowContext = useMLFlow();
   if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-  const { nodes, setNodes, currentNode, setCurrentNode, getNodeId } = MlFlowContext;
+  const { nodes, setNodes, currentNode, setCurrentNode, updateNodeFeatures, updateNodePeriods } = MlFlowContext;
 
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [selectedPeriods, setSelectedPeriods] = useState<string[]>([]);
-  const [selectedDegree, setSelectedDegree] = useState<string[]>([]);
 
   useEffect(() => {
     setSelectedFeatures(data.params.features)
     setSelectedPeriods(data.params.period)
-    setSelectedDegree(data.params.degree_of_lift)
   }, [])
+
+  useEffect(() => {
+    updateNodePeriods(id, selectedPeriods)
+  }, [selectedPeriods])
+
+  useEffect(() => {
+    updateNodeFeatures(id, selectedFeatures)
+  }, [selectedFeatures])
+
 
   const color = MlNodesColors[data.title];
 
@@ -107,27 +115,6 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
     }
   }, [id, nodes, setNodes, currentNode, setCurrentNode]);
 
-  const handleCopy = useCallback(() => {
-    if (currentNode) {
-      const newNode = {
-        id: getNodeId(),
-        type: "feature",
-        position: {
-          x: currentNode.position.x + 20,
-          y: currentNode.position.y - 20,
-        },
-        data: {
-          title: currentNode.data.title,
-          params: {
-            features: [],
-            period: []
-          }
-        },
-      };
-      setNodes(nodes => [...nodes, newNode]);
-    }
-  }, [currentNode, getNodeId, setNodes]);
-
 
   return (
     <>
@@ -135,21 +122,18 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
         <IconButton onClick={handleDelete} >
           <DeleteOutlineIcon />
         </IconButton>
-        <IconButton onClick={handleCopy}>
-          <CopyAllIcon />
-        </IconButton>
       </NodeToolbar>
       <div style={{
         width: '180px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '24.5px', padding: '10px',
-        minHeight: '80px'
+        minHeight: '20px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', height: '15px', marginBottom: '15px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', height: '15px', marginBottom: !MlNodeSectionNodes['timeFeatures'].includes(data.title) ? '15px' : '0px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>
               <Cube color={color} />
             </div>
             <TypographyHeader sx={{ fontSize: '10px', ml: 2 }}>
-              {data.title}
+              {!MlNodeSectionNodes['timeFeatures'].includes(data.title) ? data.title : MlNodeTip[data.title]}
             </TypographyHeader>
           </div>
           <LightTooltip sx={{ backgroundColor: 'white' }}
@@ -162,69 +146,71 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
             }>
             <div style={{ alignSelf: 'center' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="7" height="10" viewBox="0 0 9 13" fill="none">
-                <path d="M3.97233 12H3.98018M1 3.11898C1.42467 1.88592 2.59505 1 3.97233 1C5.70805 1 7.11518 2.4071 7.11518 4.14286C7.11518 5.44439 6.32405 6.56113 5.19647 7.03837C4.61441 7.28477 4.32338 7.40797 4.22155 7.50312C4.10032 7.61642 4.0773 7.65115 4.02025 7.80696C3.97233 7.93778 3.97233 8.13947 3.97233 8.54286V9.64286" stroke="black" stroke-width="1.99386" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M3.97233 12H3.98018M1 3.11898C1.42467 1.88592 2.59505 1 3.97233 1C5.70805 1 7.11518 2.4071 7.11518 4.14286C7.11518 5.44439 6.32405 6.56113 5.19647 7.03837C4.61441 7.28477 4.32338 7.40797 4.22155 7.50312C4.10032 7.61642 4.0773 7.65115 4.02025 7.80696C3.97233 7.93778 3.97233 8.13947 3.97233 8.54286V9.64286" stroke="black" strokeWidth="1.99386" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </LightTooltip >
         </div>
-        {data.title === 'MACD' &&
+        {!MlNodeSectionNodes['timeFeatures'].includes(data.title) &&
           <>
-            <TypographyMain sx={{ fontSize: '10px', ml: 2 }}>Параметры для расчета скользящих средних:</TypographyMain>
-            <TypographyHeader sx={{ fontSize: '10px', ml: 2 }}>12, 26</TypographyHeader>
-          </>}
-        {MlNodeParams[data.title]?.features &&
-          <StyledAutocomplete
-            MyColor={color}
-            size="small"
-            color='secondary.dark'
-            multiple={data.title !== 'Bollinger'}
-            limitTags={2}
-            id="multiple-limit-tags"
-            options={MlNodeParams[data.title]?.features || []}
-            value={selectedFeatures}
-            onChange={(_, newValue) => {
-              setSelectedFeatures(newValue as string[]);
-            }}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-              <TextField {...params} label="Признаки" InputProps={{ ...params.InputProps, readOnly: true }} />
-            )}
-          />}
-        {(data.title !== 'MACD' && data.title !== 'CMA') && <div style={{ height: '15px' }}></div>}
-        {MlNodeParams[data.title]?.period && (data.title !== 'MACD') &&
-          <StyledAutocomplete
-            MyColor={color}
-            size="small"
-            color='secondary.dark'
-            multiple={data.title !== 'Bollinger'}
-            limitTags={2}
-            id="multiple-limit-tags"
-            options={MlNodeParams[data.title]?.period || []}
-            value={selectedPeriods}
-            onChange={(_, newValue) => {
-              setSelectedPeriods(newValue as string[]);
-            }}
-            renderInput={(params: AutocompleteRenderInputParams) => (
-              <TextField {...params} label={(data.title === 'Lags') ? 'Размер сдвига' : 'Количество свечей'} InputProps={{ ...params.InputProps, readOnly: true }} />
-            )}
-          />}
-        {MlNodeParams[data.title]?.degree_of_lift && (data.title === 'Bollinger') &&
-          <>
-            <div style={{ height: '15px' }}></div>
-            <StyledAutocomplete
-              MyColor={color}
-              size="small"
-              color='secondary.dark'
-              options={MlNodeParams[data.title]?.degree_of_lift || []}
-              value={selectedDegree}
-              onChange={(_, newValue) => {
-                setSelectedDegree(newValue as string[]);
-              }}
-              renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField {...params} label={'Коэффициент отклонения'} InputProps={{ ...params.InputProps, readOnly: true }} />
-              )}
-            />
-          </>}
-        {(data.title !== 'MACD' && data.title !== 'CMA') && <div style={{ height: '15px' }}></div>}
+            {data.title === 'MACD' &&
+              <>
+                <TypographyMain sx={{ fontSize: '10px', ml: 2 }}>Параметры для расчета скользящих средних:</TypographyMain>
+                <TypographyHeader sx={{ fontSize: '10px', ml: 2 }}>12, 26</TypographyHeader>
+              </>}
+            {MlNodeParams[data.title]?.features &&
+              <StyledAutocomplete
+                mycolor={color}
+                size="small"
+                color='secondary.dark'
+                multiple={data.title !== 'Bollinger'}
+                limitTags={2}
+                id="multiple-limit-tags"
+                options={MlNodeParams[data.title]?.features || []}
+                value={selectedFeatures}
+                onChange={(_, newValue) => {
+                  setSelectedFeatures(newValue as string[]);
+                }}
+                renderInput={(params: AutocompleteRenderInputParams) => (
+                  <TextField {...params} label="Признаки" InputProps={{ ...params.InputProps, readOnly: true }} />
+                )}
+              />}
+            {(data.title !== 'MACD' && data.title !== 'CMA') && <div style={{ height: '15px' }}></div>}
+            {MlNodeParams[data.title]?.period && (data.title !== 'MACD') &&
+              <StyledAutocomplete
+                mycolor={color}
+                size="small"
+                color='secondary.dark'
+                multiple={data.title !== 'Bollinger'}
+                limitTags={2}
+                id="multiple-limit-tags"
+                options={MlNodeParams[data.title]?.period || []}
+                value={selectedPeriods}
+                onChange={(_, newValue) => {
+                  setSelectedPeriods(newValue as string[]);
+                }}
+                renderInput={(params: AutocompleteRenderInputParams) => (
+                  <TextField {...params} label={(data.title === 'Lags') ? 'Размер сдвига' : 'Количество свечей'} InputProps={{ ...params.InputProps, readOnly: true }} />
+                )}
+              />}
+            {MlNodeParams[data.title]?.degree_of_lift && (data.title === 'Bollinger') &&
+              <>
+                <div style={{ height: '15px' }}></div>
+                <StyledAutocomplete
+                  mycolor={color}
+                  size="small"
+                  color='secondary.dark'
+                  options={MlNodeParams[data.title]?.degree_of_lift || []}
+                  value={selectedFeatures}
+                  onChange={(_, newValue) => {
+                    setSelectedFeatures(newValue as string[]);
+                  }}
+                  renderInput={(params: AutocompleteRenderInputParams) => (
+                    <TextField {...params} label={'Коэффициент отклонения'} InputProps={{ ...params.InputProps, readOnly: true }} />
+                  )}
+                />
+              </>}
+            {(data.title !== 'MACD' && data.title !== 'CMA') && <div style={{ height: '15px' }}></div>}</>}
       </div >
     </>
   );
