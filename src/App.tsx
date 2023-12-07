@@ -4,10 +4,11 @@ import PrivateRoute from "./routes/PrivateRoute";
 import { AuthProvider } from "./hooks/AuthProvider";
 import LoginPage from "./pages/login/LoginPage";
 import DashboardAlgo from "./pages/algorithmist/DashboardAlgo";
-import CreateAlgo from './pages/algorithmist/CreateAlgo';
+import CreateAlgo from "./pages/algorithmist/CreateAlgo";
 import AppBar from "./shared/components/AppBar";
-import CurrentAlgo from './pages/algorithmist/CurrentAlgo';
+import CurrentAlgo from "./pages/algorithmist/CurrentAlgo";
 import { AllStockProvider } from "./hooks/AllStockDataProvider";
+import Profile from "./pages/algorithmist/Profile";
 
 const theme = createTheme({
     palette: {
@@ -44,37 +45,46 @@ function App() {
         <>
             <ThemeProvider theme={theme}>
                 <AuthProvider>
-                <AllStockProvider>
-                    <Routes>
-                        <Route path="/" element={<LoginPage />} />
-                        <Route
-                            path="/home"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar />
-                                    <DashboardAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/createAlgorithm"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar />
-                                    <CreateAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/algorithm/:type/:uuid"
-                            element={
-                                <PrivateRoute>
-                                    <AppBar />
-                                    <CurrentAlgo />
-                                </PrivateRoute>
-                            }
-                        />
-                    </Routes>
+                    <AllStockProvider>
+                        <Routes>
+                            <Route path="/" element={<LoginPage />} />
+                            <Route
+                                path="/home"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <DashboardAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/createAlgorithm"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <CreateAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/algorithm/:type/:uuid"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <CurrentAlgo />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/profile"
+                                element={
+                                    <PrivateRoute>
+                                        <AppBar />
+                                        <Profile />
+                                    </PrivateRoute>
+                                }
+                            />
+                        </Routes>
                     </AllStockProvider>
                 </AuthProvider>
             </ThemeProvider>
