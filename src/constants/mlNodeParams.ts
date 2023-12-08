@@ -1,0 +1,102 @@
+export const MlNodeParams: IMlNodeParams = {
+    'Lags': {
+        'features': ['open', 'close', 'high', 'low', 'value', 'volume', 'target'],
+        'period': ['1', '2', '3', '4', '10', '14', '20', '50', '100']
+    },
+    'CMA': { 'features': ['open', 'close', 'high', 'low', 'value', 'volume'] },
+    'SMA': {
+        'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+        'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    },
+    'EMA': {
+        'features': ['open', 'close', 'high', 'low', 'value', 'volume'],
+        'period': ['2', '3', '4', '10', '14', '20', '50', '100']
+    },
+    'Green candles ratio': { 'period': ['2', '3', '4', '10', '14', '20', '50', '100'] },
+    'Red candles ratio': { 'period': ['2', '3', '4', '10', '14', '20', '50', '100'] },
+    'RSI': { 'period': ['2', '3', '4', '10', '14', '20', '50', '100'] },
+    'MACD': { 'period': ['12', '26'] }, //только(12, 26)
+    'Bollinger': {
+        'period': ['2', '3', '4', '10', '14', '20', '50', '100'], // выбор один из 2, 3, 4, 10, 14, 20, 50, 100
+        'degree_of_lift': ['1', '2', '3'],
+    },
+}
+
+
+export const CandleStepNames: { [key: string]: string } = {
+    '1 минута': '1',
+    '5 минут': '5',
+    '10 минут': '10',
+    '30 минут': '30',
+    '1 час': '60',
+    '4 часа': '240',
+    '1 сутки': '1440'
+}
+
+export const ManagmentTip: { [key: string]: string } = {
+    'balance': "Баланс",
+    'max_balance_for_trading': "Максимальный баланс для торговли",
+    'min_balance_for_trading': "Минимальный баланс для торговли",
+    'part_of_balance_for_buy': "Доля баланса для покупки",
+    'sum_for_buy_rur': "Сумма для покупки в рублях",
+    'sum_for_buy_num': "Сумма для покупки в количестве",
+    'part_of_balance_for_sell': "Доля баланса для продажи",
+    'sum_for_sell_rur': "Сумма для продажи в рублях",
+    'sum_for_sell_num': "Сумма для продажи в количестве",
+    'sell_all': "Продавать все",
+}
+
+export interface IManagment {
+    'balance': number,
+    'max_balance_for_trading': number,
+    'min_balance_for_trading': number,
+    'part_of_balance_for_buy': number,
+    'sum_for_buy_rur': number,
+    'sum_for_buy_num': number,
+    'part_of_balance_for_sell': number,
+    'sum_for_sell_rur': number,
+    'sum_for_sell_num': number,
+    'sell_all': number,
+}
+
+
+export interface IMlNodeParams {
+    Lags: {
+        features: string[];
+        period: string[];
+    };
+    CMA: {
+        features: string[];
+    };
+    SMA: {
+        features: string[];
+        period: string[];
+    };
+    EMA: {
+        features: string[];
+        period: string[];
+    };
+    'Green candles ratio': {
+        period: string[];
+    };
+    'Red candles ratio': {
+        period: string[];
+    };
+    RSI: {
+        period: string[];
+    };
+    MACD: {
+        period: string[];
+    };
+    Bollinger: {
+        period: string[];
+        degree_of_lift: string[];
+    };
+    [key: string]: {
+        features?: string[];
+        period?: string[];
+        degree_of_lift?: string[];
+    };
+}
+
+

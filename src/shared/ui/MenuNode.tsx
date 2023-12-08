@@ -1,5 +1,6 @@
 import { TypographyMain } from "./Typography";
 import { IMenuNode } from "../../models/IMenuNode";
+import { MlNodesColors } from "../../constants/nodeData";
 
 function MenuNode({ nodeGroup, title, isParent }: IMenuNode) {
 
@@ -20,7 +21,7 @@ function MenuNode({ nodeGroup, title, isParent }: IMenuNode) {
         <>
             <div draggable='true'
                 style={{
-                    display: 'flex', justifyContent: 'space-between', width: '240px', margin: 5, border: 'dashed 1px #000000',
+                    display: 'flex', justifyContent: 'space-between', width: '240px', margin: 5, border: `dashed 1px #000000`,
                     borderRadius: '10px', height: '40px', backgroundColor: 'white'
                 }}
                 onDragStart={(event) =>
@@ -40,7 +41,7 @@ function MenuNode({ nodeGroup, title, isParent }: IMenuNode) {
                     );
                 }}>
                 <span style={{
-                    backgroundColor: (nodeGroup === 'lags') ? 'green' : 'purple',
+                    backgroundColor: MlNodesColors[title],
                     width: '10%', borderRadius: '10px 0 0 10px'
                 }}></span>
                 <TypographyMain sx={{ alignSelf: 'center' }}>
