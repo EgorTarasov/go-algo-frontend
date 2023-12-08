@@ -12,12 +12,15 @@ import ReactFlow, {
     Panel
 } from "reactflow";
 import 'reactflow/dist/style.css';
+import { useAllStock } from '../../hooks/AllStockDataProvider';
 
 import FlowSideBar from '../components/FlowSideBar';
 import { IMenuNode } from '../../models/IMenuNode';
 import FeatureNode from './nodes/FeatureNode';
 import { useMLFlow } from '../../hooks/MlFlowProvider';
 import ModelNode from './nodes/ModelNode';
+import ApiAlgo from '../../services/apiAlgo';
+import { useLocation } from 'react-router-dom';
 
 
 const rfStyle = {
@@ -38,10 +41,25 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const { nodes, setNodes, reactFlowInstance, setReactFlowInstance, setCurrentNode, getNodeId, checkUniqueChild } = MlFlowContext;
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
+    const stockContext = useAllStock();
+    if (!stockContext) throw new Error("AllStockProvider is missing");
+    const { fetchSetCurrentStock } = stockContext;
+
+    const location = useLocation();
+    const pathSegments = location.pathname.split("/");
+
+
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nds: Node[]) => applyNodeChanges(changes, nds)),
         [setNodes],
     );
+
+    useEffect(() => {
+        ApiAlgo.getAlgoMl(pathSegments[pathSegments.length - 1]).then((res) => {
+            fetchSetCurrentStock(res.sec_id);
+            // fetchSetCurrentStock('SBER');
+        });
+    }, [])
 
     const onDrop = useCallback(
         (event: React.DragEvent) => {
@@ -56,7 +74,6 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                 });
                 let { title } = data;
                 let newId = getNodeId();
-                console.log('newid', newId)
                 let newNode: Node;
 
                 if (!data.isParent) {
@@ -102,8 +119,19 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                         data: {
                             title: title,
                             params: {
-                                managment: {},
-                                period: []
+                                management: {
+                                    "balance": 0,
+                                    "max_balance_for_trading": 0,
+                                    "min_balance_for_trading": 0,
+                                    "part_of_balance_for_buy": 0,
+                                    "sum_for_buy_rur": 0,
+                                    "sum_for_buy_num": 0,
+                                    "part_of_balance_for_sell": 0,
+                                    "sum_for_sell_rur": 0,
+                                    "sum_for_sell_num": 0,
+                                    "sell_all": false,
+                                },
+                                candleStep: '1 минута'
                             }
                         },
                     };

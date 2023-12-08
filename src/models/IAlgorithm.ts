@@ -9,8 +9,9 @@ export interface IVersion {
     id: number;
     features: IMlFeatures;
     management: IRiskManagement;
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
+    nodes: any;
 }
 
 export interface IRiskManagement {

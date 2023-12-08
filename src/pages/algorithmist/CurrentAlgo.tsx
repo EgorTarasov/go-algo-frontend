@@ -12,24 +12,24 @@ function CurrentAlgo() {
     return (
         <>
             <AllStockProvider>
-                <Box sx={{ display: 'flex' }} className='container-main'>
-                    <MenuAlgo isStatic={false} />
-                    <>
-                        <Box sx={{
-                            display: 'flex', justifyContent: 'space-between',
-                            mt: '80px', width: '100%', height: 'calc(100vh - 200px)',
-                        }}>
-                            <MLFlowProvider>
+                <MLFlowProvider>
+                    <Box sx={{ display: 'flex' }} className='container-main'>
+                        <MenuAlgo isStatic={false} />
+                        <>
+                            <Box sx={{
+                                display: 'flex', justifyContent: 'space-between',
+                                mt: '80px', width: '100%', height: 'calc(100vh - 200px)',
+                            }}>
                                 <Box sx={{ width: '70%' }}>
                                     <AlgoFlow type={type} />
                                 </Box>
-                            </MLFlowProvider>
-                            <Box sx={{ width: '30%', ml: 5 }}>
-                                <SideAlgoInfo />
+                                <Box sx={{ width: '30%', ml: 5 }}>
+                                    <SideAlgoInfo />
+                                </Box>
                             </Box>
-                        </Box>
-                    </>
-                </Box>
+                        </>
+                    </Box>
+                </MLFlowProvider>
             </AllStockProvider>
         </>
     )

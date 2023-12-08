@@ -118,7 +118,7 @@ function ManagmentForm({ updateManagment, updateOpenForm, origManagment }: FormP
     };
 
     const createManagmentObject = () => {
-        const managment: IManagment = {
+        const management: IManagment = {
             "balance": 0,
             "max_balance_for_trading": 0,
             "min_balance_for_trading": 0,
@@ -130,19 +130,19 @@ function ManagmentForm({ updateManagment, updateOpenForm, origManagment }: FormP
             "sum_for_sell_num": 0,
             "sell_all": false,
         }
-        managment.balance = Number(fields['balance'].value);
-        managment.max_balance_for_trading = Number(fields['maxBalance'].value);
-        managment.min_balance_for_trading = Number(fields['minBalance'].value);
+        management.balance = Number(fields['balance'].value);
+        management.max_balance_for_trading = Number(fields['maxBalance'].value);
+        management.min_balance_for_trading = Number(fields['minBalance'].value);
 
-        if (buyType === 'Доля баланса') managment.part_of_balance_for_buy = Number(fields['buy'].value);
-        else if (buyType === 'Сумма в рублях') managment.sum_for_buy_rur = Number(fields['buy'].value);
-        else if (buyType === 'Количество акций') managment.sum_for_buy_num = Number(fields['buy'].value);
+        if (buyType === 'Доля баланса') management.part_of_balance_for_buy = Number(fields['buy'].value);
+        else if (buyType === 'Сумма в рублях') management.sum_for_buy_rur = Number(fields['buy'].value);
+        else if (buyType === 'Количество акций') management.sum_for_buy_num = Number(fields['buy'].value);
 
-        if (sellType === 'Доля баланса') managment.part_of_balance_for_sell = Number(fields['sell'].value);
-        else if (sellType === 'Сумма в рублях') managment.sum_for_sell_rur = Number(fields['sell'].value);
-        else if (sellType === 'Количество акций') managment.sum_for_sell_num = Number(fields['sell'].value);
-        else if (sellType === 'Продать всё') managment.sell_all = true;
-        return managment;
+        if (sellType === 'Доля баланса') management.part_of_balance_for_sell = Number(fields['sell'].value);
+        else if (sellType === 'Сумма в рублях') management.sum_for_sell_rur = Number(fields['sell'].value);
+        else if (sellType === 'Количество акций') management.sum_for_sell_num = Number(fields['sell'].value);
+        else if (sellType === 'Продать всё') management.sell_all = true;
+        return management;
     }
 
     function checkError() {

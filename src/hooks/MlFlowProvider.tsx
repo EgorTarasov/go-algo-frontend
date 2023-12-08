@@ -10,6 +10,8 @@ import ReactFlow, {
 import { useCallback } from 'react';
 import { MlNodeSectionNodes } from '../constants/nodeData'
 import { MlNodeParams, IManagment } from '../constants/mlNodeParams';
+import { v4 as uuidv4 } from 'uuid';
+import ApiAlgo from '../services/apiAlgo';
 
 interface MLFlowContextProps {
     nodes: Node[];
@@ -22,9 +24,10 @@ interface MLFlowContextProps {
     checkUniqueChild: (parentNode: Node, childType: string) => boolean;
     updateNodeFeatures: (id: string, features: string[]) => void;
     updateNodePeriods: (id: string, periods: string[]) => void;
-    updateModelManagment: (id: string, managment: IManagment) => void;
+    updateModelManagment: (id: string, management: IManagment) => void;
+    updateModelCandleStep: (id: string, candleStep: string) => void;
     getModelCandleStep: (id: string) => string;
-    createFeatureObject: (parentId: string) => { features: Record<string, any>, managment: any, nodes: Node[] };
+    createFeatureObject: (parentId: string) => { features: Record<string, any>, management: any, nodes: Node[] };
 }
 
 const MLFlowContext = createContext<MLFlowContextProps | null>(null);
@@ -36,8 +39,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
 
 
     const getNodeId = useCallback(() => {
-        const maxId = Math.max(...nodes.map(node => Number(node.id)), 0);
-        return String(maxId + 1);
+        return uuidv4();
     }, [nodes]);
 
     const checkUniqueChild = (parentNode: Node, childType: string) => {
@@ -56,13 +58,17 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, period: periods } } } : node));
     };
 
-    const updateModelManagment = (id: string, managment: IManagment) => {
-        setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, managment: managment } } } : node));
+    const updateModelManagment = (id: string, management: IManagment) => {
+        setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, management: management } } } : node));
+    };
+
+    const updateModelCandleStep = (id: string, candleStep: string) => {
+        setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, candleStep: candleStep } } } : node));
     };
 
     function getModelCandleStep(id: string){
         const modelNode = nodes.find(node => node.id === id);
-        return modelNode?.data.period[0];
+        return modelNode?.data.params.candleStep;
     }
 
     const createFeatureObject = (parentId: string) => {
@@ -70,7 +76,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         if (!parentNode) {
             throw new Error(`Node with id ${parentId} not found`);
         }
-        console.log(parentNode.data.params.managment)
+        console.log(parentNode.data.params.management)
     
         const childNodes = nodes.filter(node => node.parentNode === parentId);
         const features: Record<string, any> = {};
@@ -86,7 +92,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
                 features['time_features'][title] = true;
             } else if(title === 'macd') {
                 features[title] = {
-                    'period': ['12', '26']
+                    'period': [12, 26]
                 }
             } else if(title === 'bollinger'){
                 features[title] = {
@@ -104,12 +110,12 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
             }
         }
     
-        features['model'] =  parentNode.data.title;
+        features['model'] =  parentNode.data.title.toLowerCase();
     
         return {
             features,
             nodes: [parentNode, ...childNodes],
-            managment: parentNode.data.params.managment,
+            management: parentNode.data.params.management,
         };
     };
     
@@ -120,7 +126,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
     const value = {
         nodes, setNodes, reactFlowInstance, setReactFlowInstance,
         currentNode, setCurrentNode, getNodeId, checkUniqueChild, updateNodeFeatures, updateNodePeriods, createFeatureObject,
-        updateModelManagment, getModelCandleStep
+        updateModelManagment, getModelCandleStep, updateModelCandleStep
     };
 
     return (

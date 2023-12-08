@@ -18,6 +18,8 @@ import save_icon from '../../../assets/save_icon.png';
 import Button from '../../ui/Button';
 import { Backdrop } from '@mui/material';
 import ManagmentForm from '../../components/ManagmentForm';
+import ApiAlgo from '../../../services/apiAlgo';
+import { useLocation } from 'react-router-dom';
 
 
 interface ModelNodeProps {
@@ -25,8 +27,8 @@ interface ModelNodeProps {
     data: {
         title: string;
         params: {
-            period: string[];
-            managment: IManagment;
+            candleStep: string;
+            management: IManagment;
         };
     };
 }
@@ -92,26 +94,31 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createFeatureObject, updateNodePeriods, updateModelManagment } = MlFlowContext;
+    const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createFeatureObject, updateModelCandleStep,
+        updateNodePeriods, updateModelManagment, getModelCandleStep } = MlFlowContext;
 
-    const [selectedCandleSteps, setSelectedCandleSteps] = useState<string[]>([]);
-    const [managment, setManagment] = useState<IManagment | null>();
+    const [selectedCandleSteps, setSelectedCandleSteps] = useState<string>('');
+    const [management, setManagment] = useState<IManagment | null>();
     const [openManagment, setOpenManagment] = useState<boolean>(false);
+
+    const location = useLocation();
+    const pathSegments = location.pathname.split("/");
 
 
     useEffect(() => {
-        setSelectedCandleSteps(data.params.period)
-        setManagment(data.params.managment)
+        setSelectedCandleSteps(data.params.candleStep)
+        setManagment(data.params.management)
     }, [])
     const color = MlNodesColors[data.title];
 
     useEffect(() => {
-        updateNodePeriods(id, selectedCandleSteps)
+        console.log(CandleStepNames[selectedCandleSteps], 'selcs')
+        updateModelCandleStep(id, CandleStepNames[selectedCandleSteps])
     }, [selectedCandleSteps])
 
     useEffect(() => {
-        if (managment) updateModelManagment(id, managment)
-    }, [managment])
+        if (management) updateModelManagment(id, management)
+    }, [management])
 
     const updateManagment = (newManagment: IManagment) => {
         setManagment(newManagment);
@@ -152,19 +159,30 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     function handleBacktest() {
         const featureObject = createFeatureObject(id)
         const jsonStr = JSON.stringify(featureObject, null, 2);
-        console.log('fo', jsonStr)
+        console.log('fo', getModelCandleStep(id))
+        ApiAlgo.backtest(pathSegments[pathSegments.length - 1], getModelCandleStep(id)).then((res) => {
+            console.log(res, 'res')
+        });
+    }
+
+    function handleSaveModel() {
+
+        ApiAlgo.update(pathSegments[pathSegments.length - 1], createFeatureObject(id)).then((res) => {
+            console.log(res, 'res')
+        });
+
     }
 
     return (
         <>
-            <NodeToolbar isVisible={currentNode?.id === id}>
+            {/* <NodeToolbar isVisible={currentNode?.id === id}>
                 <IconButton onClick={handleDelete} >
                     <DeleteOutlineIcon />
                 </IconButton>
                 <IconButton onClick={handleCopy}>
                     <CopyAllIcon />
                 </IconButton>
-            </NodeToolbar>
+            </NodeToolbar> */}
             <div style={{
                 width: '420px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
                 minHeight: '800px'
@@ -172,7 +190,8 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                 <div style={{ backgroundColor: color, height: '55px', display: 'flex', justifyContent: 'space-around' }}>
                     <MenuButton iconSrc={risk_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
                         onClick={() => { setOpenManagment(true) }}>Настроить риск-менеджмент</MenuButton>
-                    <MenuButton iconSrc={save_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true} onClick={() => { }}>Сохранить версию модели</MenuButton>
+                    <MenuButton iconSrc={save_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
+                        onClick={handleSaveModel}>Сохранить версию модели</MenuButton>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ width: '50%', padding: 2 }}>
@@ -186,7 +205,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                                     options={Object.keys(CandleStepNames) || []}
                                     value={selectedCandleSteps}
                                     onChange={(_, newValue) => {
-                                        setSelectedCandleSteps(newValue as string[]);
+                                        setSelectedCandleSteps(newValue as string);
                                     }}
                                     renderInput={(params: AutocompleteRenderInputParams) => (
                                         <TextField {...params} InputProps={{ ...params.InputProps, readOnly: true }} />
@@ -204,7 +223,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={openManagment}>
-                <ManagmentForm updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.managment}/>
+                <ManagmentForm updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.management} />
             </Backdrop>
         </>
     );

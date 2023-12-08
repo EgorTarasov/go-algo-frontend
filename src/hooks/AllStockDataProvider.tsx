@@ -8,6 +8,7 @@ interface StockContextProps {
   setStocks: React.Dispatch<React.SetStateAction<IMarketdatum[]>>;
   currentStock: IMarketdatum | null;
   setCurrentStock: React.Dispatch<React.SetStateAction<IMarketdatum | null>>;
+  fetchSetCurrentStock: (sec_id: string) => void;
 }
 
 const StockContext = createContext<StockContextProps | null>(null);
@@ -49,9 +50,40 @@ export function AllStockProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(intervalId);
   }, []);
 
+  function fetchSetCurrentStock(sec_id: string) {
+    moexApiInstance.getSecuritiesInfo({
+      engines: "stock",
+      markets: "shares",
+      boards: "TQBR",
+      ticker: `${sec_id}`,
+    }).then((data) => {
+      if (data[1]?.marketdata && data[1]?.securities) {
+        const marketdata = data[1].marketdata;
+        const securities = data[1].securities;
+        console.log('fetcjdata', marketdata)
+        console.log('f213ata', securities)
+
+        const securitiesMap = securities.reduce((map: { [key: string]: ISecurity }, security: ISecurity) => {
+          map[security.SECID] = security;
+          return map;
+        }, {});
+
+        const stocks = marketdata.reduce((arr: IMarketdatum[], datum: IMarketdatum) => {
+          const security = securitiesMap[datum.SECID];
+          arr.push({
+            ...datum,
+            SHORTNAME: security?.SHORTNAME,
+          });
+          return arr;
+        }, []);
+        setCurrentStock(stocks[0]);
+      }
+    });
+  }
 
 
-  const value = { stocks, setStocks, currentStock, setCurrentStock };
+
+  const value = { stocks, setStocks, currentStock, setCurrentStock, fetchSetCurrentStock };
 
   return (
     <StockContext.Provider value={value}>

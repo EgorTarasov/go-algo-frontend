@@ -1,7 +1,7 @@
 import axios from "axios";
 import storage from "../utils/storage";
 import { BASE_URL } from "../config";
-import { IAlgoritm } from "../models/IAlgorithm";
+import { IAlgoritm, IVersion } from "../models/IAlgorithm";
 
 interface ICreateAlgo {
     sec_id: string;
@@ -49,6 +49,63 @@ const ApiAlgo = {
         };
         const response = await axios.get<IAlgoritm[]>(
             `${BASE_URL}/${blockType}`,
+            config,
+        );
+        if (response.status != 200) {
+            throw new Error("Error getting algorithms");
+        } else {
+            return response.data;
+        }
+    },
+    async update(uuid: string, modelObject: any): Promise<IAlgoritm> {
+        const config = {
+            headers: {
+                Authorization: storage.getToken()
+                    ? `Bearer ${storage.getToken()}`
+                    : undefined,
+            },
+        };
+        const response = await axios.post<IAlgoritm>(
+            `${BASE_URL}/ml/d/${uuid}`,
+            modelObject,
+            config,
+        );
+        if (response.status != 200) {
+            throw new Error("Error getting algorithms");
+        } else {
+            return response.data;
+        }
+    },
+    async getAlgoMl(uuid: string): Promise<IAlgoritm> {
+        const config = {
+            headers: {
+                Authorization: storage.getToken()
+                    ? `Bearer ${storage.getToken()}`
+                    : undefined,
+            },
+        };
+        const response = await axios.get<IAlgoritm>(
+            `${BASE_URL}/ml/d/${uuid}`,
+            config,
+        );
+        if (response.status != 200) {
+            throw new Error("Error getting algorithms");
+        } else {
+            return response.data;
+        }
+    },
+    async backtest(uuid: string, period: string): Promise<IAlgoritm> {
+        const config = {
+            headers: {
+                Authorization: storage.getToken()
+                    ? `Bearer ${storage.getToken()}`
+                    : undefined,
+            },
+        };
+        console.log(config, 'con')
+        const response = await axios.post<IAlgoritm>(
+            `${BASE_URL}/ml/d/${uuid}/train/${period}m`,
+            {},
             config,
         );
         if (response.status != 200) {
