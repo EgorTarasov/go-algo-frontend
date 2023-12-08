@@ -5,9 +5,14 @@ import AlgoFlow from "../../shared/widgets/AlgoFlow";
 import { useParams } from "react-router-dom";
 import { AllStockProvider } from "../../hooks/AllStockDataProvider";
 import { MLFlowProvider } from "../../hooks/MlFlowProvider";
+import { useMLFlow } from "../../hooks/MlFlowProvider";
+import { TypographyMain } from "../../shared/ui/Typography";
 
 function CurrentAlgo() {
     let { type, uuid } = useParams<{ type: 'algo' | 'ml', uuid: string }>();
+    // const MlFlowContext = useMLFlow();
+    // if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
+    // const { algoName } = MlFlowContext;
 
     return (
         <>
@@ -20,6 +25,10 @@ function CurrentAlgo() {
                                 display: 'flex', justifyContent: 'space-between',
                                 mt: '80px', width: '100%', height: 'calc(100vh - 200px)',
                             }}>
+                                {/* {algoName &&
+                                    <Box>
+                                        <TypographyMain>{algoName}</TypographyMain>
+                                    </Box>} */}
                                 <Box sx={{ width: '70%' }}>
                                     <AlgoFlow type={type} />
                                 </Box>

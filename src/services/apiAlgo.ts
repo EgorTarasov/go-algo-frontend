@@ -24,7 +24,6 @@ const ApiAlgo = {
                     : undefined,
             },
         };
-        console.log(config.headers);
         const response = await axios.post<ICreateAlgoResponse>(
             `${BASE_URL}/${data.blockType}/create`,
             {
@@ -57,7 +56,7 @@ const ApiAlgo = {
             return response.data;
         }
     },
-    async update(uuid: string, modelObject: any): Promise<IAlgoritm> {
+    async update(uuid: string, modelObject: any, versionUuid: string): Promise<IAlgoritm> {
         const config = {
             headers: {
                 Authorization: storage.getToken()
@@ -66,7 +65,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.post<IAlgoritm>(
-            `${BASE_URL}/ml/d/${uuid}`,
+            `${BASE_URL}/ml/d/${uuid}/${versionUuid}`,
             modelObject,
             config,
         );
@@ -102,7 +101,6 @@ const ApiAlgo = {
                     : undefined,
             },
         };
-        console.log(config, 'con')
         const response = await axios.post<IAlgoritm>(
             `${BASE_URL}/ml/d/${uuid}/train/${period}m`,
             {},

@@ -185,7 +185,7 @@ function ManagmentForm({ updateManagment, updateOpenForm, origManagment }: FormP
         <>
             <Box sx={{
                 backgroundColor: 'primary.dark', borderRadius: '20px', height: '500px', width: '800px',
-                maxWidth: '90vw', maxHeight: '90vh', marginTop: '-80px', p: 5
+                maxWidth: '90vw', maxHeight: '90vh', marginTop: '-80px', p: 5, zIndex: 100000
             }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', alignContent: 'center', flexWrap: 'wrap' }}>
                     <Box sx={{ height: '38%', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>

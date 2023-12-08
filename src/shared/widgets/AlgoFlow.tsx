@@ -38,7 +38,8 @@ const nodeTypes = {
 function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { nodes, setNodes, reactFlowInstance, setReactFlowInstance, setCurrentNode, getNodeId, checkUniqueChild } = MlFlowContext;
+    const { nodes, setNodes, reactFlowInstance, setReactFlowInstance, 
+        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName } = MlFlowContext;
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
     const stockContext = useAllStock();
@@ -56,15 +57,17 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
 
     useEffect(() => {
         ApiAlgo.getAlgoMl(pathSegments[pathSegments.length - 1]).then((res) => {
+            console.log(res.versions, 'versions')
+            // setAlgoName(res.name)
+            res.versions.map((version) => (drawNewNodes(version.nodes)))
             fetchSetCurrentStock(res.sec_id);
-            // fetchSetCurrentStock('SBER');
         });
     }, [])
 
     const onDrop = useCallback(
         (event: React.DragEvent) => {
             event.preventDefault();
-            console.log(nodes)
+
             if (event.dataTransfer.types.some((types) => types === "nodedata")) {
                 const reactflowBounds = reactFlowWrapper.current?.getBoundingClientRect();
                 let data: IMenuNode = JSON.parse(event.dataTransfer.getData("nodedata"));
@@ -120,9 +123,9 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                             title: title,
                             params: {
                                 management: {
-                                    "balance": 0,
-                                    "max_balance_for_trading": 0,
-                                    "min_balance_for_trading": 0,
+                                    "balance": 10000,
+                                    "max_balance_for_trading": 1,
+                                    "min_balance_for_trading": 10000,
                                     "part_of_balance_for_buy": 0,
                                     "sum_for_buy_rur": 0,
                                     "sum_for_buy_num": 0,
@@ -131,7 +134,8 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                                     "sum_for_sell_num": 0,
                                     "sell_all": false,
                                 },
-                                candleStep: '1 минута'
+                                candleStep: '1 минута',
+                                version: getNodeId()
                             }
                         },
                     };

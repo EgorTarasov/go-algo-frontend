@@ -29,6 +29,7 @@ interface ModelNodeProps {
         params: {
             candleStep: string;
             management: IManagment;
+            version: string;
         };
     };
 }
@@ -95,7 +96,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createFeatureObject, updateModelCandleStep,
-        updateNodePeriods, updateModelManagment, getModelCandleStep } = MlFlowContext;
+        updateModelManagment, getModelCandleStep, getModelVersionId } = MlFlowContext;
 
     const [selectedCandleSteps, setSelectedCandleSteps] = useState<string>('');
     const [management, setManagment] = useState<IManagment | null>();
@@ -112,7 +113,6 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const color = MlNodesColors[data.title];
 
     useEffect(() => {
-        console.log(CandleStepNames[selectedCandleSteps], 'selcs')
         updateModelCandleStep(id, CandleStepNames[selectedCandleSteps])
     }, [selectedCandleSteps])
 
@@ -157,32 +157,27 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     }, [currentNode, getNodeId, setNodes]);
 
     function handleBacktest() {
-        const featureObject = createFeatureObject(id)
-        const jsonStr = JSON.stringify(featureObject, null, 2);
-        console.log('fo', getModelCandleStep(id))
         ApiAlgo.backtest(pathSegments[pathSegments.length - 1], getModelCandleStep(id)).then((res) => {
-            console.log(res, 'res')
+            console.log(res, 'resBack')
         });
     }
 
     function handleSaveModel() {
-
-        ApiAlgo.update(pathSegments[pathSegments.length - 1], createFeatureObject(id)).then((res) => {
-            console.log(res, 'res')
+        ApiAlgo.update(pathSegments[pathSegments.length - 1], createFeatureObject(id), getModelVersionId(id)).then((res) => {
+            console.log(res, 'resSave')
         });
-
     }
 
     return (
         <>
-            {/* <NodeToolbar isVisible={currentNode?.id === id}>
+            <NodeToolbar isVisible={currentNode?.id === id}>
                 <IconButton onClick={handleDelete} >
                     <DeleteOutlineIcon />
                 </IconButton>
                 <IconButton onClick={handleCopy}>
                     <CopyAllIcon />
                 </IconButton>
-            </NodeToolbar> */}
+            </NodeToolbar>
             <div style={{
                 width: '420px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
                 minHeight: '800px'
@@ -221,7 +216,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                 </div>
             </div >
             <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                sx={{ color: '#fff', zIndex: 10000 }}
                 open={openManagment}>
                 <ManagmentForm updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.management} />
             </Backdrop>

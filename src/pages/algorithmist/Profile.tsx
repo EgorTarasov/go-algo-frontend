@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import ApiAlgo from "../../services/apiAlgo";
 
 const AlgorithmCard = (props: IAlgoritm) => {
-    console.log(props.versions.length > 0);
     const change = Math.random() * 20 - 10;
     return (
         <Box

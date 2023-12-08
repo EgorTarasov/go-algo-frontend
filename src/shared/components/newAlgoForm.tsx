@@ -225,8 +225,6 @@ function NewAlgoForm() {
                                 } catch (error) {
                                     console.log(error);
                                 }
-
-                                console.log("form", currentStock);
                             }
                         }}
                     >
