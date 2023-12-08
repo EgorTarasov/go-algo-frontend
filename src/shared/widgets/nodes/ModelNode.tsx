@@ -113,6 +113,13 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
         if (managment) updateModelManagment(id, managment)
     }, [managment])
 
+    const updateManagment = (newManagment: IManagment) => {
+        setManagment(newManagment);
+    };
+    const updateOpenForm = (newOpen: boolean) => {
+        setOpenManagment(newOpen);
+    };
+
 
     const handleDelete = useCallback(() => {
         setNodes(nodes.filter(node => node.id !== id));
@@ -197,7 +204,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={openManagment}>
-                <ManagmentForm />
+                <ManagmentForm updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.managment}/>
             </Backdrop>
         </>
     );

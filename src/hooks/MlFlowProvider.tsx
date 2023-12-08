@@ -22,9 +22,9 @@ interface MLFlowContextProps {
     checkUniqueChild: (parentNode: Node, childType: string) => boolean;
     updateNodeFeatures: (id: string, features: string[]) => void;
     updateNodePeriods: (id: string, periods: string[]) => void;
-    updateModelManagment: (id: string, management: IManagment) => void;
+    updateModelManagment: (id: string, managment: IManagment) => void;
     getModelCandleStep: (id: string) => string;
-    createFeatureObject: (parentId: string) => { features: Record<string, any>, management: any, nodes: Node[] };
+    createFeatureObject: (parentId: string) => { features: Record<string, any>, managment: any, nodes: Node[] };
 }
 
 const MLFlowContext = createContext<MLFlowContextProps | null>(null);
@@ -56,8 +56,8 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, period: periods } } } : node));
     };
 
-    const updateModelManagment = (id: string, management: IManagment) => {
-        setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, management: management } } } : node));
+    const updateModelManagment = (id: string, managment: IManagment) => {
+        setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, managment: managment } } } : node));
     };
 
     function getModelCandleStep(id: string){
@@ -70,6 +70,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         if (!parentNode) {
             throw new Error(`Node with id ${parentId} not found`);
         }
+        console.log(parentNode.data.params.managment)
     
         const childNodes = nodes.filter(node => node.parentNode === parentId);
         const features: Record<string, any> = {};
@@ -108,18 +109,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         return {
             features,
             nodes: [parentNode, ...childNodes],
-            management: {
-                "balance": 0,
-                "max_balance_for_trading": 0,
-                "min_balance_for_trading": 0,
-                "part_of_balance_for_buy": 0,
-                "sum_for_buy_rur": 0,
-                "sum_for_buy_num": 0,
-                "part_of_balance_for_sell": 0,
-                "sum_for_sell_rur": 0,
-                "sum_for_sell_num": 0,
-                "sell_all": true
-            },
+            managment: parentNode.data.params.managment,
         };
     };
     
