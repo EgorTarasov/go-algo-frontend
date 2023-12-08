@@ -56,7 +56,7 @@ export interface IManagment {
     'part_of_balance_for_sell': number,
     'sum_for_sell_rur': number,
     'sum_for_sell_num': number,
-    'sell_all': number,
+    'sell_all': boolean,
 }
 
 
