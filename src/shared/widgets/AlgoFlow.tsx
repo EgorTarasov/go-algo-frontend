@@ -63,8 +63,7 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     useEffect(() => {
         if (type) {
             ApiAlgo.getAlgoMl(pathSegments[pathSegments.length - 1], type).then((res) => {
-                console.log(res.versions, 'versions')
-                // setAlgoName(res.name)
+                setAlgoName(res.name)
                 res.versions.map((version) => (drawNewNodes(version.nodes)))
                 fetchSetCurrentStock(res.sec_id);
             });
