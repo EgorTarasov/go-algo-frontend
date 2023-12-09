@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { NodeToolbar, Handle, Position } from 'reactflow';
+import { NodeToolbar, Handle, Position , OnConnect, addEdge} from 'reactflow';
 import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
 import { Title } from 'chart.js';
 import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
@@ -14,6 +14,7 @@ import { useMLFlow } from '../../../hooks/MlFlowProvider';
 import { IfNodeTip, IfNodeTitle } from '../../../constants/nodeData'
 import { IIfNodeData, IIfNode, IIFNodeParam } from '../../../models/IIfNode';
 import { IfNodeParams } from '../../../constants/mlNodeParams';
+import IfHandle from '../handles/IfHandle'
 
 
 interface IfNodeProps {
@@ -86,7 +87,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
   const MlFlowContext = useMLFlow();
   if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-  const { nodes, setNodes, currentNode, setCurrentNode, addEdgeWithLabel, updateNodePeriods } = MlFlowContext;
+  const { nodes, setNodes, currentNode, setCurrentNode, addEdgeWithLabel, updateNodePeriods, setEdges } = MlFlowContext;
 
   const [fields, setFields] = useState<FieldsState>({
     anomaly: {
@@ -171,22 +172,14 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
   }, [id, nodes, setNodes, currentNode, setCurrentNode]);
 
 
+  const onConnect: OnConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+);
+
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Top}
-        style={{ background: '#555' }}
-        onConnect={addEdgeWithLabel}
-      />
-
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ background: '#555' }}
-        onConnect={addEdgeWithLabel}
-      />
-
+      <IfHandle type="target" position={Position.Left} isConnectable={1} />
       <NodeToolbar isVisible={currentNode?.id === id}>
         <IconButton onClick={handleDelete} >
           <DeleteOutlineIcon />

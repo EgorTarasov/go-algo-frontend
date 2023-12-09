@@ -9,7 +9,8 @@ import ReactFlow, {
     OnEdgesChange,
     OnConnect,
     applyEdgeChanges,
-    Panel
+    Panel,
+    Edge
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import { useAllStock } from '../../hooks/AllStockDataProvider';
@@ -44,7 +45,8 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { nodes, setNodes, reactFlowInstance, setReactFlowInstance,
-        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName, edges, addEdgeWithLabel } = MlFlowContext;
+        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName, edges, setEdges,
+        addEdgeWithLabel } = MlFlowContext;
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
     const stockContext = useAllStock();
@@ -58,6 +60,16 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nds: Node[]) => applyNodeChanges(changes, nds)),
         [setNodes],
+    );
+
+    const onEdgesChange: OnEdgesChange = useCallback(
+        (changes) => setEdges((edg: Edge[]) => applyEdgeChanges(changes, edg)),
+        [setEdges],
+    );
+
+    const onConnect: OnConnect = useCallback(
+        (params) => setEdges((eds) => addEdge(params, eds)),
+        [setEdges],
     );
 
     useEffect(() => {
@@ -154,13 +166,11 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                     let newNode: Node<IIfNodeData | any>;
                     if (!data.isParent) {
                         const modelNode = nodes.find(node => node.type === 'algo' &&
-                            position.x > node.position.x && position.x < node.position.x + 420 &&
+                            position.x > node.position.x && position.x < node.position.x + 700 &&
                             position.y > node.position.y && position.y < node.position.y + 800);
-                        console.log('x', position.x, 'y', position.y,
-                            'modelnode.x', modelNode?.position.x, 'modelnode/y', modelNode?.position.y)
 
                         if (!modelNode) {
-                            alert('Перенесите фичи внутрь модели');
+                            alert('Перенесите условия внутрь блока алгоритма');
                             return;
                         }
 
@@ -241,7 +251,8 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
-                onConnect={addEdgeWithLabel}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
