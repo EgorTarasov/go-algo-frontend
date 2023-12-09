@@ -171,14 +171,14 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
 
     return (
         <>
-            <NodeToolbar isVisible={currentNode?.id === id}>
+            {/* <NodeToolbar isVisible={currentNode?.id === id}>
                 <IconButton onClick={handleDelete} >
                     <DeleteOutlineIcon />
                 </IconButton>
                 <IconButton onClick={handleCopy}>
                     <CopyAllIcon />
                 </IconButton>
-            </NodeToolbar>
+            </NodeToolbar> */}
             <div style={{
                 width: '420px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
                 minHeight: '800px'
@@ -217,7 +217,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                 </div>
             </div >
             <Backdrop
-                sx={{ color: '#fff', zIndex: 10000 }}
+                // sx={{ color: '#fff', zIndex: 10000 }}
                 open={openManagment}>
                 <ManagmentForm updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.management} />
             </Backdrop>

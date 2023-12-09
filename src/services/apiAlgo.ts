@@ -1,7 +1,7 @@
 import axios from "axios";
 import storage from "../utils/storage";
 import { BASE_URL } from "../config";
-import { IAlgoritm, IVersion } from "../models/IAlgorithm";
+import { IAlgoritm, IBacktestResult } from "../models/IAlgorithm";
 
 interface ICreateAlgo {
     sec_id: string;
@@ -93,7 +93,7 @@ const ApiAlgo = {
             return response.data;
         }
     },
-    async backtest(uuid: string, period: string, blockType: string, versionUuid: string): Promise<IAlgoritm> {
+    async backtest(uuid: string, period: string, blockType: string, versionUuid: string): Promise<IBacktestResult> {
         const config = {
             headers: {
                 Authorization: storage.getToken()
@@ -102,7 +102,7 @@ const ApiAlgo = {
             },
         };
         if(period === undefined) period = '1';
-        const response = await axios.post<IAlgoritm>(
+        const response = await axios.post<IBacktestResult>(
             `${BASE_URL}/algo/${blockType}/d/${uuid}/${versionUuid}/backtest/${period}m`,
             {},
             config,

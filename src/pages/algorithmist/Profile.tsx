@@ -50,7 +50,7 @@ const AlgorithmCard = (props: IAlgoritm) => {
                         </Typography>
                     </Box>
                 )}
-                <Link to={`/algorithm/ml/${props.uuid}`}>
+                <Link to={`/algorithm/${props.algo_type}/${props.uuid}`}>
                     <Button>Редактировать</Button>
                 </Link>
             </Box>

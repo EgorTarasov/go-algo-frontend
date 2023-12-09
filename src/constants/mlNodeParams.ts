@@ -46,7 +46,7 @@ export const IfNodeParams: {
     },
     'out_of_limits': {
         condition: ['high', 'low'],
-        feature_name: ['close', 'high', 'low', 'open', 'value', 'volume', 'green_candle_ratio', 'red_candle_ratio', 'price_changing'],
+        feature_name: ['close', 'high', 'low', 'open', 'value', 'volume', 'green_candles_ratio', 'red_candles_ratio', 'price_changing'],
         period: ['2', '5', '7', '10', '14', '21', '30', '100']
     },
     'average_cross': {

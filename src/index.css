@@ -45,3 +45,8 @@ html body {
 .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 7px !important;
 }
+
+.react-flow__edges,
+.react-flow__container{
+    z-index: 1001 !important;
+}

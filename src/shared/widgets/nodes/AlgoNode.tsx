@@ -96,7 +96,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createFeatureObject, updateModelCandleStep,
+    const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createIfObject, updateModelCandleStep,
         updateModelManagment, getModelCandleStep, getModelVersionId } = MlFlowContext;
 
     const [selectedCandleSteps, setSelectedCandleSteps] = useState<string>('');
@@ -164,22 +164,22 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     }
 
     function handleSaveModel() {
-        // console.log(createIfObject(id))
-        // ApiAlgo.update(pathSegments[pathSegments.length - 1], createFeatureObject(id), getModelVersionId(id), data.params.blockType).then((res) => {
-        //     console.log(res, 'resSave')
-        // });
+        console.log('if obj', JSON.stringify(createIfObject(id)))
+        ApiAlgo.update(pathSegments[pathSegments.length - 1], createIfObject(id), getModelVersionId(id), data.params.blockType).then((res) => {
+            console.log(res, 'resSave')
+        });
     }
 
     return (
         <>
-            <NodeToolbar isVisible={currentNode?.id === id}>
+            {/* <NodeToolbar isVisible={currentNode?.id === id}>
                 <IconButton onClick={handleDelete} >
                     <DeleteOutlineIcon />
                 </IconButton>
                 <IconButton onClick={handleCopy}>
                     <CopyAllIcon />
                 </IconButton>
-            </NodeToolbar>
+            </NodeToolbar> */}
             <div style={{
                 width: '700px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
                 minHeight: '800px'

@@ -2,7 +2,12 @@ export interface IAlgoritm {
     sec_id: string;
     name: string;
     uuid: string;
+    algo_type: string;
     versions: IVersion[];
+}
+
+export interface IBacktestResult {
+    static: string;
 }
 
 export interface IVersion {

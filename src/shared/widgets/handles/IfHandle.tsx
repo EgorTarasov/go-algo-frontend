@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getConnectedEdges, Handle, useNodeId, useStore, Position } from 'reactflow';
+import { v4 as uuidv4 } from 'uuid';
 
 type Selector = {
     nodeInternals: any,
@@ -27,7 +28,8 @@ const CustomHandle: React.FC<Props> = (props: Props) => {
             const node = nodeInternals.get(nodeId);
             const connectedEdges = getConnectedEdges([node], edges);
 
-            return props.isConnectable({ node, connectedEdges });
+            // Allow connection if the node is of the same type
+            return props.isConnectable({ node, connectedEdges }) || node.type === props.type;
         }
 
         if (typeof props.isConnectable === 'number') {
@@ -41,7 +43,7 @@ const CustomHandle: React.FC<Props> = (props: Props) => {
     }, [nodeInternals, edges, nodeId, props.isConnectable]);
 
     return (
-        <Handle {...props} isConnectable={isHandleConnectable}></Handle>
+        <Handle {...props} isConnectable={isHandleConnectable} id={uuidv4()} ></Handle>
     );
 };
 

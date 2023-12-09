@@ -6,20 +6,30 @@ import ReactFlow, {
     applyEdgeChanges,
     addEdge,
     Connection,
-    ReactFlowInstance
+    ReactFlowInstance,
+    useEdgesState,
+    EdgeChange
 } from "reactflow";
 import { useCallback } from 'react';
 import { MlNodeSectionNodes } from '../constants/nodeData'
 import { MlNodeParams, IManagment } from '../constants/mlNodeParams';
 import { v4 as uuidv4 } from 'uuid';
 import ApiAlgo from '../services/apiAlgo';
-import { IIfNodeData } from '../models/IIfNode';
+import { IIfNodeData, IIfNode } from '../models/IIfNode';
+
+interface nodeField {
+    node: Node[],
+    edge: Edge[]
+}
+
+
 
 interface MLFlowContextProps {
     nodes: Node[];
     setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
     edges: Edge[];
     setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+    onEdgesChange: (changes: EdgeChange[]) => void;
     algoName: string | null;
     setAlgoName: React.Dispatch<React.SetStateAction<string | null>>;
     reactFlowInstance: ReactFlowInstance | null;
@@ -28,16 +38,17 @@ interface MLFlowContextProps {
     setCurrentNode: React.Dispatch<React.SetStateAction<Node | null>>;
     getNodeId: () => string;
     checkUniqueChild: (parentNode: Node, childType: string) => boolean;
+    updateIfParams: (id: string, fields: IIfNode) => void;
     updateNodeFeatures: (id: string, features: string[]) => void;
     updateNodePeriods: (id: string, periods: string[]) => void;
-    updateIfNodeParams: (id: string, newData: IIfNodeData) => void;
     updateModelManagment: (id: string, management: IManagment) => void;
     updateModelCandleStep: (id: string, candleStep: string) => void;
     getModelCandleStep: (id: string) => string;
     getModelVersionId: (id: string) => string;
     drawNewNodes: (newNodes: Node[]) => void;
-    addEdgeWithLabel: (connection: Edge | Connection) => void;
+    drawNewEdges: (newEdges: Edge[]) => void;
     createFeatureObject: (parentId: string) => { features: Record<string, any>, management: any, nodes: Node[] };
+    createIfObject: (parentId: string) => { features: any, management: any, nodes: nodeField };
 }
 
 const MLFlowContext = createContext<MLFlowContextProps | null>(null);
@@ -47,23 +58,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [currentNode, setCurrentNode] = useState<Node | null>(null);
     const [algoName, setAlgoName] = useState<string | null>(null);
-    const [edges, setEdges] = useState<Edge[]>([]);
-
-
-    const addEdgeWithLabel = useCallback((connection: Edge | Connection) => {
-        if (connection.source && connection.target) {
-          const newEdge: Edge = {
-            id: uuidv4(), 
-            source: connection.source, 
-            target: connection.target, 
-            label: 'and', 
-          };
-          setEdges((e) => [...e, newEdge]);
-        }
-      }, []);
-      
-      
-      
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     function getNodeId() {
         return uuidv4();
@@ -81,11 +76,6 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, features } } } : node));
     };
 
-    const updateIfNodeParams = (id: string, newData: IIfNodeData) => {
-        setNodes(nodes => nodes.map(node => node.id === id ? 
-            { ...node, data:  newData} : node));
-    };
-
     const updateNodePeriods = (id: string, periods: string[]) => {
         setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, period: periods } } } : node));
     };
@@ -96,6 +86,12 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
 
     const updateModelCandleStep = (id: string, candleStep: string) => {
         setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: { ...node.data.params, candleStep: candleStep } } } : node));
+    };
+
+
+    const updateIfParams = (id: string, fields: IIfNode) => {
+        console.log('here', fields)
+        setNodes(nodes => nodes.map(node => node.id === id ? { ...node, data: { ...node.data, params: fields } } : node));
     };
 
     function getModelCandleStep(id: string) {
@@ -165,17 +161,101 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         };
     };
 
+    function groupNodes(nodes: Node[], edges: Edge[]): {blocks: any[][], blocksEdges: Edge[]} {
+        const visited = new Set<string>();
+        const blocks: any[][] = [];
+        const blocksEdges: Edge[] = [];
+      
+        for (const node of nodes) {
+          if (!visited.has(node.id)) {
+            node.selected = false;
+            const block: any[] = [];
+            const stack: string[] = [node.id];
+      
+            while (stack.length > 0) {
+              const nodeId = stack.pop()!;
+              if (!visited.has(nodeId)) {
+                visited.add(nodeId);
+                const currentNode = nodes.find(n => n.id === nodeId)!;
+                block.push({
+                  type: currentNode.data.type,
+                  ...currentNode.data.params
+                });
+      
+                for (const edge of edges) {
+                  if (edge.source === nodeId && !visited.has(edge.target)) {
+                    stack.push(edge.target);
+                    if (!blocksEdges.find(e => e.source === edge.source && e.target === edge.target)) {
+                      blocksEdges.push(edge);
+                    }
+                  } else if (edge.target === nodeId && !visited.has(edge.source)) {
+                    stack.push(edge.source);
+                    if (!blocksEdges.find(e => e.source === edge.source && e.target === edge.target)) {
+                      blocksEdges.push(edge);
+                    }
+                  }
+                }
+              }
+            }
+      
+            blocks.push(block);
+          }
+        }
+      
+        return {blocks, blocksEdges};
+      }
+
+
+    const createIfObject = (parentId: string) => {
+        const parentNode = nodes.find(node => node.id === parentId);
+        if (!parentNode) {
+            throw new Error(`Node with id ${parentId} not found`);
+        }
+
+        parentNode.selected = false;
+
+        const childNodes = nodes.filter(node => node.parentNode === parentId);
+        const features: any = {};
+
+        const {blocks, blocksEdges} = groupNodes(childNodes, edges);
+        const featureArray : any = []
+        for(const block of blocks){
+            featureArray.push({
+                type: 'and',
+                blocks: block
+            });
+        }
+    
+        features['model'] = parentNode.data.title.toLowerCase();
+
+        return {
+            features: featureArray,
+            nodes: {
+                node: [parentNode, ...childNodes],
+                edge: blocksEdges,
+            },
+            management: parentNode.data.params.management,
+        };
+    };
+
     function drawNewNodes(newNodes: Node[]) {
-        console.log(newNodes, 'newnodes')
         newNodes.map((node) => (setNodes((nds) => nds.concat(node))));
     }
+
+    function drawNewEdges(newEdges: Edge[]) {
+        let existingEdge = edges.find(edge => edge.id === newEdges[0].id);
+        if (!existingEdge) {
+            setEdges((prevEdges) => [...prevEdges, ...newEdges]);
+        }
+    }
+    
 
 
     const value = {
         nodes, setNodes, reactFlowInstance, setReactFlowInstance,
         currentNode, setCurrentNode, getNodeId, checkUniqueChild, updateNodeFeatures, updateNodePeriods, createFeatureObject,
         updateModelManagment, getModelCandleStep, updateModelCandleStep, getModelVersionId, drawNewNodes, algoName, setAlgoName,
-        updateIfNodeParams, edges, setEdges, addEdgeWithLabel
+        edges, setEdges, createIfObject, onEdgesChange, updateIfParams, drawNewEdges
     };
 
     return (

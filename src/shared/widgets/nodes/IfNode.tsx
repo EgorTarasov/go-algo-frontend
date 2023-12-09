@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { NodeToolbar, Handle, Position , OnConnect, addEdge} from 'reactflow';
+import { NodeToolbar, Handle, Position, OnConnect, addEdge } from 'reactflow';
 import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
 import { Title } from 'chart.js';
 import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
@@ -29,6 +29,7 @@ interface StyledAutocompleteProps extends AutocompleteProps<unknown, boolean | u
 interface FieldsState {
   [key: string]: IIfNode;
 };
+
 
 const StyledAutocomplete = styled(Autocomplete)<StyledAutocompleteProps>(({ mycolor }) => ({
   '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input': {
@@ -87,7 +88,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
   const MlFlowContext = useMLFlow();
   if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-  const { nodes, setNodes, currentNode, setCurrentNode, addEdgeWithLabel, updateNodePeriods, setEdges } = MlFlowContext;
+  const { nodes, setNodes, currentNode, setCurrentNode, updateIfParams } = MlFlowContext;
 
   const [fields, setFields] = useState<FieldsState>({
     anomaly: {
@@ -140,6 +141,14 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
     }));
   };
 
+  useEffect(() => {
+    // console.log(id, fields[data.title])
+    if(data.title) {
+      console.log(id, fields[data.title])
+      updateIfParams(id, fields[data.title]);
+    }
+  },[fields])
+
   function checkError() {
     let errorEmpty = false;
 
@@ -172,14 +181,10 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
   }, [id, nodes, setNodes, currentNode, setCurrentNode]);
 
 
-  const onConnect: OnConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-);
-
   return (
     <>
-      <IfHandle type="target" position={Position.Left} isConnectable={1} />
+      <IfHandle type="target" position={Position.Top} isConnectable={2} />
+      <IfHandle type="source" position={Position.Bottom} isConnectable={2} />
       <NodeToolbar isVisible={currentNode?.id === id}>
         <IconButton onClick={handleDelete} >
           <DeleteOutlineIcon />
@@ -555,8 +560,8 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
               </div>
               {
                 typeof fields[data.title].param === 'object' &&
-                ((fields[data.title].param as IIFNodeParam).feature_name === 'green_candle_ratio' ||
-                  (fields[data.title].param as IIFNodeParam).feature_name === 'red_candle_ratio') &&
+                ((fields[data.title].param as IIFNodeParam).feature_name === 'green_candles_ratio' ||
+                  (fields[data.title].param as IIFNodeParam).feature_name === 'red_candles_ratio') &&
                 <div>
                   <StyledAutocomplete
                     mycolor={color}

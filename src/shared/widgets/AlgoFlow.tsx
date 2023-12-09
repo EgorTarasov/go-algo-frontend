@@ -10,7 +10,9 @@ import ReactFlow, {
     OnConnect,
     applyEdgeChanges,
     Panel,
-    Edge
+    Edge,
+    MiniMap,
+    useEdgesState
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import { useAllStock } from '../../hooks/AllStockDataProvider';
@@ -26,6 +28,7 @@ import { TypographyMain } from '../ui/Typography';
 import IfNode from './nodes/IfNode';
 import { IIfNodeData } from '../../models/IIfNode';
 import AlgoNode from './nodes/AlgoNode';
+import CustomNode from './nodes/CustomNode';
 
 const rfStyle = {
     backgroundColor: '#F3F4F6',
@@ -39,14 +42,15 @@ const nodeTypes = {
     model: ModelNode,
     if: IfNode,
     algo: AlgoNode,
+    custom: CustomNode,
 };
 
 function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { nodes, setNodes, reactFlowInstance, setReactFlowInstance,
-        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName, edges, setEdges,
-        addEdgeWithLabel } = MlFlowContext;
+        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName, 
+    edges, onEdgesChange, setEdges, drawNewEdges } = MlFlowContext;
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
     const stockContext = useAllStock();
@@ -62,21 +66,23 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
         [setNodes],
     );
 
-    const onEdgesChange: OnEdgesChange = useCallback(
-        (changes) => setEdges((edg: Edge[]) => applyEdgeChanges(changes, edg)),
-        [setEdges],
-    );
-
     const onConnect: OnConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges],
+        [setEdges]
     );
 
     useEffect(() => {
         if (type) {
             ApiAlgo.getAlgoMl(pathSegments[pathSegments.length - 1], type).then((res) => {
                 setAlgoName(res.name)
-                res.versions.map((version) => (drawNewNodes(version.nodes)))
+                if(res.algo_type === 'algo') {
+                    res.versions.map((version) => (drawNewNodes(version.nodes.node)));
+                
+                    res.versions.map((version) => (
+                        drawNewEdges(version.nodes.edge)
+                        ));
+                }
+                if(res.algo_type === 'ml') res.versions.map((version) => (drawNewNodes(version.nodes)));
                 fetchSetCurrentStock(res.sec_id);
             });
         }
@@ -190,7 +196,8 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                                 }
                             },
                             parentNode: modelNode.id,
-                            extent: 'parent'
+                            extent: 'parent',
+                            connectable: true
                         };
                     } else {
                         newNode = {
@@ -245,14 +252,17 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
         [setCurrentNode],
     );
 
+    useEffect(() => {
+        console.log(edges, 'edges')
+    }, [edges])
     return (
         <div ref={reactFlowWrapper} style={{ width: '100%', height: 'calc(100vh - 200px)' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onEdgesChange={onEdgesChange}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
@@ -271,6 +281,7 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                     <TypographyMain>Text</TypographyMain>
                 </Panel> */}
                 <Controls position='bottom-right' />
+                <MiniMap nodeStrokeWidth={3} />
             </ReactFlow>
         </div>
     );
