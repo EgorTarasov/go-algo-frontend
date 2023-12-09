@@ -17,6 +17,8 @@ export default function AppBar() {
         createAlgorithm: "Создать алгоритм",
         profile: "Профиль",
         myAlgorithms: "Мои Алгоритмы",
+        algo: 'Алгоритмические блоки ',
+        ml: 'ML блоки'
     };
 
     return (
@@ -55,11 +57,9 @@ export default function AppBar() {
                                     height="20px"
                                 />
                                 {pathSegments.map(
-                                    (path: string, index: number) => (
+                                    (path: string, _: number) => (
                                         <TypographyMain sx={{ ml: 2 }}>
-                                            {pathText[path]}{" "}
-                                            {index < pathSegments.length - 1 &&
-                                                "/"}
+                                            {pathText[path]}{"  "}
                                         </TypographyMain>
                                     ),
                                 )}

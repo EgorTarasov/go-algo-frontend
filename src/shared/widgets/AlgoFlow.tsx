@@ -21,7 +21,9 @@ import { useMLFlow } from '../../hooks/MlFlowProvider';
 import ModelNode from './nodes/ModelNode';
 import ApiAlgo from '../../services/apiAlgo';
 import { useLocation } from 'react-router-dom';
-
+import { TypographyMain } from '../ui/Typography';
+import IfNode from './nodes/IfNode';
+import { IIfNodeData } from '../../models/IIfNode';
 
 const rfStyle = {
     backgroundColor: '#F3F4F6',
@@ -33,13 +35,14 @@ const rfStyle = {
 const nodeTypes = {
     feature: FeatureNode,
     model: ModelNode,
+    if: IfNode,
 };
 
 function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { nodes, setNodes, reactFlowInstance, setReactFlowInstance, 
-        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName } = MlFlowContext;
+    const { nodes, setNodes, reactFlowInstance, setReactFlowInstance,
+        setCurrentNode, getNodeId, checkUniqueChild, drawNewNodes, setAlgoName, edges, addEdgeWithLabel } = MlFlowContext;
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
     const stockContext = useAllStock();
@@ -77,70 +80,132 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                 });
                 let { title } = data;
                 let newId = getNodeId();
-                let newNode: Node;
 
-                if (!data.isParent) {
-                    const modelNode = nodes.find(node => node.type === 'model' &&
-                    position.x > node.position.x && position.x < node.position.x + 420 &&
-                    position.y > node.position.y && position.y < node.position.y + 800);
-                    console.log('x', position.x, 'y', position.y, 
-                    'modelnode.x', modelNode?.position.x, 'modelnode/y', modelNode?.position.y)
+                if (data.blockType === 'ml') {
+                    let newNode: Node;
+                    if (!data.isParent) {
+                        const modelNode = nodes.find(node => node.type === 'model' &&
+                            position.x > node.position.x && position.x < node.position.x + 420 &&
+                            position.y > node.position.y && position.y < node.position.y + 800);
+                        console.log('x', position.x, 'y', position.y,
+                            'modelnode.x', modelNode?.position.x, 'modelnode/y', modelNode?.position.y)
 
-                     if (!modelNode) {
-                        alert('Перенесите фичи внутрь модели');
-                        return;
+                        if (!modelNode) {
+                            alert('Перенесите фичи внутрь модели');
+                            return;
+                        }
+
+                        if (!checkUniqueChild(modelNode, title)) {
+                            alert('В одной модели могут быть фичи только разного вида, то есть каждая фича должна быть в одном экземпляре');
+                            return;
+                        }
+
+
+                        newNode = {
+                            id: newId,
+                            type: "feature",
+                            position: {
+                                x: 0,
+                                y: 350
+                            },
+                            data: {
+                                title: title,
+                                params: {
+                                    features: [],
+                                    period: []
+                                }
+                            },
+                            parentNode: modelNode.id,
+                            extent: 'parent'
+                        };
+                    } else {
+                        newNode = {
+                            id: newId,
+                            type: "model",
+                            position,
+                            data: {
+                                title: title,
+                                params: {
+                                    management: {
+                                        "balance": 10000,
+                                        "max_balance_for_trading": 1,
+                                        "min_balance_for_trading": 10000,
+                                        "part_of_balance_for_buy": 0,
+                                        "sum_for_buy_rur": 0,
+                                        "sum_for_buy_num": 0,
+                                        "part_of_balance_for_sell": 0,
+                                        "sum_for_sell_rur": 0,
+                                        "sum_for_sell_num": 0,
+                                        "sell_all": false,
+                                    },
+                                    candleStep: '1 минута',
+                                    version: getNodeId()
+                                }
+                            },
+                        };
                     }
-
-                    if(!checkUniqueChild(modelNode, title)) {
-                        alert('В одной модели могут быть фичи только разного вида, то есть каждая фича должна быть в одном экземпляре');
-                        return;
-                    }
-
-
-                    newNode = {
-                        id: newId,
-                        type: "feature",
-                        position: {
-                            x: 0,
-                            y: 350
-                        },
-                        data: {
-                            title: title,
-                            params: {
-                                features: [],
-                                period: []
-                            }
-                        },
-                        parentNode: modelNode.id,
-                        extent: 'parent'
-                    };
-                } else {
-                    newNode = {
-                        id: newId,
-                        type: "model",
-                        position,
-                        data: {
-                            title: title,
-                            params: {
-                                management: {
-                                    "balance": 10000,
-                                    "max_balance_for_trading": 1,
-                                    "min_balance_for_trading": 10000,
-                                    "part_of_balance_for_buy": 0,
-                                    "sum_for_buy_rur": 0,
-                                    "sum_for_buy_num": 0,
-                                    "part_of_balance_for_sell": 0,
-                                    "sum_for_sell_rur": 0,
-                                    "sum_for_sell_num": 0,
-                                    "sell_all": false,
-                                },
-                                candleStep: '1 минута',
-                                version: getNodeId()
-                            }
-                        },
-                    };
+                    setNodes((nds: Node[]) => nds.concat(newNode));
                 }
-                setNodes((nds: Node[]) => nds.concat(newNode));
+                else if(data.blockType === 'algo'){
+                    let newNode: Node<IIfNodeData | any>;
+                    if (!data.isParent) {
+                        const modelNode = nodes.find(node => node.type === 'model' &&
+                            position.x > node.position.x && position.x < node.position.x + 420 &&
+                            position.y > node.position.y && position.y < node.position.y + 800);
+                        console.log('x', position.x, 'y', position.y,
+                            'modelnode.x', modelNode?.position.x, 'modelnode/y', modelNode?.position.y)
+
+                        if (!modelNode) {
+                            alert('Перенесите фичи внутрь модели');
+                            return;
+                        }
+
+
+                        newNode = {
+                            id: newId,
+                            type: "if",
+                            position: {
+                                x: 0,
+                                y: 350
+                            },
+                            data: {
+                                title: title,
+                                params: {
+                                    feature: '',
+                                    param: '',
+                                }
+                            },
+                            parentNode: modelNode.id,
+                            extent: 'parent'
+                        };
+                    } else {
+                        newNode = {
+                            id: newId,
+                            type: "model",
+                            position,
+                            data: {
+                                title: title,
+                                params: {
+                                    management: {
+                                        "balance": 10000,
+                                        "max_balance_for_trading": 1,
+                                        "min_balance_for_trading": 10000,
+                                        "part_of_balance_for_buy": 0,
+                                        "sum_for_buy_rur": 0,
+                                        "sum_for_buy_num": 0,
+                                        "part_of_balance_for_sell": 0,
+                                        "sum_for_sell_rur": 0,
+                                        "sum_for_sell_num": 0,
+                                        "sell_all": false,
+                                    },
+                                    candleStep: '1 минута',
+                                    version: getNodeId()
+                                }
+                            },
+                        };
+                    }
+                    setNodes((nds: Node[]) => nds.concat(newNode));
+                }
             }
         },
         [getNodeId, reactFlowInstance, setNodes, nodes]
@@ -169,7 +234,9 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
         <div ref={reactFlowWrapper} style={{ width: '100%', height: 'calc(100vh - 200px)' }}>
             <ReactFlow
                 nodes={nodes}
+                edges={edges}
                 onNodesChange={onNodesChange}
+                onConnect={addEdgeWithLabel}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
@@ -182,8 +249,11 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
             >
                 <Background />
                 <Panel position="top-left" style={{ height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0 }}>
-                    <FlowSideBar type={type ? type : 'algo'} />
+                    <FlowSideBar type={type ? type : 'ml'} />
                 </Panel>
+                {/* <Panel position="top-right" style={{ height: '30%', width: '100px', backgroundColor: '#D4D7DE', margin: 0 }}>
+                    <TypographyMain>Text</TypographyMain>
+                </Panel> */}
                 <Controls position='bottom-right' />
             </ReactFlow>
         </div>

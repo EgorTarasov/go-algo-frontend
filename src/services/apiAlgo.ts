@@ -25,7 +25,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.post<ICreateAlgoResponse>(
-            `${BASE_URL}/${data.blockType}/create`,
+            `${BASE_URL}/ml/create`,
             {
                 sec_id: data.sec_id,
                 name: data.name,

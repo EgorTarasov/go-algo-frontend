@@ -110,7 +110,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
         setSelectedCandleSteps(data.params.candleStep)
         setManagment(data.params.management)
     }, [])
-    const color = MlNodesColors[data.title];
+    const color = '#FF0508';
 
     useEffect(() => {
         updateModelCandleStep(id, CandleStepNames[selectedCandleSteps])
@@ -210,7 +210,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                         </>
                     </div>
                     <div style={{ backgroundColor: color, height: '55px', width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <TypographyHeader sx={{ pl: 2, fontSize: '20px' }}>{data.title}</TypographyHeader>
+                        <TypographyHeader sx={{ pl: 2, fontSize: '20px' }}>{data.title === 'algo_block' ? 'Блок алгоритма' : data.title}</TypographyHeader>
                         <Button onClick={handleBacktest} sx={{ width: '90%', height: '20px', fontSize: '10px', mr: 2, mt: 0 }}>BACKTEST</Button>
                     </div>
                 </div>

@@ -21,16 +21,56 @@ export const MlNodeParams: IMlNodeParams = {
         'degree_of_lift': ['1', '2', '3'],
     },
 }
+interface IIFNodeAllParam {
+    condition?: string[];
+    param? : string[];
+    period?: string[];
+    value?: string[];
+    feature_name?: string[];
+    limit?: string[];
+    n_fast?: string[];
+    n_slow?: string[];
+    average_type?: string[];
+}
+
+export const IfNodeParams: {
+    [key: string]: IIFNodeAllParam;
+} = {
+    'anomaly': {
+        condition: ['high', 'low'],
+        param: ['value', 'price_changing']
+    },
+    'anomal_rsi': {
+        period: ['2', '5', '10', '15', '20', '30', '50'],
+        value: ['50', '55', '60', '65', '70', '75', '80', '85', '90']
+    },
+    'out_of_limits': {
+        condition: ['high', 'low'],
+        feature_name: ['close', 'high', 'low', 'open', 'value', 'volume', 'green_candle_ratio', 'red_candle_ratio', 'price_changing'],
+        period: ['2', '5', '7', '10', '14', '21', '30', '100']
+    },
+    'average_cross': {
+        average_type: ['ema', 'sma'],
+        feature_name: ['close', 'high', 'low', 'open', 'value', 'volume'],
+        n_fast: ['2', '5', '10', '15', '50', '100'],
+        n_slow: ['2', '5', '10', '15', '50', '100']
+    },
+    'macd_cross': {
+        feature_name: ['close', 'high', 'low', 'open', 'value', 'volume'],
+        n_fast: ['2', '5', '10', '15', '50', '100'],
+        n_slow: ['2', '5', '10', '15', '50', '100']
+    },
+}
 
 
 export const CandleStepNames: { [key: string]: string } = {
     '1 минута': '1',
-    '5 минут': '5',
+    // '5 минут': '5',
     '10 минут': '10',
-    '30 минут': '30',
-    '1 час': '60',
-    '4 часа': '240',
-    '1 сутки': '1440'
+    // '30 минут': '30',
+    // '1 час': '60',
+    // '4 часа': '240',
+    // '1 сутки': '1440'
 }
 
 export const ManagmentTip: { [key: string]: string } = {
