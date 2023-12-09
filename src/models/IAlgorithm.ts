@@ -7,7 +7,37 @@ export interface IAlgoritm {
 }
 
 export interface IBacktestResult {
-    static: string;
+    status: string;
+    data: IBacktestData;
+}
+
+interface IBacktestData {
+    "Start": string | null,
+    "End": string | null,
+    "Duration": string | null,
+    "Exposure Time [%]": number | null,
+    "Equity Final [$]": number | null,
+    "Equity Peak [$]": number | null,
+    "Return [%]": number | null,
+    "Buy & Hold Return [%]": number | null,
+    "Return (Ann.) [%]": number | null,
+    "Volatility (Ann.) [%]": number | null,
+    "Sharpe Ratio": number | null,
+    "Sortino Ratio": number | null,
+    "Calmar Ratio": number | null,
+    "Max. Drawdown [%]": number | null,
+    "Avg. Drawdown [%]": number | null,
+    "Max. Drawdown Duration": string | null,
+    "Avg. Drawdown Duration": string | null,
+    "# Trades": number,
+    "Best Trade [%]": number | null,
+    "Worst Trade [%]": number | null,
+    "Avg. Trade [%]": number | null,
+    "Max. Trade Duration": string | null,
+    "Avg. Trade Duration": string | null,
+    "Profit Factor": number | null,
+    "Expectancy [%]": number | null,
+    "SQN": number | null
 }
 
 export interface IVersion {

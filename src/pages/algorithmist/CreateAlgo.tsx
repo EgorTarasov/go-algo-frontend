@@ -3,9 +3,19 @@ import MenuAlgo from "../../shared/components/MenuAlgo";
 import NewAlgoForm from '../../shared/components/newAlgoForm'
 import background_arrow from '../../assets/background_arrow.svg'
 import { AllStockProvider } from "../../hooks/AllStockDataProvider";
+import { useEffect } from "react";
+import { useMLFlow } from "../../hooks/MlFlowProvider";
 
 
 function CreateAlgo() {
+    const MlFlowContext = useMLFlow();
+    if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
+    const { setNodes, setEdges } = MlFlowContext;
+
+    useEffect(() => {
+        setNodes([]),
+        setEdges([])
+    }, [])
     return (
         <>
             <AllStockProvider>

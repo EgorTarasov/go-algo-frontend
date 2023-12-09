@@ -253,8 +253,8 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     );
 
     useEffect(() => {
-        console.log(edges, 'edges')
-    }, [edges])
+        console.log(nodes, 'nodes')
+    }, [])
     return (
         <div ref={reactFlowWrapper} style={{ width: '100%', height: 'calc(100vh - 200px)' }}>
             <ReactFlow

@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 import { AllStockProvider } from "../../hooks/AllStockDataProvider";
 import { useMLFlow } from "../../hooks/MlFlowProvider";
 import { TypographyHeader, TypographyMain } from "../../shared/ui/Typography";
+import { useEffect } from "react";
 
 function CurrentAlgo() {
     let { type } = useParams<{ type: 'algo' | 'ml', uuid: string }>();
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { algoName } = MlFlowContext;
-
     return (
         <>
             <AllStockProvider>
