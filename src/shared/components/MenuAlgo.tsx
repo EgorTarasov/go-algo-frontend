@@ -66,7 +66,6 @@ export default function MenuAlgo({ isStatic = false }) {
                                 <MenuButton active={currentPath === 'createAlgorithm'} onClick={() => { navigate('/createAlgorithm') }} sx={{ width: '100%' }} iconSrc={create_algorithm}>Создать алгоритм</MenuButton>
                                 <TypographyMain sx={{ mt: 4, ml: 2 }}>Аккаунт</TypographyMain>
                                 <MenuButton active={currentPath === 'profile'} onClick={() => { navigate('/profile') }} sx={{ width: '100%' }} iconSrc={profile_icon}>Профиль</MenuButton>
-                                <MenuButton active={currentPath === 'myAlgorithms'} onClick={() => { navigate('/myAlgorithms') }} sx={{ width: '100%' }} iconSrc={my_algorithms}>Мои алгоритмы</MenuButton>
                             </Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                                 <img src={icon_documentation} width="90%" />
