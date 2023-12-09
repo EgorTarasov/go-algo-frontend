@@ -70,7 +70,7 @@ export default function MenuAlgo({ isStatic = false }) {
                             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                                 <img src={icon_documentation} width="90%" />
                                 <TypographyMain sx={{ mr: 0, mt: -4, textAlign: 'center' }}>На основе данных <br></br>ALGOPACK</TypographyMain>
-                                <Button onClick={() => { }} sx={{
+                                <Button onClick={() => window.open('https://www.moex.com/ru/algopack', '_blank')} sx={{
                                     width: '100%',
                                     backgroundColor: 'primary.main',
                                     color: 'secondary.main',
@@ -80,7 +80,7 @@ export default function MenuAlgo({ isStatic = false }) {
                                         backgroundColor: 'secondary.main',
                                         color: 'white',
                                     },
-                                }}>ALGOPACK</Button>
+                                }}><TypographyMain>ALGOPACK</TypographyMain></Button>
                             </Box>
                         </Box>
 
