@@ -47,7 +47,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.get<IAlgoritm[]>(
-            `${BASE_URL}/algo`,
+            `${BASE_URL}/algo/`,
             config,
         );
         if (response.status != 200) {

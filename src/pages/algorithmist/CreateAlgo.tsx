@@ -10,11 +10,12 @@ import { useMLFlow } from "../../hooks/MlFlowProvider";
 function CreateAlgo() {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { setNodes, setEdges } = MlFlowContext;
+    const { setNodes, setEdges, setShowBacktest } = MlFlowContext;
 
     useEffect(() => {
-        setNodes([]),
-        setEdges([])
+        setNodes([]);
+        setEdges([]);
+        setShowBacktest(false);
     }, [])
     return (
         <>

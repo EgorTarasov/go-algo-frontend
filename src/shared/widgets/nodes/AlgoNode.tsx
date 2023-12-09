@@ -97,7 +97,8 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createIfObject, updateModelCandleStep,
-        updateModelManagment, getModelCandleStep, getModelVersionId } = MlFlowContext;
+        updateModelManagment, getModelCandleStep, getModelVersionId,
+    setBacktestData, setShowBacktest, backtestData } = MlFlowContext;
 
     const [selectedCandleSteps, setSelectedCandleSteps] = useState<string>('');
     const [management, setManagment] = useState<IManagment | null>();
@@ -158,9 +159,17 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     }, [currentNode, getNodeId, setNodes]);
 
     function handleBacktest() {
-        ApiAlgo.backtest(pathSegments[pathSegments.length - 1], getModelCandleStep(id), data.params.blockType, data.params.version).then((res) => {
-            console.log(res, 'resBack')
-        });
+        setShowBacktest(true)
+        if((backtestData && !backtestData[data.params.version]) || !backtestData){
+            ApiAlgo.backtest(pathSegments[pathSegments.length - 1], getModelCandleStep(id), data.params.blockType, data.params.version).then((res) => {
+                setBacktestData({
+                    version_id: data.params.version,
+                    backtestData: res
+                })
+            });
+        }else {
+            setBacktestData(null);
+        }
     }
 
     function handleSaveModel() {

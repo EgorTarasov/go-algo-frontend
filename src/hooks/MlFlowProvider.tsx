@@ -16,10 +16,17 @@ import { MlNodeParams, IManagment } from '../constants/mlNodeParams';
 import { v4 as uuidv4 } from 'uuid';
 import ApiAlgo from '../services/apiAlgo';
 import { IIfNodeData, IIfNode } from '../models/IIfNode';
+import { IBacktestResult } from '../models/IAlgorithm';
 
 interface nodeField {
     node: Node[],
     edge: Edge[]
+}
+
+interface BacktestWithId {
+    version_id: string;
+    backtestData: IBacktestResult;
+    [key: string] : string | IBacktestResult;
 }
 
 
@@ -27,6 +34,10 @@ interface nodeField {
 interface MLFlowContextProps {
     nodes: Node[];
     setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
+    showBacktest: boolean;
+    setShowBacktest: React.Dispatch<React.SetStateAction<boolean>>;
+    backtestData: BacktestWithId | null;
+    setBacktestData: React.Dispatch<React.SetStateAction<BacktestWithId | null>>;
     edges: Edge[];
     setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
     onEdgesChange: (changes: EdgeChange[]) => void;
@@ -59,6 +70,8 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
     const [currentNode, setCurrentNode] = useState<Node | null>(null);
     const [algoName, setAlgoName] = useState<string | null>(null);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [showBacktest, setShowBacktest] = useState(false);
+    const [backtestData, setBacktestData] = useState<BacktestWithId | null>(null);
 
     function getNodeId() {
         return uuidv4();
@@ -255,7 +268,8 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         nodes, setNodes, reactFlowInstance, setReactFlowInstance,
         currentNode, setCurrentNode, getNodeId, checkUniqueChild, updateNodeFeatures, updateNodePeriods, createFeatureObject,
         updateModelManagment, getModelCandleStep, updateModelCandleStep, getModelVersionId, drawNewNodes, algoName, setAlgoName,
-        edges, setEdges, createIfObject, onEdgesChange, updateIfParams, drawNewEdges
+        edges, setEdges, createIfObject, onEdgesChange, updateIfParams, drawNewEdges, showBacktest, setShowBacktest,
+        backtestData, setBacktestData
     };
 
     return (

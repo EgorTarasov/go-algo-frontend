@@ -7,36 +7,44 @@ import { AllStockProvider } from "../../hooks/AllStockDataProvider";
 import { useMLFlow } from "../../hooks/MlFlowProvider";
 import { TypographyHeader, TypographyMain } from "../../shared/ui/Typography";
 import { useEffect } from "react";
+import { Backdrop } from '@mui/material'
+import { IFRAME_URL } from "../../config";
+import BacktestForm from "../../shared/components/BacktestForm";
 
 function CurrentAlgo() {
     let { type } = useParams<{ type: 'algo' | 'ml', uuid: string }>();
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { algoName } = MlFlowContext;
+    const { algoName, showBacktest } = MlFlowContext;
     return (
         <>
             <AllStockProvider>
-                    <Box sx={{ display: 'flex' }} className='container-main'>
-                        <MenuAlgo isStatic={false} />
-                        <>
-                            <Box sx={{
-                                display: 'flex', justifyContent: 'space-between',
-                                mt: '80px', width: '100%', height: 'calc(100vh - 200px)',
-                            }}>
-                                <Box sx={{ width: '70%' }}>
-                                    <AlgoFlow type={type} />
-                                </Box>
-                                <Box sx={{ width: '30%', ml: 5 }}>
-                                     {algoName &&
-                                     <Box sx={{ml: 2}}>
+                <Box sx={{ display: 'flex' }} className='container-main'>
+                    <MenuAlgo isStatic={false} />
+                    <>
+                        <Box sx={{
+                            display: 'flex', justifyContent: 'space-between',
+                            mt: '80px', width: '100%', height: 'calc(100vh - 200px)',
+                        }}>
+                            <Box sx={{ width: '70%' }}>
+                                <AlgoFlow type={type} />
+                            </Box>
+                            <Box sx={{ width: '30%', ml: 5 }}>
+                                {algoName &&
+                                    <Box sx={{ ml: 2 }}>
                                         <TypographyHeader>Алгоритм:  {algoName}</TypographyHeader>
                                     </Box>
-                                    }
-                                    <SideAlgoInfo />
-                                </Box>
+                                }
+                                <SideAlgoInfo />
                             </Box>
-                        </>
-                    </Box>
+                        </Box>
+                    </>
+                </Box>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: 10000 }}
+                    open={showBacktest}>
+                    <BacktestForm />
+                </Backdrop>
             </AllStockProvider>
         </>
     )

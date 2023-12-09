@@ -91,7 +91,7 @@ function MainGraphStocks() {
                                     cap={currentStock['ISSUECAPITALIZATION']}
                                     low={currentStock['LOW']}
                                     high={currentStock['HIGH']}
-                                    button={true}
+                                    button={false}
                                 />
                             </Box>
                         </>}
