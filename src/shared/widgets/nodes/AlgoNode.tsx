@@ -98,7 +98,7 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createIfObject, updateModelCandleStep,
         updateModelManagment, getModelCandleStep, getModelVersionId,
-    setBacktestData, setShowBacktest, backtestData } = MlFlowContext;
+        setBacktestData, setShowBacktest, backtestData } = MlFlowContext;
 
     const [selectedCandleSteps, setSelectedCandleSteps] = useState<string>('');
     const [management, setManagment] = useState<IManagment | null>();
@@ -160,14 +160,14 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
 
     function handleBacktest() {
         setShowBacktest(true)
-        if((backtestData && !backtestData[data.params.version]) || !backtestData){
+        if ((backtestData && !backtestData[data.params.version]) || !backtestData) {
             ApiAlgo.backtest(pathSegments[pathSegments.length - 1], getModelCandleStep(id), data.params.blockType, data.params.version).then((res) => {
                 setBacktestData({
                     version_id: data.params.version,
                     backtestData: res
                 })
             });
-        }else {
+        } else {
             setBacktestData(null);
         }
     }
@@ -191,46 +191,48 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
             </NodeToolbar> */}
             <div style={{
                 width: '700px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
-                minHeight: '800px'
+                minHeight: '800px', display: openManagment ? 'flex' : 'block'
             }}>
-                <div style={{ backgroundColor: color, height: '55px', display: 'flex', justifyContent: 'space-around' }}>
-                    <MenuButton iconSrc={risk_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
-                        onClick={() => { setOpenManagment(true) }}>Настроить риск-менеджмент</MenuButton>
-                    <MenuButton iconSrc={save_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
-                        onClick={handleSaveModel}>Сохранить версию модели</MenuButton>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ width: '50%', padding: 2 }}>
-                        <>
-                            <TypographyMain sx={{ ml: 2, fontSize: '11px' }}>Задайте интервал для свеч</TypographyMain>
-                            <div style={{ marginLeft: '10px', marginRight: '10px' }}>
-                                <StyledAutocomplete
-                                    mycolor={color}
-                                    size="small"
-                                    color='secondary.dark'
-                                    options={Object.keys(CandleStepNames) || []}
-                                    value={selectedCandleSteps}
-                                    onChange={(_, newValue) => {
-                                        setSelectedCandleSteps(newValue as string);
-                                    }}
-                                    renderInput={(params: AutocompleteRenderInputParams) => (
-                                        <TextField {...params} InputProps={{ ...params.InputProps, readOnly: true }} />
-                                    )}
-                                />
-                            </div>
-                        </>
+                <div style={{width: '700px'}}>
+                    <div style={{ backgroundColor: color, height: '55px', display: 'flex', justifyContent: 'space-around' }}>
+                        <MenuButton iconSrc={risk_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
+                            onClick={() => { setOpenManagment(true) }}>Настроить риск-менеджмент</MenuButton>
+                        <MenuButton iconSrc={save_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
+                            onClick={handleSaveModel}>Сохранить версию модели</MenuButton>
                     </div>
-                    <div style={{ backgroundColor: color, height: '55px', width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <TypographyHeader sx={{ pl: 2, fontSize: '20px' }}>{data.title === 'algo_block' ? 'Блок алгоритма' : data.title}</TypographyHeader>
-                        <Button onClick={handleBacktest} sx={{ width: '90%', height: '20px', fontSize: '10px', mr: 2, mt: 0 }}>BACKTEST</Button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ width: !openManagment ? '50%' : '100%', padding: 2 }}>
+                            <>
+                                <TypographyMain sx={{ ml: 2, fontSize: '11px' }}>Задайте интервал для свеч</TypographyMain>
+                                <div style={{ marginLeft: '10px', marginRight: '10px' }}>
+                                    <StyledAutocomplete
+                                        mycolor={color}
+                                        size="small"
+                                        color='secondary.dark'
+                                        options={Object.keys(CandleStepNames) || []}
+                                        value={selectedCandleSteps}
+                                        onChange={(_, newValue) => {
+                                            setSelectedCandleSteps(newValue as string);
+                                        }}
+                                        renderInput={(params: AutocompleteRenderInputParams) => (
+                                            <TextField {...params} InputProps={{ ...params.InputProps, readOnly: true }} />
+                                        )}
+                                    />
+                                </div>
+                            </>
+                        </div>
+                        <div style={{ backgroundColor: color, height: '55px', width: !openManagment ? '50%' : '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <TypographyHeader sx={{ pl: 2, fontSize: '20px' }}>{data.title === 'algo_block' ? 'Блок алгоритма' : data.title}</TypographyHeader>
+                            <Button onClick={handleBacktest} sx={{ width: '90%', height: '20px', fontSize: '10px', mr: 2, mt: 0 }}>BACKTEST</Button>
+                        </div>
                     </div>
                 </div>
+                {openManagment &&
+                    <>
+                        <ManagmentForm blockType='algo'
+                            updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.management} />
+                    </>}
             </div >
-            <Backdrop
-                sx={{ color: '#fff', zIndex: 10000 }}
-                open={openManagment}>
-                <ManagmentForm updateManagment={updateManagment} updateOpenForm={updateOpenForm} origManagment={data.params.management} />
-            </Backdrop>
         </>
     );
 };

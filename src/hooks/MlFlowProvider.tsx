@@ -26,7 +26,7 @@ interface nodeField {
 interface BacktestWithId {
     version_id: string;
     backtestData: IBacktestResult;
-    [key: string] : string | IBacktestResult;
+    [key: string]: string | IBacktestResult;
 }
 
 
@@ -58,6 +58,7 @@ interface MLFlowContextProps {
     getModelVersionId: (id: string) => string;
     drawNewNodes: (newNodes: Node[]) => void;
     drawNewEdges: (newEdges: Edge[]) => void;
+    addStylesChild: (parentId: string) => void;
     createFeatureObject: (parentId: string) => { features: Record<string, any>, management: any, nodes: Node[] };
     createIfObject: (parentId: string) => { features: any, management: any, nodes: nodeField };
 }
@@ -117,6 +118,25 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         return modelNode?.data.params.version;
     }
 
+    function addStylesChild(parentId: string) {
+        const parentNode = nodes.find(node => node.id === parentId);
+        if (!parentNode) {
+            throw new Error(`Node with id ${parentId} not found`);
+        }
+        const childNodes = nodes.filter(node => node.parentNode === parentId);
+        for (const childNode of childNodes) {
+            console.log('1')
+            // if (childNode.style) {
+                const ele = document.querySelectorAll('.react-flow__node, .react-flow__node-feature');
+                for (var i = 0; i < ele.length; i++) {
+                    (ele[i] as HTMLElement).style.zIndex = '0 !important';
+                    console.log('2')
+                }
+            // }
+        }
+
+    }
+
     const createFeatureObject = (parentId: string) => {
         const parentNode = nodes.find(node => node.id === parentId);
         if (!parentNode) {
@@ -174,49 +194,49 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         };
     };
 
-    function groupNodes(nodes: Node[], edges: Edge[]): {blocks: any[][], blocksEdges: Edge[]} {
+    function groupNodes(nodes: Node[], edges: Edge[]): { blocks: any[][], blocksEdges: Edge[] } {
         const visited = new Set<string>();
         const blocks: any[][] = [];
         const blocksEdges: Edge[] = [];
-      
+
         for (const node of nodes) {
-          if (!visited.has(node.id)) {
-            node.selected = false;
-            const block: any[] = [];
-            const stack: string[] = [node.id];
-      
-            while (stack.length > 0) {
-              const nodeId = stack.pop()!;
-              if (!visited.has(nodeId)) {
-                visited.add(nodeId);
-                const currentNode = nodes.find(n => n.id === nodeId)!;
-                block.push({
-                  type: currentNode.data.type,
-                  ...currentNode.data.params
-                });
-      
-                for (const edge of edges) {
-                  if (edge.source === nodeId && !visited.has(edge.target)) {
-                    stack.push(edge.target);
-                    if (!blocksEdges.find(e => e.source === edge.source && e.target === edge.target)) {
-                      blocksEdges.push(edge);
+            if (!visited.has(node.id)) {
+                node.selected = false;
+                const block: any[] = [];
+                const stack: string[] = [node.id];
+
+                while (stack.length > 0) {
+                    const nodeId = stack.pop()!;
+                    if (!visited.has(nodeId)) {
+                        visited.add(nodeId);
+                        const currentNode = nodes.find(n => n.id === nodeId)!;
+                        block.push({
+                            type: currentNode.data.type,
+                            ...currentNode.data.params
+                        });
+
+                        for (const edge of edges) {
+                            if (edge.source === nodeId && !visited.has(edge.target)) {
+                                stack.push(edge.target);
+                                if (!blocksEdges.find(e => e.source === edge.source && e.target === edge.target)) {
+                                    blocksEdges.push(edge);
+                                }
+                            } else if (edge.target === nodeId && !visited.has(edge.source)) {
+                                stack.push(edge.source);
+                                if (!blocksEdges.find(e => e.source === edge.source && e.target === edge.target)) {
+                                    blocksEdges.push(edge);
+                                }
+                            }
+                        }
                     }
-                  } else if (edge.target === nodeId && !visited.has(edge.source)) {
-                    stack.push(edge.source);
-                    if (!blocksEdges.find(e => e.source === edge.source && e.target === edge.target)) {
-                      blocksEdges.push(edge);
-                    }
-                  }
                 }
-              }
+
+                blocks.push(block);
             }
-      
-            blocks.push(block);
-          }
         }
-      
-        return {blocks, blocksEdges};
-      }
+
+        return { blocks, blocksEdges };
+    }
 
 
     const createIfObject = (parentId: string) => {
@@ -230,15 +250,15 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         const childNodes = nodes.filter(node => node.parentNode === parentId);
         const features: any = {};
 
-        const {blocks, blocksEdges} = groupNodes(childNodes, edges);
-        const featureArray : any = []
-        for(const block of blocks){
+        const { blocks, blocksEdges } = groupNodes(childNodes, edges);
+        const featureArray: any = []
+        for (const block of blocks) {
             featureArray.push({
                 type: 'and',
                 blocks: block
             });
         }
-    
+
         features['model'] = parentNode.data.title.toLowerCase();
 
         return {
@@ -261,7 +281,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
             setEdges((prevEdges) => [...prevEdges, ...newEdges]);
         }
     }
-    
+
 
 
     const value = {
@@ -269,7 +289,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         currentNode, setCurrentNode, getNodeId, checkUniqueChild, updateNodeFeatures, updateNodePeriods, createFeatureObject,
         updateModelManagment, getModelCandleStep, updateModelCandleStep, getModelVersionId, drawNewNodes, algoName, setAlgoName,
         edges, setEdges, createIfObject, onEdgesChange, updateIfParams, drawNewEdges, showBacktest, setShowBacktest,
-        backtestData, setBacktestData
+        backtestData, setBacktestData, addStylesChild
     };
 
     return (

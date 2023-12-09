@@ -24,12 +24,13 @@ interface FormProps {
     updateManagment: (newManagment: IManagment) => void;
     updateOpenForm: (newOpen: boolean) => void;
     origManagment: IManagment;
-}
+    blockType: 'algo' | 'ml';
+} 
 
 const buyTypeOptionsArr = ['Доля баланса', 'Сумма в рублях', 'Количество акций'];
 const sellTypeOptionsArr = ['Доля баланса', 'Сумма в рублях', 'Количество акций', 'Продать всё'];
 
-function ManagmentForm({ updateManagment, updateOpenForm, origManagment }: FormProps) {
+function ManagmentForm({ updateManagment, updateOpenForm, origManagment, blockType }: FormProps) {
     const [buyType, setBuyType] = useState<string>('Доля баланса');
     const [sellType, setSellType] = useState<string>('Доля баланса');
 
@@ -184,8 +185,8 @@ function ManagmentForm({ updateManagment, updateOpenForm, origManagment }: FormP
     return (
         <>
             <Box sx={{
-                backgroundColor: 'primary.dark', borderRadius: '20px', height: '500px', width: '800px',
-                maxWidth: '90vw', maxHeight: '90vh', marginTop: '-80px', p: 5, zIndex: 100000
+                backgroundColor: 'primary.dark', borderRadius: '20px', height: '500px', width: '420px',
+                maxWidth: '90vw', maxHeight: '90vh', p: 5, position: 'absolute', left: blockType === 'ml' ? '420px' : '700px', marginTop: '100px'
             }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', alignContent: 'center', flexWrap: 'wrap' }}>
                     <Box sx={{ height: '38%', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>

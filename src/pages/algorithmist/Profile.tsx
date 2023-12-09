@@ -6,8 +6,18 @@ import { useEffect, useState } from "react";
 import { IAlgoritm } from "../../models/IAlgorithm";
 import { Link } from "react-router-dom";
 import ApiAlgo from "../../services/apiAlgo";
+import { useMLFlow } from "../../hooks/MlFlowProvider";
 
 const AlgorithmCard = (props: IAlgoritm) => {
+    const MlFlowContext = useMLFlow();
+    if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
+    const { setNodes, setEdges, setShowBacktest } = MlFlowContext;
+
+    useEffect(() => {
+        setNodes([]);
+        setEdges([]);
+        setShowBacktest(false);
+    }, [])
     const change = Math.random() * 20 - 10;
     return (
         <Box
