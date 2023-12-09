@@ -50,8 +50,8 @@ html body {
 .react-flow__container{
     z-index: 1001 !important;
 }
-/* 
-.react-flow__node.react-flow__node-if {
-    z-index: 0 !important;
+
+
+.react-joyride__tooltip{
+    font-family: Arial, sans-serif; 
 }
-   */

@@ -17,7 +17,7 @@ function MenuButton({ onClick, sx, children, iconSrc, active }: StyledButtonProp
                 mt: 1, 
                 width: '300px', 
                 color: 'black', 
-                fontFamily: 'FavoritPro-Regular', 
+                fontFamily: 'FavoritPro-Regular, Arial', 
                 backgroundColor: active ? 'white' : 'transparent', 
                 boxShadow: active ? '0 0 10px rgba(0, 0, 0, 0.1)' : 'none', 
                 borderRadius: '8px', 

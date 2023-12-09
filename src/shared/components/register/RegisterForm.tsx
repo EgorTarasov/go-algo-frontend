@@ -105,12 +105,12 @@ const RegisterForm = (loginProps: LoginFormProps) => {
                     Зарегистрироваться</Button>
                 <Box sx={{ mt: 1 }}>
                     <span style={{
-                        textDecoration: 'none', fontFamily: 'FavoritPro-Regular, sans', color: 'secondary.main',
+                        textDecoration: 'none', fontFamily: 'FavoritPro-Regular, Arial', color: 'secondary.main',
                         fontSize: '15px'
                     }}>Уже зарегистрированы?</span>
                     <span>    |    </span>
                     <a onClick={navigateRegister} style={{
-                        textDecoration: 'none', fontFamily: 'FavoritPro-Regular, sans', color: 'secondary.main',
+                        textDecoration: 'none', fontFamily: 'FavoritPro-Regular, Arial', color: 'secondary.main',
                         fontSize: '15px', cursor: 'pointer'
                     }}>Войти</a>
                     <style>
