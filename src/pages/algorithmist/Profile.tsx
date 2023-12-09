@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { Box, Grid, Typography, useMediaQuery, Button } from "@mui/material";
 import MenuAlgo from "../../shared/components/MenuAlgo";
-
+import { TypographyHeader } from "../../shared/ui/Typography";
 import { useEffect, useState } from "react";
 import { IAlgoritm } from "../../models/IAlgorithm";
 import { Link } from "react-router-dom";
@@ -37,9 +37,9 @@ const AlgorithmCard = (props: IAlgoritm) => {
                     padding: "20px",
                 }}
             >
-                <Typography variant={"h5"} style={{ fontWeight: "bold" }}>
+                <TypographyHeader >
                     {props.name}
-                </Typography>
+                </TypographyHeader>
                 <Link target="_blank"
                     to={`https://www.moex.com/ru/issue.aspx?board=TQBR&code=${props.sec_id}`}
                 >
@@ -50,14 +50,14 @@ const AlgorithmCard = (props: IAlgoritm) => {
                         <Typography variant={"body1"}>
                             Версия: {props.versions[0].id}
                         </Typography>
-                        <Typography variant={"body1"}>
+                        {/* <Typography variant={"body1"}>
                             Прогнозируемая доходность:{" "}
                         </Typography>
                         <Typography
                             sx={{ color: change < 0 ? "#ea3326" : "#43972a" }}
                         >
                             {change.toFixed(2)} %
-                        </Typography>
+                        </Typography> */}
                     </Box>
                 )}
                 <Link to={`/algorithm/${props.algo_type}/${props.uuid}`}>
@@ -84,7 +84,7 @@ const Profile = observer(() => {
             <Box sx={{ display: "flex" }} className="container-main">
                 <MenuAlgo isStatic={!isMobile} />
                 <Box sx={{ ml: "310px", width: "calc(100% - 310px)" }}>
-                    <Typography variant={"h3"} style={{ fontWeight: "bold" }}>
+                    <Typography variant={"h3"} style={{ fontWeight: "bold", marginTop: '30px' }}>
                         Алгоритмы
                     </Typography>
                     <Grid
