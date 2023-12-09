@@ -24,6 +24,7 @@ import { useLocation } from 'react-router-dom';
 import { TypographyMain } from '../ui/Typography';
 import IfNode from './nodes/IfNode';
 import { IIfNodeData } from '../../models/IIfNode';
+import AlgoNode from './nodes/AlgoNode';
 
 const rfStyle = {
     backgroundColor: '#F3F4F6',
@@ -36,6 +37,7 @@ const nodeTypes = {
     feature: FeatureNode,
     model: ModelNode,
     if: IfNode,
+    algo: AlgoNode,
 };
 
 function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
@@ -59,12 +61,14 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
     );
 
     useEffect(() => {
-        ApiAlgo.getAlgoMl(pathSegments[pathSegments.length - 1]).then((res) => {
-            console.log(res.versions, 'versions')
-            // setAlgoName(res.name)
-            res.versions.map((version) => (drawNewNodes(version.nodes)))
-            fetchSetCurrentStock(res.sec_id);
-        });
+        if (type) {
+            ApiAlgo.getAlgoMl(pathSegments[pathSegments.length - 1], type).then((res) => {
+                console.log(res.versions, 'versions')
+                // setAlgoName(res.name)
+                res.versions.map((version) => (drawNewNodes(version.nodes)))
+                fetchSetCurrentStock(res.sec_id);
+            });
+        }
     }, [])
 
     const onDrop = useCallback(
@@ -139,17 +143,18 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                                         "sell_all": false,
                                     },
                                     candleStep: '1 минута',
-                                    version: getNodeId()
+                                    version: getNodeId(),
+                                    blockType: type,
                                 }
                             },
                         };
                     }
                     setNodes((nds: Node[]) => nds.concat(newNode));
                 }
-                else if(data.blockType === 'algo'){
+                else if (data.blockType === 'algo') {
                     let newNode: Node<IIfNodeData | any>;
                     if (!data.isParent) {
-                        const modelNode = nodes.find(node => node.type === 'model' &&
+                        const modelNode = nodes.find(node => node.type === 'algo' &&
                             position.x > node.position.x && position.x < node.position.x + 420 &&
                             position.y > node.position.y && position.y < node.position.y + 800);
                         console.log('x', position.x, 'y', position.y,
@@ -181,7 +186,7 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                     } else {
                         newNode = {
                             id: newId,
-                            type: "model",
+                            type: "algo",
                             position,
                             data: {
                                 title: title,
@@ -199,7 +204,8 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                                         "sell_all": false,
                                     },
                                     candleStep: '1 минута',
-                                    version: getNodeId()
+                                    version: getNodeId(),
+                                    blockType: type,
                                 }
                             },
                         };

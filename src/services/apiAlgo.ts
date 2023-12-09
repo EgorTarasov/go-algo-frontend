@@ -25,7 +25,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.post<ICreateAlgoResponse>(
-            `${BASE_URL}/ml/create`,
+            `${BASE_URL}/algo/${data.blockType}/create`,
             {
                 sec_id: data.sec_id,
                 name: data.name,
@@ -47,7 +47,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.get<IAlgoritm[]>(
-            `${BASE_URL}/${blockType}`,
+            `${BASE_URL}/algo`,
             config,
         );
         if (response.status != 200) {
@@ -56,7 +56,7 @@ const ApiAlgo = {
             return response.data;
         }
     },
-    async update(uuid: string, modelObject: any, versionUuid: string): Promise<IAlgoritm> {
+    async update(uuid: string, modelObject: any, versionUuid: string, blockType: string): Promise<IAlgoritm> {
         const config = {
             headers: {
                 Authorization: storage.getToken()
@@ -65,7 +65,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.post<IAlgoritm>(
-            `${BASE_URL}/ml/d/${uuid}/${versionUuid}`,
+            `${BASE_URL}/algo/${blockType}/d/${uuid}/${versionUuid}`,
             modelObject,
             config,
         );
@@ -75,7 +75,7 @@ const ApiAlgo = {
             return response.data;
         }
     },
-    async getAlgoMl(uuid: string): Promise<IAlgoritm> {
+    async getAlgoMl(uuid: string, blockType: string): Promise<IAlgoritm> {
         const config = {
             headers: {
                 Authorization: storage.getToken()
@@ -84,7 +84,7 @@ const ApiAlgo = {
             },
         };
         const response = await axios.get<IAlgoritm>(
-            `${BASE_URL}/ml/d/${uuid}`,
+            `${BASE_URL}/algo/${blockType}/d/${uuid}`,
             config,
         );
         if (response.status != 200) {
@@ -93,7 +93,7 @@ const ApiAlgo = {
             return response.data;
         }
     },
-    async backtest(uuid: string, period: string): Promise<IAlgoritm> {
+    async backtest(uuid: string, period: string, blockType: string, versionUuid: string): Promise<IAlgoritm> {
         const config = {
             headers: {
                 Authorization: storage.getToken()
@@ -101,8 +101,9 @@ const ApiAlgo = {
                     : undefined,
             },
         };
+        if(period === undefined) period = '1';
         const response = await axios.post<IAlgoritm>(
-            `${BASE_URL}/ml/d/${uuid}/train/${period}m`,
+            `${BASE_URL}/algo/${blockType}/d/${uuid}/${versionUuid}/backtest/${period}m`,
             {},
             config,
         );

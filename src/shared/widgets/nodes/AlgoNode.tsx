@@ -93,7 +93,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
+const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
     const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createFeatureObject, updateModelCandleStep,
@@ -164,9 +164,10 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     }
 
     function handleSaveModel() {
-        ApiAlgo.update(pathSegments[pathSegments.length - 1], createFeatureObject(id), getModelVersionId(id), data.params.blockType).then((res) => {
-            console.log(res, 'resSave')
-        });
+        // console.log(createIfObject(id))
+        // ApiAlgo.update(pathSegments[pathSegments.length - 1], createFeatureObject(id), getModelVersionId(id), data.params.blockType).then((res) => {
+        //     console.log(res, 'resSave')
+        // });
     }
 
     return (
@@ -180,7 +181,7 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                 </IconButton>
             </NodeToolbar>
             <div style={{
-                width: '420px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
+                width: '700px', backgroundColor: 'white', border: `1px solid ${color}`, borderRadius: '0 0 24.5px 24.5px',
                 minHeight: '800px'
             }}>
                 <div style={{ backgroundColor: color, height: '55px', display: 'flex', justifyContent: 'space-around' }}>
@@ -225,4 +226,4 @@ const ModelNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     );
 };
 
-export default memo(ModelNode);
+export default memo(AlgoNode);

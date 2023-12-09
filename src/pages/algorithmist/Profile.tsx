@@ -12,11 +12,14 @@ const AlgorithmCard = (props: IAlgoritm) => {
     return (
         <Box
             sx={{
-                // add shadow to card
-                boxShadow: 2,
-                width: "100%",
-                height: "100%",
-                borderRadius: "10px",
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'secondary.light',
+                borderRadius: '13.5px',
+                boxShadow: 'none',
+                transition: 'box-shadow 0.3s ease',
+                cursor: 'pointer'
+
             }}
         >
             <Box
@@ -27,7 +30,7 @@ const AlgorithmCard = (props: IAlgoritm) => {
                 <Typography variant={"h5"} style={{ fontWeight: "bold" }}>
                     {props.name}
                 </Typography>
-                <Link
+                <Link target="_blank"
                     to={`https://www.moex.com/ru/issue.aspx?board=TQBR&code=${props.sec_id}`}
                 >
                     <Typography variant={"h6"}>{props.sec_id}</Typography>

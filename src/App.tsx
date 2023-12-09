@@ -41,6 +41,12 @@ const theme = createTheme({
 });
 
 function App() {
+    // const [isAdmin, setIsAdmin] = useState(false);
+    // useEffect(() => {
+    //     if (storage.getRole() === 'admin') setIsAdmin(true);
+    //     else setIsAdmin(false);
+    // }, []);
+
     return (
         <>
             <ThemeProvider theme={theme}>
