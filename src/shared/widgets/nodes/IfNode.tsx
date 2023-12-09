@@ -163,8 +163,7 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
 
 
   useEffect(() => {
-    // setSelectedFeatures(data.params.features)
-    // setSelectedPeriods(data.params.period)
+    updateField(data.title, data.params)
   }, [])
 
 
