@@ -4,7 +4,7 @@ import { MlNodesColors, IfNodesColor } from "../../constants/nodeData";
 import { styled } from '@mui/system';
 import { Tooltip, TooltipProps, tooltipClasses } from "@mui/material";
 import React from 'react';
-import { MlNodeTip, IfNodeTip, IfNodeTitle } from "../../constants/nodeData";
+import { MlNodeTip, IfNodeTip, IfNodeTitle , MlNodeSectionNodes, TimeTitle} from "../../constants/nodeData";
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -60,13 +60,13 @@ function MenuNode({ nodeGroup, title, isParent, blockType }: IMenuNode) {
                     width: '10%', borderRadius: '10px 0 0 10px'
                 }}></span>
                 <TypographyMain sx={{ alignSelf: 'center' }}>
-                    {blockType === 'ml' ? title : IfNodeTitle[title]}
+                    {blockType === 'ml' ? (!MlNodeSectionNodes['timeFeatures'].includes(title) ? title : TimeTitle[title]): IfNodeTitle[title]}
                 </TypographyMain>
                 <LightTooltip sx={{ backgroundColor: 'white' }}
                     placement="right"
                     title={
                         <React.Fragment>
-                            <TypographyHeader>{blockType === 'ml' ? title : IfNodeTitle[title]}</TypographyHeader>
+                            <TypographyHeader>{blockType === 'ml' ? (!MlNodeSectionNodes['timeFeatures'].includes(title) ? title : TimeTitle[title]): IfNodeTitle[title]}</TypographyHeader>
                             <TypographyMain> {blockType === 'ml' ? MlNodeTip[title] : IfNodeTip[title]}</TypographyMain>
                         </React.Fragment>
                     }>

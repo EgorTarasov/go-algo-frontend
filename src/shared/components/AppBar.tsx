@@ -57,8 +57,8 @@ export default function AppBar() {
                                     height="20px"
                                 />
                                 {pathSegments.map(
-                                    (path: string, _: number) => (
-                                        <TypographyMain sx={{ ml: 2 }}>
+                                    (path: string, index: number) => (
+                                        <TypographyMain key={index} sx={{ ml: 2 }}>
                                             {pathText[path]}{"  "}
                                         </TypographyMain>
                                     ),

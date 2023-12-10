@@ -93,8 +93,8 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
   const [fields, setFields] = useState<FieldsState>({
     anomaly: {
       feature: 'anomaly',
-      condition: 'high', //high | low
-      param: 'value' //value | price_changing
+      condition: 'high', 
+      param: 'value'
     },
     anomal_rsi: {
       feature: 'anomal_rsi',
@@ -142,28 +142,19 @@ const IfNode: React.FC<IfNodeProps> = ({ id, data }) => {
   };
 
   useEffect(() => {
-    // console.log(id, fields[data.title])
     if(data.title) {
       console.log(id, fields[data.title])
       updateIfParams(id, fields[data.title]);
     }
   },[fields])
 
-  function checkError() {
-    let errorEmpty = false;
 
-    // if (!fields['balance'].value || !Number(fields['balance'].value)) {
-    //     updateField('balance', { helperText: 'Введите численный баланс', error: true });
-    //     errorEmpty = true;
-    // }
-    // else updateField('balance', { helperText: '', error: false });
-
-    return errorEmpty;
-  }
-
-
+//   params: {
+//     feature: '',
+//     param: '',
+// }
   useEffect(() => {
-    updateField(data.title, data.params)
+    if(data.params.param !== '' && data.params.feature !== '' )updateField(data.title, data.params)
   }, [])
 
 

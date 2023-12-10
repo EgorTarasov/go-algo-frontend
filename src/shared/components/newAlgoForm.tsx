@@ -8,6 +8,7 @@ import { IMarketdatum } from "../../models/IMarketdatum";
 import StockCard from "./StockCard";
 import { useNavigate } from "react-router-dom";
 import ApiAlgo from "../../services/apiAlgo";
+import { tickers } from "../../constants/nodeData";
 
 interface FieldState {
     error: boolean;
@@ -116,10 +117,10 @@ function NewAlgoForm() {
                                         setAutoValue(newValue.split(" - ")[0]);
                                 }}
                                 id="controllable-states-demo"
-                                options={stocks.map(
-                                    (item) =>
-                                        `${item.SECID} - ${item.SHORTNAME}`,
-                                )}
+                                options={stocks
+                                    .filter(stock => tickers.includes(stock.SECID))
+                                    .map(item => `${item.SECID} - ${item.SHORTNAME}`)
+                                }
                                 sx={{ width: 300 }}
                                 renderInput={(params) => (
                                     <TextField

@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import MenuNode from "../ui/MenuNode";
 import { MlNodeSectionNames, MlNodeSectionNodes, IfNodesSectionNames, IfNodeSectionNodes } from '../../constants/nodeData';
 import { TypographyMain } from "../ui/Typography";
-import { IfNodeTitle } from "../../constants/nodeData";
 
 interface FlowSideBarProps {
     type: 'algo' | 'ml';
@@ -19,9 +18,9 @@ function FlowSideBar({ type }: FlowSideBarProps) {
                     },
                     msOverflowStyle: 'none'}}>
                         {Object.keys(MlNodeSectionNames)
-                            .map((sectionName: string) => (
+                            .map((sectionName: string, index: number) => (
                                 <>
-                                    <TypographyMain>{MlNodeSectionNames[sectionName]}</TypographyMain>
+                                    <TypographyMain key={index} >{MlNodeSectionNames[sectionName]}</TypographyMain>
                                     {MlNodeSectionNodes[sectionName].map((nodeName) => (
                                         <MenuNode nodeGroup={sectionName} title={nodeName} blockType={type}
                                         isParent={sectionName === 'models'}/>

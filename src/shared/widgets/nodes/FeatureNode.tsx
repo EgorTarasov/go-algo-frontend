@@ -12,7 +12,7 @@ import { MlNodesColors } from '../../../constants/nodeData';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import { useMLFlow } from '../../../hooks/MlFlowProvider';
-import { MlNodeSectionNodes } from '../../../constants/nodeData'
+import { MlNodeSectionNodes, TimeTitle } from '../../../constants/nodeData'
 
 
 interface FeatureNodeProps {
@@ -133,14 +133,14 @@ const FeatureNode: React.FC<FeatureNodeProps> = ({ id, data }) => {
               <Cube color={color} />
             </div>
             <TypographyHeader sx={{ fontSize: '10px', ml: 2 }}>
-              {!MlNodeSectionNodes['timeFeatures'].includes(data.title) ? data.title : MlNodeTip[data.title]}
+              {!MlNodeSectionNodes['timeFeatures'].includes(data.title) ? data.title : TimeTitle[data.title]}
             </TypographyHeader>
           </div>
           <LightTooltip sx={{ backgroundColor: 'white' }}
             placement="right"
             title={
               <React.Fragment>
-                <TypographyHeader>{data.title}</TypographyHeader>
+                <TypographyHeader>{!MlNodeSectionNodes['timeFeatures'].includes(data.title) ? data.title : TimeTitle[data.title]}</TypographyHeader>
                 <TypographyMain> {MlNodeTip[data.title]}</TypographyMain>
               </React.Fragment>
             }>

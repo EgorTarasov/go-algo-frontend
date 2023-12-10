@@ -75,7 +75,7 @@ function CurrentAlgo() {
                                         <Box sx={{ ml: 2 }}>
                                             <TypographyHeader>Алгоритм:  {algoName}</TypographyHeader>
                                         </Box>
-                                        <Button className='instruction-button' sx={{ width: '30%', margin: '0 auto' }} onClick={() => { setRunTour(true) }}>Инструкция</Button>
+                                        <Button className='instruction-button' sx={{ width: '117px', margin: '0 auto', height: '40px' }} onClick={() => { setRunTour(true) }}>Инструкция</Button>
                                     </div>
                                 }
                                 <SideAlgoInfo />
