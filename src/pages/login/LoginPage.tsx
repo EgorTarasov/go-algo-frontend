@@ -46,7 +46,6 @@ function LoginPage() {
                     }}>
                         <Typography
                             sx={{
-                                fontFamily: 'Favorit Bold, Arial',
                                 fontWeight: 400,
                                 fontSize: '50px',
                                 color: 'secondary.main',
@@ -59,7 +58,6 @@ function LoginPage() {
                         </Typography>
                         <Typography
                             sx={{
-                                fontFamily: 'FavoritPro-Regular, Arial',
                                 fontWeight: 400,
                                 fontSize: '20px',
                                 color: 'secondary.main',

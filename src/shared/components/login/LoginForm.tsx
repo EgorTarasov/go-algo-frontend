@@ -79,10 +79,10 @@ const LoginForm = (loginProps: LoginFormProps) => {
                     sx={{ mt: 3, width: '300px' }}>
                     Вход</Button>
                 <Box sx={{ mt: 1 }}>
-                    <a href='/ui' style={{ textDecoration: 'none', fontFamily: 'FavoritPro-Regular, Arial', color: 'secondary.main' ,
+                    <a href='/investor' style={{ textDecoration: 'none', fontFamily: 'Arial, sans', color: 'secondary.main' ,
                 fontSize: '15px'}}>Войти как инвестор</a>
                     <span> | </span>
-                    <a onClick={navigateRegister} style={{ textDecoration: 'none', fontFamily: 'FavoritPro-Regular, Arial', color: 'secondary.main',
+                    <a onClick={navigateRegister} style={{ textDecoration: 'none', fontFamily: 'Arial, sans', color: 'secondary.main',
                 fontSize: '15px', cursor: 'pointer' }}>Зарегистрироваться</a>
                     <style>
                         {`
