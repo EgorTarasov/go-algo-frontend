@@ -150,9 +150,11 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
             }}>
                 <div style={{width: '700px'}}>
                     <div style={{ backgroundColor: color, height: '55px', display: 'flex', justifyContent: 'space-around' }}>
-                        <MenuButton iconSrc={risk_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
+                        <MenuButton className='risk-button'
+                        iconSrc={risk_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
                             onClick={() => { setOpenManagment(true) }}>Настроить риск-менеджмент</MenuButton>
-                        <MenuButton iconSrc={save_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
+                        <MenuButton className='save-model-button'
+                        iconSrc={save_icon} sx={{ width: '150px', lineHeight: 1.2, height: '38px', fontSize: '10px' }} active={true}
                             onClick={handleSaveModel}>Сохранить версию модели</MenuButton>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -178,7 +180,8 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
                         </div>
                         <div style={{ backgroundColor: color, height: '55px', width: !openManagment ? '50%' : '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <TypographyHeader sx={{ pl: 2, fontSize: '20px' }}>{data.title === 'algo_block' ? 'Блок алгоритма' : data.title}</TypographyHeader>
-                            <Button onClick={handleBacktest} sx={{ width: '90%', height: '20px', fontSize: '10px', mr: 2, mt: 0 }}>BACKTEST</Button>
+                            <Button onClick={handleBacktest} className='backtest-button' 
+                            sx={{ width: '90%', height: '20px', fontSize: '10px', mr: 2, mt: 0 }}>BACKTEST</Button>
                         </div>
                     </div>
                 </div>

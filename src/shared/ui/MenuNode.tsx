@@ -34,6 +34,7 @@ function MenuNode({ nodeGroup, title, isParent, blockType }: IMenuNode) {
     return (
         <>
             <div draggable='true'
+            className="menu-node"
                 style={{
                     display: 'flex', justifyContent: 'space-between', width: '240px', margin: 5, border: `dashed 1px #000000`,
                     borderRadius: '10px', height: '40px', backgroundColor: 'white', paddingRight: '10px'

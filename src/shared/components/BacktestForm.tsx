@@ -39,6 +39,7 @@ function BacktestForm() {
             }}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                     <TypographyHeader sx={{ mb: 5 }}>Результат BACKTEST</TypographyHeader>
+                    <TypographyMain>*скорость работы зависит от скорости получения данных по api ALGOPACK </TypographyMain>
                     <IconButton  sx={{mt: -5}}
                     onClick={() => {
                         setShowBacktest(false);

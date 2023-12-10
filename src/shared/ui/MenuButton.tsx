@@ -6,13 +6,15 @@ interface StyledButtonProps {
     sx?: any;
     children: ReactNode;
     iconSrc?: string;
-    active: boolean
+    active: boolean;
+    className? : string;
 }
 
-function MenuButton({ onClick, sx, children, iconSrc, active }: StyledButtonProps) {
+function MenuButton({ onClick, sx, children, iconSrc, active, className }: StyledButtonProps) {
     return (
         <Button
             onClick={onClick}
+            className={className ? className : ''}
             sx={{ 
                 mt: 1, 
                 width: '300px', 
