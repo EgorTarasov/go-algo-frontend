@@ -1,10 +1,14 @@
-import { createChart, ColorType, IChartApi, ISeriesApi, DeepPartial, LayoutOptions, Background } from 'lightweight-charts';
-import { useEffect, useRef, RefObject } from 'react';
-
-interface ChartData {
-    time: string;
-    value: number;
-}
+import {
+    createChart,
+    ColorType,
+    IChartApi,
+    DeepPartial,
+    LayoutOptions,
+    ISeriesApi
+} from "lightweight-charts";
+import { useEffect, useRef, RefObject } from "react";
+import moexApiInstance from "../../services/apiMoex";
+import { serialiseCandles } from "../../utils/graph";
 
 interface ChartColors {
     backgroundColor?: string;
@@ -15,77 +19,143 @@ interface ChartColors {
 }
 
 interface ChartProps {
-    data: ChartData[];
+    secid: string;
+    myInterval: number;
     colors?: ChartColors;
 }
 
-export const ChartComponent: React.FC<ChartProps> = (props) => {
-	const {
-		data,
-		colors: {
-			backgroundColor = 'white',
-			lineColor = '#2962FF',
-			textColor = 'black',
-			areaTopColor = '#2962FF',
-			areaBottomColor = 'rgba(41, 98, 255, 0.28)',
-		} = {},
-	} = props;
-
-	const chartContainerRef: RefObject<HTMLDivElement> = useRef(null);
-
-	useEffect(() => {
-			const handleResize = () => {
-				if (chartContainerRef.current) {
-					chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-				}
-			};
-
-			const chart: IChartApi = createChart(chartContainerRef.current!, {
-				layout: {
-					background: { type: ColorType.Solid, color: backgroundColor },
-					textColor,
-				} as DeepPartial<LayoutOptions>,
-				width: chartContainerRef.current!.clientWidth,
-				height: 300,
-			});
-			chart.timeScale().fitContent();
-
-			const newSeries: ISeriesApi<'Area'> = chart.addAreaSeries({ lineColor, topColor: areaTopColor, bottomColor: areaBottomColor });
-			newSeries.setData(data);
-
-			window.addEventListener('resize', handleResize);
-
-			return () => {
-				window.removeEventListener('resize', handleResize);
-
-				chart.remove();
-			};
-		},
-		[data, backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor]
-	);
-
-	return (
-		<div
-			ref={chartContainerRef}
-		/>
-	);
+const defaultColors = {
+    backgroundColor: "white",
+    lineColor: "#2962FF",
+    textColor: "black",
+    areaTopColor: "#2962FF",
+    areaBottomColor: "rgba(41, 98, 255, 0.28)",
 };
 
-const initialData: ChartData[] = [
-	{ time: '2018-12-22', value: 32.51 },
-	{ time: '2018-12-23', value: 31.11 },
-	{ time: '2018-12-24', value: 27.02 },
-	{ time: '2018-12-25', value: 27.32 },
-	{ time: '2018-12-26', value: 25.17 },
-	{ time: '2018-12-27', value: 28.89 },
-	{ time: '2018-12-28', value: 25.46 },
-	{ time: '2018-12-29', value: 23.92 },
-	{ time: '2018-12-30', value: 22.68 },
-	{ time: '2018-12-31', value: 22.67 },
-];
+const configureChart = (chart: IChartApi, colors: ChartColors) => {
+    const {
+        backgroundColor,
+        textColor,
+    } = colors;
 
-export default function Chart(props: ChartProps) {
-	return (
-		<ChartComponent {...props} data={initialData}></ChartComponent>
-	);
-}
+    const myPriceFormatter = Intl.NumberFormat("ru", {
+        style: "currency",
+        currency: "RUB",
+    }).format;
+
+    const myTimeFormatter = (time: number) => {
+        return new Date(time).toLocaleString("ru", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            timeZone: "UTC"
+        });
+    };
+
+    const myTickMarkFormatter = (time: number) => {
+        return new Date(time).toLocaleString("ru", {
+            hour: "numeric",
+            minute: "numeric",
+            timeZone: "UTC"
+        });
+    };
+
+    chart.applyOptions({
+        layout: {
+            background: { type: ColorType.Solid, color: backgroundColor },
+            textColor,
+        } as DeepPartial<LayoutOptions>,
+        overlayPriceScales: {
+            scaleMargins: {
+                top: 0.3,
+                bottom: 0.25,
+            },
+            borderVisible: false,
+        },
+        localization: {
+            locale: "ru",
+            priceFormatter: myPriceFormatter,
+            timeFormatter: myTimeFormatter,
+        },
+        timeScale: {
+            tickMarkFormatter: myTickMarkFormatter,
+            timeVisible: true,
+            secondsVisible: false,
+            ticksVisible: true,
+            fixLeftEdge: true,
+            fixRightEdge: true,
+            barSpacing: 50,
+            lockVisibleTimeRangeOnResize: true,
+            borderColor: "#D1D4DC",
+        },
+    });
+};
+
+const handleResize = (chart: IChartApi, chartContainerRef: RefObject<HTMLDivElement>) => {
+    if (chartContainerRef.current) {
+        chart.applyOptions({
+            width: chartContainerRef.current.clientWidth,
+        });
+    }
+};
+
+export const ChartComponent: React.FC<ChartProps> = ({ secid, myInterval, colors = defaultColors }) => {
+
+    const chartContainerRef: RefObject<HTMLDivElement> = useRef(null);
+    const intervalRef = useRef<any>(null);
+
+    let chart: IChartApi | null = null;
+    let mainSeries: ISeriesApi<'Candlestick'> | null = null;
+
+    useEffect(() => {
+        const fetchAndUpdate = async () => {
+            const candleData = (
+                await moexApiInstance.getCandles({
+                    engine: "stock",
+                    markets: "shares",
+                    boardgroups: 57,
+                    ticker: secid,
+                    interval: myInterval,
+                    candles: 500,
+                    timestamp: Date.now(),
+                })
+            ).candles[0];
+            const newData = serialiseCandles(candleData.data);
+
+            if (!chart) {
+                chart = createChart(chartContainerRef.current!, {
+                    width: chartContainerRef.current!.clientWidth,
+                    height: 400,
+                });
+                configureChart(chart, colors);
+                mainSeries = chart.addCandlestickSeries();
+            }
+            if (mainSeries) {
+                mainSeries.setData(newData as any);
+            }
+            
+        };
+
+        fetchAndUpdate();
+        if(myInterval === 1) intervalRef.current = setInterval(fetchAndUpdate, 5000);
+        else intervalRef.current = setInterval(fetchAndUpdate, (myInterval * 60 * 1000) - 10000);
+
+        window.addEventListener("resize", () => handleResize(chart!, chartContainerRef));
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+            if (chart) {
+                window.removeEventListener("resize", () => handleResize(chart!, chartContainerRef));
+                chart.remove();
+            }
+        };
+    }, [secid, myInterval, colors]);
+
+
+    return <div ref={chartContainerRef} />;
+};
+
+export default ChartComponent;

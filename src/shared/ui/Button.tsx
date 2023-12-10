@@ -5,19 +5,20 @@ interface StyledButtonProps {
     onClick: (event: any) => void;
     sx?: any;
     children: ReactNode;
+    className? : string;
 }
 
-function StyledButton({ onClick, sx, children }: StyledButtonProps) {
+function StyledButton({ onClick, sx, children, className }: StyledButtonProps) {
     return (
         <Button
             onClick={onClick}
+            className={className ? className : ''}
             sx={{ 
                 mt: 3, 
                 width: '300px', 
                 color: 'white', 
-                fontFamily: 'Favorit Pro', 
-                backgroundColor: 'secondary.main', 
                 borderRadius: '8px', 
+                backgroundColor: 'secondary.main', 
                 textTransform: 'uppercase', 
                 '&:hover': {
                     backgroundColor: 'primary.main', 

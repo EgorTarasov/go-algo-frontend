@@ -9,12 +9,10 @@ interface StyledTypographyProps {
 export function TypographyHeader({ children, sx }: StyledTypographyProps) {
     return (
         <Typography 
-            variant="h2"
             sx={{
                 textAlign: 'left',
                 mr: 2,
                 ml: 0,
-                fontFamily: 'FavoritC, sans',
                 fontWeight: 700,
                 fontSize: '24px',
                 color: 'secondary.main',
@@ -30,17 +28,15 @@ export function TypographyHeader({ children, sx }: StyledTypographyProps) {
 export function TypographyMain({ children , sx}: StyledTypographyProps) {
     return (
         <Typography 
-            variant="h2"
             sx={{
                 textAlign: 'left',
                 mr: 2,
                 mt: 0.5,
                 ml: 0,
-                fontFamily: 'Favorit Pro, sans',
                 fontWeight: 400,
                 fontSize: '16px',
                 textDecoration: 'none',
-                color: '#secindary.main',
+                color: 'secondary.main',
                 ...sx
             }}
         >

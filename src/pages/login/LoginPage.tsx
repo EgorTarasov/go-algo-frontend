@@ -46,7 +46,6 @@ function LoginPage() {
                     }}>
                         <Typography
                             sx={{
-                                fontFamily: 'FavoritC, sans',
                                 fontWeight: 400,
                                 fontSize: '50px',
                                 color: 'secondary.main',
@@ -59,7 +58,6 @@ function LoginPage() {
                         </Typography>
                         <Typography
                             sx={{
-                                fontFamily: 'Favorit Pro, sans',
                                 fontWeight: 400,
                                 fontSize: '20px',
                                 color: 'secondary.main',
@@ -77,7 +75,7 @@ function LoginPage() {
                     </Box>
                     <Box sx={{
                         position: 'relative',
-                        zIndex: 2,
+                        zIndex: 3,
                         maxWidth: '95%',
                         display: 'flex',
                         justifyContent: 'center',
@@ -90,7 +88,7 @@ function LoginPage() {
                 <Box sx={{ width: '50%' }}>
                     <Box sx={{
                         position: 'relative',
-                        zIndex: 2,
+                        zIndex: 3,
                         display: 'flex',
                         justifyContent: 'center',
                         marginTop: '50px'
