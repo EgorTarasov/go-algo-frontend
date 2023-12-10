@@ -5,10 +5,8 @@ import AlgoFlow from "../../shared/widgets/AlgoFlow";
 import { useParams } from "react-router-dom";
 import { AllStockProvider } from "../../hooks/AllStockDataProvider";
 import { useMLFlow } from "../../hooks/MlFlowProvider";
-import { TypographyHeader, TypographyMain } from "../../shared/ui/Typography";
-import { useEffect } from "react";
+import { TypographyHeader } from "../../shared/ui/Typography";
 import { Backdrop } from '@mui/material'
-import { IFRAME_URL } from "../../config";
 import BacktestForm from "../../shared/components/BacktestForm";
 import Joyride, { Step, CallBackProps, STATUS } from 'react-joyride';
 import { useState } from "react";

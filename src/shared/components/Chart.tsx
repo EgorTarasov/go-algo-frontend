@@ -7,7 +7,6 @@ import {
     ISeriesApi
 } from "lightweight-charts";
 import { useEffect, useRef, RefObject } from "react";
-import { IChartData } from "../../models/IChartData";
 import moexApiInstance from "../../services/apiMoex";
 import { serialiseCandles } from "../../utils/graph";
 

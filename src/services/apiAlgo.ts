@@ -38,7 +38,7 @@ const ApiAlgo = {
             return response.data;
         }
     },
-    async getMyAlgorithms(blockType: string): Promise<IAlgoritm[]> {
+    async getMyAlgorithms(): Promise<IAlgoritm[]> {
         const config = {
             headers: {
                 Authorization: storage.getToken()

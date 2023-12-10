@@ -1,7 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { NodeToolbar, Handle, Position, OnConnect, addEdge } from 'reactflow';
-import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
-import { Title } from 'chart.js';
+import { NodeToolbar, Position } from 'reactflow';
 import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
 import Cube from '../../ui/Cube';
 import { TypographyHeader, TypographyMain } from '../../ui/Typography';
@@ -9,12 +7,11 @@ import { styled } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { IfNodesColor } from '../../../constants/nodeData';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CopyAllIcon from '@mui/icons-material/CopyAll';
 import { useMLFlow } from '../../../hooks/MlFlowProvider';
 import { IfNodeTip, IfNodeTitle } from '../../../constants/nodeData'
 import { IIfNodeData, IIfNode, IIFNodeParam } from '../../../models/IIfNode';
 import { IfNodeParams } from '../../../constants/mlNodeParams';
-import IfHandle from '../handles/IfHandle'
+import IfHandle from '../handles/IfHandle';
 
 
 interface IfNodeProps {

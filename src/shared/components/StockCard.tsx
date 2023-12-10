@@ -1,6 +1,5 @@
-import { Box, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import AreaChart, { DataPoint } from "./AreaChart";
 import { TypographyMain, TypographyHeader } from "../ui/Typography";
 
 export interface StockCardProps {

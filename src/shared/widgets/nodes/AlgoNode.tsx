@@ -1,22 +1,14 @@
-import React, { memo, useCallback } from 'react';
-import { NodeToolbar, useReactFlow, useStoreApi, Position } from 'reactflow';
-import { MlNodeParams, CandleStepNames, IManagment } from '../../../constants/mlNodeParams';
-import { Title } from 'chart.js';
-import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
-import Cube from '../../ui/Cube';
+import React, { memo } from 'react';
+import {  CandleStepNames, IManagment } from '../../../constants/mlNodeParams';
+import { Autocomplete, TextField, AutocompleteRenderInputParams, AutocompleteProps } from '@mui/material';
 import { TypographyHeader, TypographyMain } from '../../ui/Typography';
 import { styled } from '@mui/system';
 import { useState, useEffect } from 'react';
-import { MlNodeTip } from '../../../constants/nodeData';
-import { MlNodesColors } from '../../../constants/nodeData';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CopyAllIcon from '@mui/icons-material/CopyAll';
 import { useMLFlow } from '../../../hooks/MlFlowProvider';
 import MenuButton from '../../ui/MenuButton';
 import risk_icon from '../../../assets/risk_icon.png';
 import save_icon from '../../../assets/save_icon.png';
 import Button from '../../ui/Button';
-import { Backdrop } from '@mui/material';
 import ManagmentForm from '../../components/ManagmentForm';
 import ApiAlgo from '../../../services/apiAlgo';
 import { useLocation } from 'react-router-dom';
@@ -83,20 +75,11 @@ const StyledAutocomplete = styled(Autocomplete)<StyledAutocompleteProps>(({ myco
     }
 }));
 
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
-        color: 'rgba(0, 0, 0, 0.87)',
-        fontSize: 11,
-    },
-}));
 
 const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { nodes, setNodes, currentNode, setCurrentNode, getNodeId, createIfObject, updateModelCandleStep,
+    const { createIfObject, updateModelCandleStep,
         updateModelManagment, getModelCandleStep, getModelVersionId,
         setBacktestData, setShowBacktest, backtestData } = MlFlowContext;
 
@@ -129,34 +112,6 @@ const AlgoNode: React.FC<ModelNodeProps> = ({ id, data }) => {
         setOpenManagment(newOpen);
     };
 
-
-    const handleDelete = useCallback(() => {
-        setNodes(nodes.filter(node => node.id !== id));
-        if (currentNode?.id === id) {
-            setCurrentNode(null);
-        }
-    }, [id, nodes, setNodes, currentNode, setCurrentNode]);
-
-    const handleCopy = useCallback(() => {
-        if (currentNode) {
-            const newNode = {
-                id: getNodeId(),
-                type: "model",
-                position: {
-                    x: currentNode.position.x + 20,
-                    y: currentNode.position.y - 20,
-                },
-                data: {
-                    title: currentNode.data.title,
-                    params: {
-                        features: [],
-                        period: []
-                    }
-                },
-            };
-            setNodes(nodes => [...nodes, newNode]);
-        }
-    }, [currentNode, getNodeId, setNodes]);
 
     function handleBacktest() {
         setShowBacktest(true)

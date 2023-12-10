@@ -1,13 +1,8 @@
 import { Box, Autocomplete, TextField, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import { useAllStock } from '../../hooks/AllStockDataProvider';
 import { TypographyMain } from "../ui/Typography";
 import { useEffect, useState } from "react";
-import MenuButton from "../ui/MenuButton";
 import Button from "../ui/Button";
-import { IMarketdatum } from "../../models/IMarketdatum";
-import StockCard from "./StockCard";
-import { useNavigate } from "react-router-dom";
 import { IManagment } from '../../constants/mlNodeParams'
 
 interface FieldState {

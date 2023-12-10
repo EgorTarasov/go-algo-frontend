@@ -6,13 +6,9 @@ import ReactFlow, {
     Controls,
     applyNodeChanges,
     OnNodesChange,
-    OnEdgesChange,
     OnConnect,
-    applyEdgeChanges,
     Panel,
-    Edge,
     MiniMap,
-    useEdgesState
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import { useAllStock } from '../../hooks/AllStockDataProvider';
@@ -24,11 +20,9 @@ import { useMLFlow } from '../../hooks/MlFlowProvider';
 import ModelNode from './nodes/ModelNode';
 import ApiAlgo from '../../services/apiAlgo';
 import { useLocation } from 'react-router-dom';
-import { TypographyMain } from '../ui/Typography';
 import IfNode from './nodes/IfNode';
 import { IIfNodeData } from '../../models/IIfNode';
 import AlgoNode from './nodes/AlgoNode';
-import CustomNode from './nodes/CustomNode';
 
 const rfStyle = {
     backgroundColor: '#F3F4F6',
@@ -42,7 +36,6 @@ const nodeTypes = {
     model: ModelNode,
     if: IfNode,
     algo: AlgoNode,
-    custom: CustomNode,
 };
 
 function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
@@ -277,9 +270,6 @@ function AlgoFlow({ type }: { type: 'algo' | 'ml' | undefined }) {
                 <Panel position="top-left" style={{ height: '100%', width: '290px', backgroundColor: '#D4D7DE', margin: 0 }}>
                     <FlowSideBar type={type ? type : 'ml'} />
                 </Panel>
-                {/* <Panel position="top-right" style={{ height: '30%', width: '100px', backgroundColor: '#D4D7DE', margin: 0 }}>
-                    <TypographyMain>Text</TypographyMain>
-                </Panel> */}
                 <Controls position='bottom-right' />
                 <MiniMap nodeStrokeWidth={3} />
             </ReactFlow>

@@ -1,7 +1,6 @@
 import React, { memo, useCallback } from 'react';
-import { NodeToolbar, Node, useStoreApi, Position } from 'reactflow';
-import { MlNodeParams, IMlNodeParams } from '../../../constants/mlNodeParams';
-import { Title } from 'chart.js';
+import { NodeToolbar } from 'reactflow';
+import { MlNodeParams } from '../../../constants/mlNodeParams';
 import { Tooltip, Autocomplete, TextField, AutocompleteRenderInputParams, TooltipProps, tooltipClasses, AutocompleteProps, IconButton } from '@mui/material';
 import Cube from '../../ui/Cube';
 import { TypographyHeader, TypographyMain } from '../../ui/Typography';
@@ -10,7 +9,6 @@ import { useState, useEffect } from 'react';
 import { MlNodeTip } from '../../../constants/nodeData';
 import { MlNodesColors } from '../../../constants/nodeData';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CopyAllIcon from '@mui/icons-material/CopyAll';
 import { useMLFlow } from '../../../hooks/MlFlowProvider';
 import { MlNodeSectionNodes, TimeTitle } from '../../../constants/nodeData'
 

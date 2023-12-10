@@ -10,6 +10,7 @@ import CurrentAlgo from "./pages/algorithmist/CurrentAlgo";
 // import { AllStockProvider } from "./hooks/AllStockDataProvider";
 import Profile from "./pages/algorithmist/Profile";
 import { MLFlowProvider } from "./hooks/MlFlowProvider";
+import NotFound from "./shared/components/NotFound";
 
 const theme = createTheme({
     palette: {
@@ -90,6 +91,12 @@ function App() {
                                         <AppBar />
                                         <Profile />
                                     </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="*"
+                                element={
+                                       <NotFound/>
                                 }
                             />
                         </Routes>

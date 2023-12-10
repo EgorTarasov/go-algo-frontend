@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import home_icon from '../../assets/home_icon.svg';
 import create_algorithm from '../../assets/create_algorithm.svg';
-import my_algorithms from '../../assets/my_algorithms.svg';
 import profile_icon from '../../assets/profile_icon.svg';
 import icon_documentation from '../../assets/icon-documentation.png';
 

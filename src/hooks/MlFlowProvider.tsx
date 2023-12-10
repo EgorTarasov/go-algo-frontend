@@ -1,21 +1,15 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import ReactFlow, {
+import { createContext, useContext, useState, ReactNode } from 'react';
+import  {
     Node,
     Edge,
-    applyNodeChanges,
-    applyEdgeChanges,
-    addEdge,
-    Connection,
     ReactFlowInstance,
     useEdgesState,
     EdgeChange
 } from "reactflow";
-import { useCallback } from 'react';
 import { MlNodeSectionNodes } from '../constants/nodeData'
 import { MlNodeParams, IManagment } from '../constants/mlNodeParams';
 import { v4 as uuidv4 } from 'uuid';
-import ApiAlgo from '../services/apiAlgo';
-import { IIfNodeData, IIfNode } from '../models/IIfNode';
+import { IIfNode } from '../models/IIfNode';
 import { IBacktestResult } from '../models/IAlgorithm';
 
 interface nodeField {
@@ -58,7 +52,6 @@ interface MLFlowContextProps {
     getModelVersionId: (id: string) => string;
     drawNewNodes: (newNodes: Node[]) => void;
     drawNewEdges: (newEdges: Edge[]) => void;
-    addStylesChild: (parentId: string) => void;
     createFeatureObject: (parentId: string) => { features: Record<string, any>, management: any, nodes: Node[] };
     createIfObject: (parentId: string) => { features: any, management: any, nodes: nodeField };
 }
@@ -116,25 +109,6 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
     function getModelVersionId(id: string) {
         const modelNode = nodes.find(node => node.id === id);
         return modelNode?.data.params.version;
-    }
-
-    function addStylesChild(parentId: string) {
-        const parentNode = nodes.find(node => node.id === parentId);
-        if (!parentNode) {
-            throw new Error(`Node with id ${parentId} not found`);
-        }
-        const childNodes = nodes.filter(node => node.parentNode === parentId);
-        for (const childNode of childNodes) {
-            console.log('1')
-            // if (childNode.style) {
-                const ele = document.querySelectorAll('.react-flow__node, .react-flow__node-feature');
-                for (var i = 0; i < ele.length; i++) {
-                    (ele[i] as HTMLElement).style.zIndex = '0 !important';
-                    console.log('2')
-                }
-            // }
-        }
-
     }
 
     const createFeatureObject = (parentId: string) => {
@@ -289,7 +263,7 @@ export function MLFlowProvider({ children }: { children: ReactNode }) {
         currentNode, setCurrentNode, getNodeId, checkUniqueChild, updateNodeFeatures, updateNodePeriods, createFeatureObject,
         updateModelManagment, getModelCandleStep, updateModelCandleStep, getModelVersionId, drawNewNodes, algoName, setAlgoName,
         edges, setEdges, createIfObject, onEdgesChange, updateIfParams, drawNewEdges, showBacktest, setShowBacktest,
-        backtestData, setBacktestData, addStylesChild
+        backtestData, setBacktestData
     };
 
     return (

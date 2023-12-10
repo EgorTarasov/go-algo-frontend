@@ -1,5 +1,5 @@
 import logo_moex from "../../assets/MOEXlogo-ru.svg";
-import { IconButton, Button, Box } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import { TypographyHeader } from "./Typography";
 
 export default function Logo() {

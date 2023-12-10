@@ -8,7 +8,7 @@ import Close from "@mui/icons-material/Close";
 function BacktestForm() {
     const MlFlowContext = useMLFlow();
     if (!MlFlowContext) throw new Error("MlFlowProvider is missing");
-    const { backtestData, setBacktestData, setShowBacktest } = MlFlowContext;
+    const { backtestData, setShowBacktest } = MlFlowContext;
     return (
         <>
             {backtestData &&

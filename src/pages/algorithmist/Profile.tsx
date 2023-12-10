@@ -18,7 +18,6 @@ const AlgorithmCard = (props: IAlgoritm) => {
         setEdges([]);
         setShowBacktest(false);
     }, [])
-    const change = Math.random() * 20 - 10;
     return (
         <Box
             sx={{
@@ -74,7 +73,7 @@ const Profile = observer(() => {
 
     useEffect(() => {
         // TODO: load data from server
-        ApiAlgo.getMyAlgorithms("ml").then((res) => {
+        ApiAlgo.getMyAlgorithms().then((res) => {
             setAlgoritms(res);
         });
     }, []);
